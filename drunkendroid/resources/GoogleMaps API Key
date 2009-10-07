@@ -1,0 +1,13 @@
+Debug Fingerprint
+androiddebugkey, Oct 7, 2009, PrivateKeyEntry, 
+Certificate fingerprint (MD5): AD:5F:EE:A8:30:01:7E:D0:AF:B7:E6:C9:C9:5E:0E:61
+
+API-KEY
+0VA24ZIeDjEl4gOtgk8VvYQ0XlzbOKHXc1_XJ7A
+
+Here is an example xml layout to get you started on your way to mapping glory:
+              <com.google.android.maps.MapView
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:apiKey="0VA24ZIeDjEl4gOtgk8VvYQ0XlzbOKHXc1_XJ7A"
+                 />
