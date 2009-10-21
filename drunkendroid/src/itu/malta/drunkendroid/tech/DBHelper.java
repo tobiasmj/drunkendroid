@@ -5,13 +5,12 @@ import itu.malta.drunkendroid.dal.entities.*;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
 /*
- *This class is heavily inspired by the helper class described in 
+ *This class is heavily inspired by the helper class DBHelper described in 
  * "Unlocking Android 2009", by W. Frank Ableson, Charlie Collins, Robi Sen
  */
 public class DBHelper {
