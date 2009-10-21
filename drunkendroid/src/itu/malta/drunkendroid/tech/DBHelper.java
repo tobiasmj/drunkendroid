@@ -1,6 +1,7 @@
 package itu.malta.drunkendroid.tech;
 
 import itu.malta.drunkendroid.Constants;
+import itu.malta.drunkendroid.dal.entities.*;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,15 +22,15 @@ public class DBHelper {
 	public static final String CLASSNAME = "DBHelper";
 	
 	private SQLiteDatabase db;
-	private final DBOpenHelper dbOpenHelpder;
+	private final DBOpenHelper dbOpenHelper;
 	
 	public DBHelper(final Context context){
-		this.dbOpenHelpder = new DBOpenHelper(context, DB_NAME, null, DB_VERSION);
+		this.dbOpenHelper = new DBOpenHelper(context, DB_NAME, null, DB_VERSION);
 	}
 	
 	private void establishDb(){
 		if( this.db == null)
-			this.db = this.dbOpenHelpder.getWritableDatabase();
+			this.db = this.dbOpenHelper.getWritableDatabase();
 	}
 	
 	public void cleanup(){
@@ -38,8 +39,26 @@ public class DBHelper {
 			this.db = null;
 		}		
 	}
+
+	public Boolean insert(Trip t){
+		//TODO implement
+		return false;
+	};
 	
+	public Boolean insert(Trip.Reading r){
+		//TODO implement
+		return false;
+	}
 	
+	public Boolean update(Trip t){
+		//TODO implement
+		return false;
+	}
+	
+	public Boolean update(Trip.Reading r){
+		//TODO implement
+		return false;
+	}
 	
 	private static class DBOpenHelper extends SQLiteOpenHelper{
 		private static final String TBLS_CREATE = "BEGIN TRANSACTION; "
