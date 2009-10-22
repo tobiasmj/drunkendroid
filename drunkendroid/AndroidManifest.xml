@@ -15,7 +15,15 @@
             </intent-filter>
         </activity>
         
+        <activity android:name="itu.malta.drunkendroid.ui.AppSettings" android:label="@string/view_appsettings">
+        	<intent-filter>
+        		<action android:name="itu.malta.drunkendroid.VIEW_SETTINGS"></action>
+        		<category android:name="android.intent.category.DEFAULT"></category>
+        	</intent-filter>
+        </activity>
+        
         <uses-permission android:name="android.permission.INTERNET" />
+
 
     </application>
     <uses-sdk android:minSdkVersion="4" />

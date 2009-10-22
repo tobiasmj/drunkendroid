@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, Main!</string>
-    <string name="app_name">drunkendroid</string>
+    <string name="app_name">DrunkenDroid</string>
+    <string name="firsttimeuse">Please configure DrunkenDroid for first-time use</string>
+    <string name="view_appsettings">DrunkenDroid Settings</string>
 </resources>
