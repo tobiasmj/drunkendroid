@@ -1,21 +1,29 @@
 package itu.malta.drunkendroid.tech;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import itu.malta.drunkendroid.Constants;
 import itu.malta.drunkendroid.dal.entities.*;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
-/*
- *This class is heavily inspired by the helper class DBHelper described in 
- * "Unlocking Android 2009", by W. Frank Ableson, Charlie Collins, Robi Sen
+/**
+ * This class is heavily inspired by the helper class DBHelper described in 
+ * "Unlocking Android 2009", by W. Frank Ableson, Charlie Collins, Robi Sen.
+ * <br>
+ * The class takes care of the technical communication with the sqlite3 database
+ * @author ExxKA
  */
 public class DBHelper {
 	public static final String DB_NAME = "drunkendroid";
-	public static final Integer DB_VERSION = 3;
+	public static final Integer DB_VERSION = 4;
 	public static final String TABLE_TRIP = "Trip";
 	public static final String TABLE_READING = "Reading";
 	public static final String CLASSNAME = "DBHelper";
@@ -25,6 +33,7 @@ public class DBHelper {
 	
 	public DBHelper(final Context context){
 		this.dbOpenHelper = new DBOpenHelper(context, DB_NAME, null, DB_VERSION);
+		this.establishDb();
 	}
 	
 	private void establishDb(){
@@ -39,37 +48,118 @@ public class DBHelper {
 		}		
 	}
 
-	public Boolean insert(Trip t){
-		//TODO implement
-		return false;
-	};
+	/**
+	 * Inserts a trip including all of the accompanied readings. <br>
+	 * {@link Trip}
+	 * @param t a trip including the Readings
+	 * @return whether or not the insertion was a success.
+	 * @exception IllegalArgumentException if there are no attached Readings
+	 * @exception SQLException if something with the underlying database is wrong
+	 */
 	
-	public Boolean insert(Trip.Reading r){
-		//TODO implement
-		return false;
+	public void insert(NewTrip t) throws IllegalArgumentException, SQLException {
+		
+		if(t.getTripReadings().isEmpty())
+			throw new IllegalArgumentException("There are no readings");
+		try{
+			ContentValues values = new ContentValues();
+			values.put("startDateTime", t.getStartDate().getTimeInMillis());
+			long tripId = db.insertOrThrow(TABLE_TRIP, null, values);
+			if(tripId < -0)
+				throw new SQLException("The new trip didn't get inserted to the trip table");
+			try{
+				db.beginTransaction();
+				for(Trip.Reading r : t.getTripReadings()){
+					//Prepare insert statements for all the readings, refering to the trip.
+					ContentValues readingValues = new ContentValues();
+					readingValues.put("trip", tripId);
+					readingValues.put("dateTime", r.getDate().getTimeInMillis());
+					readingValues.put("longitude", r.getLongitude());
+					readingValues.put("latitude", r.getLatitude());
+					readingValues.put("mood", r.getMood().intValue());
+					
+					long success = db.insertOrThrow(TABLE_READING, null, readingValues);
+					if(success == -1)
+						throw new SQLException("The readings where not inserted");
+				}
+				db.setTransactionSuccessful();
+			}
+			finally{
+				db.endTransaction();
+			}
+		}
+		catch(SQLException e){
+			//TODO implement exception handling
+			Log.e(Constants.LOGTAG, "Tried to insert a Trip", e);
+			throw e;
+		}
 	}
 	
-	public Boolean update(Trip t){
-		//TODO implement
-		return false;
+	public OldTrip selectTripByStartDate(Calendar startDate){
+		OldTrip loadedTrip = new OldTrip();
+		//TODO: Complete
+		String[] selectedColumns = {"id"};
+		String[] whereDateTimeEQ = {String.valueOf(startDate.getTimeInMillis())};
+		Cursor selectionCursor = db.query(TABLE_TRIP, selectedColumns, "startDateTime = ?", whereDateTimeEQ, null, null, null);
+		//Find the TripId
+		selectionCursor.moveToNext();
+		long tripId = selectionCursor.getLong(0);
+		if(tripId < 0)
+			throw new IllegalArgumentException("The trip could not be located");
+		//The trip was located, which means we now know the startdate
+		loadedTrip.setDateInMilliSec(startDate.getTimeInMillis());
+		selectionCursor.close();
+		//Build the trip
+		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood"};
+		String[] whereTripEQ = {String.valueOf(tripId)};
+		Cursor selectionOfReadings = db.query(TABLE_READING, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
+		
+		while(selectionOfReadings.moveToNext()){
+			OldTrip.OldReading r = loadedTrip.newReading();
+			//Set dateTime
+			Calendar c = Calendar.getInstance();
+			c.setTimeInMillis(selectionOfReadings.getLong(0));
+			r.setDate(c);
+			//Set Longitude
+			r.setLongitude(selectionOfReadings.getDouble(1));
+			//Set Latitude
+			r.setLatitude(selectionOfReadings.getDouble(2));
+			//Set Mood
+			r.setMood(selectionOfReadings.getShort(3));
+			
+			//Add to the trip
+			loadedTrip.AddReading(r);
+		}
+		return loadedTrip;
 	}
 	
-	public Boolean update(Trip.Reading r){
-		//TODO implement
-		return false;
+	/**
+	 * This will delete all content in the database.
+	 */
+	public void flushDatabase(){
+		final String deleteAllContentIN = "DELETE FROM ";
+		try{
+			db.beginTransaction();
+			db.execSQL(deleteAllContentIN + TABLE_TRIP );
+			db.execSQL(deleteAllContentIN + TABLE_READING);
+			db.setTransactionSuccessful();
+		}
+		catch(SQLException e){
+			Log.e(Constants.LOGTAG, "Tried to flush the database");
+		}
+		finally{
+			db.endTransaction();
+		}
+		
+	}
+	
+	public ArrayList<Trip> selectAllTrips() {
+		ArrayList<Trip> trips = new ArrayList<Trip>();
+		final String selectTripStartTimes = "SELECT startDateTime FROM Trip";
+		return null;
 	}
 	
 	private static class DBOpenHelper extends SQLiteOpenHelper{
-		private static final String TBLS_CREATE = "BEGIN TRANSACTION; "
-			+ "CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime DATETIME NOT NULL); "
-			+ "CREATE TABLE " + DBHelper.TABLE_READING + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime DATETIME NOT NULL, longitude LONG NOT NULL, latitude LONG NOT NULL, altitude LONG, mood SMALLINT); "
-			+ "CREATE INDEX TripReading on " + DBHelper.TABLE_READING + " (trip DESC, id ASC); "
-			+ "COMMIT TRANSACTION;";
-		private static final String TBLS_DROP = "BEGIN TRANSACTION;"
-			+ "DROP TABLE IF EXISTS " + DBHelper.TABLE_TRIP + "; "
-			+ "DROP TABLE IF EXISTS " + DBHelper.TABLE_READING + "; "
-			+ "COMMIT TRANSACTION;";
-			
 		
 		public DBOpenHelper(Context context, String name, CursorFactory factory, int version) {
 			// Just call the super method.
@@ -79,12 +169,20 @@ public class DBHelper {
 		@Override
 		public void onCreate(final SQLiteDatabase db) {
 			try{
-				db.execSQL(DBOpenHelper.TBLS_CREATE);
+				db.beginTransaction();
+				db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime DATETIME NOT NULL); ");
+				db.execSQL("CREATE TABLE " + DBHelper.TABLE_READING + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime DATETIME NOT NULL, longitude LONG NOT NULL, latitude LONG NOT NULL, altitude LONG, mood SMALLINT);");
+				db.execSQL("CREATE INDEX TripReading on " + DBHelper.TABLE_READING + " (trip DESC, id ASC);");
+				db.setTransactionSuccessful();
 			}
 			catch (SQLException e) {
 				Log.e(Constants.LOGTAG , DBHelper.CLASSNAME, e);
 				//We should also notify the user that the program cannot save data.
 			}
+			finally{
+				db.endTransaction();
+			}
+			
 		}
 		
 		@Override
@@ -94,9 +192,19 @@ public class DBHelper {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-			db.execSQL(DBOpenHelper.TBLS_DROP);
+			//Start by tearing down the tables
+			try{
+			db.beginTransaction();
+			db.execSQL("DROP TABLE IF EXISTS " + DBHelper.TABLE_TRIP + "; ");
+			db.execSQL("DROP TABLE IF EXISTS " + DBHelper.TABLE_READING + "; ");
+			db.setTransactionSuccessful();
+			}
+			finally{
+				db.endTransaction();
+			}
 			this.onCreate(db);			
 		}
 		
 	}
+
 }

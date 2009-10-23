@@ -2,29 +2,36 @@ package itu.malta.drunkendroid.dal.entities;
 
 import java.util.*;
 
-public class Trip {
-	private ArrayList<Reading> readings = new ArrayList<Reading>();
+
+public abstract class Trip {
+	protected ArrayList<Reading> readings = new ArrayList<Reading>();
 	private Calendar startDate = null;
 	
-	private void setStartDate(Calendar d){
-		if(this.startDate == null)
-			if(this.startDate.after(d)) //If the startDate is earlier than the suggested one.
+	protected void setStartDate(Calendar d){
+		if(this.startDate != null){
+			if(this.startDate.after(d))
 				startDate = d;
-	}
-	private void AddReading(Reading r){
-		setStartDate(r.getDate());
-		readings.add(r);
-	}
-	
-	protected Iterator<Reading> getReadingIterator(){
-		return readings.iterator();
+		}//If the startDate is earlier than the suggested one.
+		else{
+			startDate = d;
+		}
 	}
 	
-	public final class Reading {
+	public Calendar getStartDate(){
+		return this.startDate;
+	}
+	
+	public abstract void AddReading(Reading r);
+	
+	public abstract ArrayList<Reading> getTripReadings();
+	
+	public abstract Reading newReading();
+	
+	public class Reading {
 		private Calendar date;
 		private Double latitude;
 		private Double longitude;
-		private Byte mood;
+		private Short mood;
 		
 		public Calendar getDate() {
 			return date;
@@ -50,17 +57,18 @@ public class Trip {
 			this.longitude = longitude;
 		}
 
-		public Byte getMood() {
+		public Short getMood() {
 			return mood;
 		}
 
-		public void setMood(Byte mood) {
+		public void setMood(Short mood) {
+			if(mood > 255)
+				this.mood = 255;
 			this.mood = mood;
 		}
 
 		public Reading(){
 			this.date = Calendar.getInstance();
-			Trip.this.AddReading(this);
 		}
 	}
 }
