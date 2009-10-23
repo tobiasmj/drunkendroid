@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.ui.map;
+package itu.malta.drunkendroid.ui;
 
 import itu.malta.drunkendroid.R;
 
