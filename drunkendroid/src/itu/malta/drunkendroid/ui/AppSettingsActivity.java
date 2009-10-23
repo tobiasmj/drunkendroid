@@ -4,7 +4,7 @@ import itu.malta.drunkendroid.R;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class AppSettings extends Activity {
+public class AppSettingsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

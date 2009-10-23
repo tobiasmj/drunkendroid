@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
-public class Main extends Activity {
+public class MainActivity extends Activity {
 	
 	private static final int MENU_SETTINGS = Menu.FIRST;
 	private static final int MENU_PREVIOUS_TRIPS = Menu.FIRST + 1;
@@ -42,8 +42,8 @@ public class Main extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, Main.MENU_SETTINGS, 0, R.string.menu_settings).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(0, Main.MENU_PREVIOUS_TRIPS, 0, R.string.menu_previous_trips);
+		menu.add(0, MainActivity.MENU_SETTINGS, 0, R.string.menu_settings).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(0, MainActivity.MENU_PREVIOUS_TRIPS, 0, R.string.menu_previous_trips);
 		openOptionsMenu();
 		return true;
 	}

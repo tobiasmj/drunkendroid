@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class MoodMap extends MapActivity {
+public class MoodMapActivity extends MapActivity {
 	
 	MapView mapView;
 	

@@ -7,21 +7,21 @@
     	<uses-sdk android:minSdkVersion="4" />
     	<uses-library android:name="com.google.android.maps" />
     	<uses-permission android:name="android.permission.INTERNET" />
-        <activity android:name=".ui.Main"
+        <activity android:name=".ui.MainActivity"
                   android:label="@string/activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.map.MoodMap"
+        <activity android:name=".ui.map.MoodMapActivity"
                   android:label="@string/activity_mood_map">
             <intent-filter>
                 <action android:name=".VIEW_MAP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AppSettings" android:label="@string/activity_app_settings">
+        <activity android:name=".ui.AppSettingsActivity" android:label="@string/activity_app_settings">
         	<intent-filter>
         		<action android:name=".ui.VIEW_SETTINGS"></action>
         		<category android:name="android.intent.category.DEFAULT"></category>
