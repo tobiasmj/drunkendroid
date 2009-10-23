@@ -5,7 +5,6 @@
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/appName">
     	<uses-library android:name="com.google.android.maps" />
-    	<uses-permission android:name="android.permission.INTERNET" />
         <activity android:name=".ui.MainActivity"
                   android:label="@string/activity_main">
             <intent-filter>
@@ -27,5 +26,6 @@
         	</intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-sdk android:minSdkVersion="4" />
 </manifest> 

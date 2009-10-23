@@ -1,20 +1,19 @@
 package itu.malta.drunkendroid.ui.map;
 
 import itu.malta.drunkendroid.R;
-import itu.malta.drunkendroid.R.id;
-import itu.malta.drunkendroid.R.layout;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MapView.LayoutParams;  
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView; 
  
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
 
 public class MoodMapActivity extends MapActivity {
 	
 	MapView mapView;
+	MapController mapController;
+	GeoPoint gp;
 	
     /** Called when the activity is first created. */
     @Override
@@ -22,14 +21,22 @@ public class MoodMapActivity extends MapActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+        
         mapView = (MapView) findViewById(R.id.mapView);
-        LinearLayout zoomLayout = (LinearLayout)findViewById(R.id.zoom);  
-        View zoomView = mapView.getZoomControls(); 
+        mapView.setBuiltInZoomControls(true);
+        
+        mapController = mapView.getController();
+        String coordinates[] = {"35.908138", "14.500975"};
+        double lat = Double.parseDouble(coordinates[0]);
+        double lng = Double.parseDouble(coordinates[1]);
  
-        zoomLayout.addView(zoomView, new LinearLayout.LayoutParams(
-					            LayoutParams.WRAP_CONTENT, 
-					            LayoutParams.WRAP_CONTENT)); 
-        mapView.displayZoomControls(true);
+        gp = new GeoPoint(
+            (int) (lat * 1E6), 
+            (int) (lng * 1E6));
+ 
+        mapController.animateTo(gp);
+        mapController.setZoom(17); 
+        mapView.invalidate();
     }
  
     @Override
