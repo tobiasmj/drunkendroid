@@ -11,11 +11,11 @@ public class DrunkendroidserverApplication extends Application {
     @Override  
     public synchronized Restlet createInboundRoot() {  
         // Create a router Restlet that routes each call to a  
-        // new instance of HelloWorldResource.  
+        // new instance of drunkendroid
         Router router = new Router(getContext());  
   
         // Defines only one route  
-        router.attach("/drunkendroid", DrunkendroidResource.class);
+        //router.attach("/drunkendroid", DrunkendroidResource.class);
         router.attach("/drunkendroid/trip/{IMEI}", TripResource.class);
         return router;  
     }  

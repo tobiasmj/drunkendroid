@@ -23,5 +23,6 @@ public class DatabaseConnection {
 	}
 	public Connection getConn(){
 		return conn;
+		
 	}
 }
