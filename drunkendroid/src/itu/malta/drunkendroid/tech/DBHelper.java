@@ -155,8 +155,32 @@ public class DBHelper {
 	
 	public ArrayList<Trip> selectAllTrips() {
 		ArrayList<Trip> trips = new ArrayList<Trip>();
-		final String selectTripStartTimes = "SELECT startDateTime FROM Trip";
-		return null;
+		String[] selectedTripColumns = {"startDateTime"};
+		Cursor returnedTrips = null;
+		
+		db.beginTransaction();
+		try{
+			returnedTrips = db.query(TABLE_TRIP, selectedTripColumns, null, null, null, null, null);
+			db.setTransactionSuccessful();	
+		}
+		finally{
+			db.endTransaction();
+		}
+		
+		//Add trips to the list
+		try{
+			while(returnedTrips.moveToNext()){
+				long startDateTime = returnedTrips.getLong(0);
+				OldTrip trip = new OldTrip();
+				trip.setDateInMilliSec(startDateTime);
+				trips.add(trip);
+			}
+		}
+		finally{
+			returnedTrips.close();
+		}
+		
+		return trips;
 	}
 	
 	private static class DBOpenHelper extends SQLiteOpenHelper{

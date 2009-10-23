@@ -51,6 +51,19 @@ public class DBHelperTest extends AndroidTestCase {
 		testTrip.AddReading(r2);
 		testTrip.AddReading(r3);
 		dbh.insert(testTrip);
+		
+		//Insert another trip
+		NewTrip testTrip2 = new NewTrip();
+		// Reading 1
+		NewTrip.NewReading r2_1 = testTrip.newReading();
+		Calendar c2_1 = Calendar.getInstance();
+		c2_1.setTimeInMillis(1257815633);
+		r2_1.setDate(c2_1);
+		r2_1.setLatitude(35.908422);
+		r2_1.setLongitude(14.502362);
+		r2_1.setMood((short)270);
+		testTrip2.AddReading(r2_1);
+		dbh.insert(testTrip2);
 	}
 	
 	public void testInsertTrip(){
@@ -61,10 +74,21 @@ public class DBHelperTest extends AndroidTestCase {
 			assertFalse(true);
 		}
 		assertTrue(true);
+		dbh.flushDatabase();
+	}
+	
+	public void testGetAllLocalTrips(){
+		this.insertTestData();
+		
+		ArrayList<Trip> trips = dbh.selectAllTrips();
+		assertEquals(2, trips.size());
+		
+		dbh.flushDatabase();
 	}
 	
 	public void testSelectTripByStartDate(){
 		try{
+			this.insertTestData();
 			final long startDate = 1255816133;
 			Calendar c = Calendar.getInstance();
 			c.setTimeInMillis(startDate);
@@ -72,18 +96,12 @@ public class DBHelperTest extends AndroidTestCase {
 			OldTrip returnedTrip;
 			returnedTrip = dbh.selectTripByStartDate(c);
 			
-			assertEquals(returnedTrip.getTripReadings().size(), 3);
+			assertEquals(3, returnedTrip.getTripReadings().size());
 			assertEquals(startDate, returnedTrip.getStartDate().getTimeInMillis());
 		}
 		finally{
 			dbh.flushDatabase();
 		}
-		
-	}
-	
-	public void testGetAllLocalTrips(){
-		ArrayList<Trip> trips = dbh.selectAllTrips();
-		assertEquals(trips.size(), 2);
 		
 	}
 }
