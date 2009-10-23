@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="appName">DrunkenDroid</string>
-    <string name="menuActivity">DrunkenDroid : Menu</string>
-    <string name="moodMapActivity">DrunkenDroid : Mood Map</string>
-    <string name="firsttimeuse">Please configure DrunkenDroid for first-time use</string>
-    <string name="view_appsettings">DrunkenDroid Settings</string>
+    <string name="activity_main">DrunkenDroid : Menu</string>
+    <string name="activity_mood_map">DrunkenDroid : Mood Map</string>
+    <string name="activity_app_settings">DrunkenDroid : Settings</string>
+    <string name="txt_first_time_use">Please configure DrunkenDroid for first-time use</string>
+    <string name="menu_settings"></string>
+    <string name="menu_previous_trips"></string>
+    
 </resources>

@@ -4,34 +4,28 @@
       android:versionCode="1"
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/appName">
-    
+    	<uses-sdk android:minSdkVersion="4" />
     	<uses-library android:name="com.google.android.maps" />
-    
-        <activity android:name=".ui.Menu"
-                  android:label="@string/menuActivity">
+    	<uses-permission android:name="android.permission.INTERNET" />
+        <activity android:name=".ui.Main"
+                  android:label="@string/activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    
         <activity android:name=".ui.map.MoodMap"
-                  android:label="@string/moodMapActivity">
+                  android:label="@string/activity_mood_map">
             <intent-filter>
                 <action android:name=".VIEW_MAP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="itu.malta.drunkendroid.ui.AppSettings" android:label="@string/view_appsettings">
+        <activity android:name=".ui.AppSettings" android:label="@string/activity_app_settings">
         	<intent-filter>
-        		<action android:name="itu.malta.drunkendroid.VIEW_SETTINGS"></action>
+        		<action android:name=".ui.VIEW_SETTINGS"></action>
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
-        
-        <uses-permission android:name="android.permission.INTERNET" />
-
     </application>
-    <uses-sdk android:minSdkVersion="4" />
 </manifest> 
