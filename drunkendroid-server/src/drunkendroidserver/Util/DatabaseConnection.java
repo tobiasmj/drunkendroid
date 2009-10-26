@@ -4,14 +4,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-	private Connection conn = null;
+	private String connURL = null;
 	private DatabaseConnection(){
-		try { 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema");
-			} catch (SQLException se) {
-				//TODO : handle exception
-			}
-		
+			connURL = "jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema";
+			//conn = DriverManager.getConnection("jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema");	
 	}
 	
 	private static class DatabaseConnectionSingleton {
@@ -22,7 +18,13 @@ public class DatabaseConnection {
 		return DatabaseConnectionSingleton.INSTANCE;
 	}
 	public Connection getConn(){
+		Connection conn = null;
+		try{
+			conn  = DriverManager.getConnection(connURL);
+			
+		} catch (SQLException se){
+			// ignore for new since we can't do much about it?
+		}
 		return conn;
-		
 	}
 }
