@@ -1,12 +1,11 @@
 package itu.malta.drunkendroid.ui;
 
 import itu.malta.drunkendroid.R;
-import itu.malta.drunkendroid.R.id;
-import itu.malta.drunkendroid.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -28,7 +27,6 @@ public class MainActivity extends Activity {
     	{
     		public void onClick(View v) {
     			try {
-    				System.out.println("Start view map");
     				Intent i = new Intent(".VIEW_MAP");
     				startActivity(i);
     			}
@@ -44,7 +42,26 @@ public class MainActivity extends Activity {
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, MainActivity.MENU_SETTINGS, 0, R.string.menu_settings).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(0, MainActivity.MENU_PREVIOUS_TRIPS, 0, R.string.menu_previous_trips);
-		openOptionsMenu();
 		return true;
 	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		Intent intent = null;
+		
+		switch(item.getItemId()) {
+		case MainActivity.MENU_SETTINGS:
+			try {
+			intent = new Intent(".VIEW_SETTINGS");
+			startActivity(intent);
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+			
+		return true;	
+		}		
+		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	
 }

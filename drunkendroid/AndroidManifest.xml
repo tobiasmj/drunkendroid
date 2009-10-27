@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="itu.malta.drunkendroid"
+	  package="itu.malta.drunkendroid"
       android:versionCode="1"
       android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/appName">
+    <application android:icon="@drawable/icon" android:label="@string/appName" android:debuggable="true">
     	<uses-library android:name="com.google.android.maps" />
         <activity android:name=".ui.MainActivity"
                   android:label="@string/activity_main">
@@ -19,13 +19,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AppSettingsActivity" android:label="@string/activity_app_settings">
+        <activity android:name=".ui.AppSettingsActivity" 
+        	      android:label="@string/activity_app_settings"
+        	      android:theme="@style/BrightTheme">
         	<intent-filter>
-        		<action android:name=".ui.VIEW_SETTINGS"></action>
+        		<action android:name=".VIEW_SETTINGS" />
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="3" />
 </manifest> 
