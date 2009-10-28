@@ -19,6 +19,7 @@ public class OldTrip extends Trip {
 		return readings;
 	}
 	
+	@Override
 	public OldReading newReading(){
 		return new OldReading();
 	}
