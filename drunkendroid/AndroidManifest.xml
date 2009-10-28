@@ -27,6 +27,19 @@
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
+        <receiver android:name=".tech.DrunkenServiceReceiver">
+        	<intent-filter>
+        		<action android:name="android.intent.action.DATA_SMS_RECEIVED" />
+        	</intent-filter>
+        	<intent-filter>
+        		<action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+        	</intent-filter>
+        	<intent-filter>
+        		<action android:name="android.intent.action.TIME_TICK" />
+        	</intent-filter>
+        </receiver>
+        <service android:name=".tech.DrunkenService">        	
+        </service>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
