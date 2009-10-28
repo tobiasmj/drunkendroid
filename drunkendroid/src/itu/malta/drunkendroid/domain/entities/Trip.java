@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.dal.entities;
+package itu.malta.drunkendroid.domain.entities;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.dal.entities;
+package itu.malta.drunkendroid.domain.entities;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +19,6 @@ public class OldTrip extends Trip {
 		return readings;
 	}
 	
-	@Override
 	public OldReading newReading(){
 		return new OldReading();
 	}

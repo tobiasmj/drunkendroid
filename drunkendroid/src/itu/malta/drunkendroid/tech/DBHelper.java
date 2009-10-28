@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import itu.malta.drunkendroid.Constants;
-import itu.malta.drunkendroid.dal.entities.*;
+import itu.malta.drunkendroid.domain.entities.*;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
