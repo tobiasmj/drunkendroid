@@ -1,6 +1,6 @@
 package itu.malta.drunkendroid.control;
 
-import itu.malta.drunkendroid.dal.entities.Trip;
+import itu.malta.drunkendroid.domain.entities.Trip;
 
 public class BuildController {
 
