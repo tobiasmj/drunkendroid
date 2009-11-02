@@ -5,40 +5,33 @@
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/appName" android:debuggable="true">
     	<uses-library android:name="com.google.android.maps" />
-        <activity android:name=".ui.MainActivity"
+        <activity android:name=".ui.activities.MainActivity"
                   android:label="@string/activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MoodMapActivity"
+        <activity android:name=".ui.activities.MoodMapActivity"
                   android:label="@string/activity_mood_map">
             <intent-filter>
-                <action android:name=".VIEW_MAP" />
+                <action android:name="VIEW_MAP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AppSettingsActivity" 
+        <activity android:name=".ui.activities.AppSettingsActivity" 
         	      android:label="@string/activity_app_settings"
         	      android:theme="@style/BrightTheme">
         	<intent-filter>
-        		<action android:name=".VIEW_SETTINGS" />
+        		<action android:name="VIEW_SETTINGS" />
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
-        <receiver android:name=".tech.DrunkenServiceReceiver">
+        <service android:name=".services.DrunkenService">   
         	<intent-filter>
-        		<action android:name="android.intent.action.DATA_SMS_RECEIVED" />
+        		<action android:name="START_DRUNKEN_SERVICE"></action>
+        		<category android:name="itu.malta.drunkendroid.services"></category>
         	</intent-filter>
-        	<intent-filter>
-        		<action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-        	</intent-filter>
-        	<intent-filter>
-        		<action android:name="android.intent.action.TIME_TICK" />
-        	</intent-filter>
-        </receiver>
-        <service android:name=".tech.DrunkenService">        	
         </service>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

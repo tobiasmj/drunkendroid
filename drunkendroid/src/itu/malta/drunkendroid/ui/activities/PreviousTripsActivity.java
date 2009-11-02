@@ -1,10 +1,10 @@
-package itu.malta.drunkendroid.ui;
+package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class UploadActivity extends Activity {
+public class PreviousTripsActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

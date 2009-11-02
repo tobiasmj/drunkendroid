@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.ui;
+package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
 

@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.ui;
+package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
 import android.app.Activity;
@@ -26,8 +26,12 @@ public class MainActivity extends Activity {
     	mvBtn.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			try {
-    				Intent i = new Intent(".VIEW_MAP");
-    				startActivity(i);
+//    				Intent i = new Intent(".VIEW_MAP");
+//    				startActivity(i);
+    				System.out.println("Starting Service");
+    				Intent i2 = new Intent("START_DRUNKEN_SERVICE");
+    				i2.addCategory("itu.malta.drunkendroid.services");
+    				startService(i2);
     			}
     			catch (Exception e) {
     				System.out.println(e.getMessage());
@@ -52,7 +56,7 @@ public class MainActivity extends Activity {
 		switch(item.getItemId()) {
 		case MainActivity.MENU_SETTINGS:
 			try {
-			intent = new Intent(".VIEW_SETTINGS");
+			intent = new Intent("VIEW_SETTINGS");
 			startActivity(intent);
 			} catch(Exception e) {
 				System.out.println(e.getMessage());

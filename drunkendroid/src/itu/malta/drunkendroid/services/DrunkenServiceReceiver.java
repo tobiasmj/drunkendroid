@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.tech;
+package itu.malta.drunkendroid.services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
