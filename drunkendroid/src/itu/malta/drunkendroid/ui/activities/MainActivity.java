@@ -4,6 +4,7 @@ import itu.malta.drunkendroid.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,24 @@ public class MainActivity extends Activity {
     				Intent i2 = new Intent("START_DRUNKEN_SERVICE");
     				i2.addCategory("itu.malta.drunkendroid.services");
     				startService(i2);
+    			}
+    			catch (Exception e) {
+    				System.out.println(e.getMessage());
+    			}
+    		}
+    	});
+    	
+    	final Button stopServiceBtn = (Button)findViewById(R.id.stopServiceButton);
+        
+    	stopServiceBtn.setOnClickListener(new Button.OnClickListener() {
+    		public void onClick(View v) {
+    			try {
+    				System.out.println("Stopping Service");
+    				Intent i2 = new Intent("START_DRUNKEN_SERVICE");
+    				i2.addCategory("itu.malta.drunkendroid.services");
+    				stopService(i2);   		
+    				
+    				
     			}
     			catch (Exception e) {
     				System.out.println(e.getMessage());
