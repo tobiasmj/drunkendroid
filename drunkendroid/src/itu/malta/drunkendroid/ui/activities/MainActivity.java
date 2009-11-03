@@ -1,6 +1,7 @@
 package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
+import itu.malta.drunkendroid.services.DrunkenService;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class MainActivity extends Activity {
     	stopServiceBtn.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			try {
+    				System.out.println("Læser fra Singleton, Interval: " + DrunkenService.getInstance().readingInterval);
     				System.out.println("Stopping Service");
     				Intent i2 = new Intent("START_DRUNKEN_SERVICE");
     				i2.addCategory("itu.malta.drunkendroid.services");

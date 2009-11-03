@@ -1,6 +1,7 @@
 package itu.malta.drunkendroid.services;
 
 import itu.malta.drunkendroid.R;
+import itu.malta.drunkendroid.handlers.SMSHandler;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,13 +10,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 
 public class DrunkenService extends Service {
 	
 	private static DrunkenService drunkenService = null;
-	Handler moodReadHandler = new Handler();
+	private Handler moodReadHandler = new Handler();
+	private SMSHandler smsHandler = new SMSHandler();
 	public SMSReceiver SMSReceiver;
-	int readingInterval;
+	public int readingInterval;
 	
 	@Override
 	public void onCreate() {
@@ -24,7 +27,7 @@ public class DrunkenService extends Service {
 		
 		System.out.println("Service Started");
 		
-		DrunkenService.drunkenService = new DrunkenService();
+		DrunkenService.drunkenService = this;
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
 	}
@@ -51,21 +54,28 @@ public class DrunkenService extends Service {
 		super.onDestroy();
 		System.out.println("Service stopped");
 		UnregisterReceivers();
+		moodReadHandler.removeMessages(0);
 		DrunkenService.drunkenService = null;
 	}
 
+	/**
+	 * Register BroadcastReceivers to Service, and connect as listener to SharePreferences.
+	 */
 	public void RegisterReceivers()
 	{
+		//Register receiver to trigger when SMS is received
 		IntentFilter filter = new IntentFilter("android.intent.action.TIME_TICK");
 		this.SMSReceiver = new SMSReceiver();
 		this.registerReceiver(this.SMSReceiver, filter);
 		
+		//Register as listener to receive changes in Mood Reading Interval.
 		SharedPreferences prefs = getSharedPreferences("prefs_config", MODE_PRIVATE);
 		prefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
 			
 			public void onSharedPreferenceChanged(SharedPreferences sp,
 					String key) {
 				
+				//if changes are made to the interval, change the timer of the mood readings.
 				if(key.equals("moodReadInterval"))
 					StartReadingTimer(sp);
 			}
@@ -77,6 +87,10 @@ public class DrunkenService extends Service {
 		this.unregisterReceiver(this.SMSReceiver);
 	}
 	
+	/**
+	 * Start a timer for showing the Moodread Dialog at a specified interval.
+	 * @param sp SharedPreferences containing the mood reading interval.
+	 */
 	private void StartReadingTimer(final SharedPreferences sp)
 	{		
 		String[] intervalArray = getResources().getStringArray(R.array.mood_read_intervals);
@@ -84,12 +98,13 @@ public class DrunkenService extends Service {
 		Runnable run = new Runnable() {
 			public void run() 
 			{
-				moodReadHandler.postDelayed(this, readingInterval*60000);
 				System.out.println("MoodRead Intervallet sat til " + readingInterval);
+				moodReadHandler.postDelayed(this, readingInterval*60000);
 			}
 		};
 		moodReadHandler.removeMessages(0);
 		moodReadHandler.postDelayed(run, readingInterval*60000);
+		System.out.println("Interval sat til " + readingInterval);
 	}
 	
 	private class SMSReceiver extends BroadcastReceiver {
@@ -97,7 +112,11 @@ public class DrunkenService extends Service {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			// TODO Auto-generated method stub
-			System.out.println("Minute tick received!");
+			System.out.println("SMS received!");
+			Message msg = new Message();
+			msg.arg1 = 1;
+			msg.obj = new String("TestBesked!");
+			smsHandler.sendMessage(msg);
 		}
 	};
 }

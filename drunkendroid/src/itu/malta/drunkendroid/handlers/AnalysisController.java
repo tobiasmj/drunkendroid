@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.control;
+package itu.malta.drunkendroid.handlers;
 
 public class AnalysisController {
 

@@ -1,8 +1,8 @@
-package itu.malta.drunkendroid.control;
+package itu.malta.drunkendroid.handlers;
 
 import itu.malta.drunkendroid.domain.entities.Trip;
 
-public class BuildController {
+public class CurrentTripHandler {
 
 	private Trip tripInstance;
 	
