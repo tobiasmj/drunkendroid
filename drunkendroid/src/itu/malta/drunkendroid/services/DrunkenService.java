@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -110,13 +111,23 @@ public class DrunkenService extends Service {
 	private class SMSReceiver extends BroadcastReceiver {
 
 		@Override
-		public void onReceive(Context arg0, Intent arg1) {
+		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			System.out.println("SMS received!");
 			Message msg = new Message();
 			msg.arg1 = 1;
-			msg.obj = new String("TestBesked!");
+			msg.obj = intent;
 			smsHandler.sendMessage(msg);
+		}
+	};
+	
+	private class CallReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			// TODO Auto-generated method stub
+			
+			
 		}
 	};
 }
