@@ -1,9 +1,12 @@
 package itu.malta.drunkendroid.ui.map;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader.TileMode;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -26,19 +29,19 @@ public class MoodOverlay extends Overlay
 			Point point = new Point();
 			projection.toPixels(gp, point);
 			
+			// Create gradient circle
+			int[] gradientColors = new int[]{Color.BLACK,Color.TRANSPARENT};
+			float[] gradientPositions = new float[]{0.5f,1.0f};
+			RadialGradient gradient = new RadialGradient(point.x, point.y, 40, gradientColors, gradientPositions, TileMode.CLAMP);
+			
 			// Create and setup paint brush
 			Paint paint = new Paint();
 			paint.setARGB(250, 255, 0, 0);
 			paint.setAntiAlias(true);
 			paint.setFakeBoldText(true);
-			
-			// Create circle
-			int rad = 5;
-			RectF oval = new RectF(point.x-rad, point.y-rad,point.x+rad,point.y+rad);
-			
+			paint.setShader(gradient); // Add gradient circle
 			// Draw on the canvas
-			canvas.drawOval(oval, paint);
-			canvas.drawText("Red circle", point.x+rad, point.y+rad, paint);
+			canvas.drawPaint(paint);
 		}
 		else
 		{
