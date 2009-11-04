@@ -16,7 +16,7 @@ import android.util.Log;
  */
 public class DBHelper extends SQLiteOpenHelper {
 	public static final String DB_NAME = "drunkendroid";
-	public static final Integer DB_VERSION = 4;
+	public static final Integer DB_VERSION = 5;
 	public static final String TABLE_TRIP = "Trip";
 	public static final String TABLE_READING = "Reading";
 	public static final String CLASSNAME = "DBHelper";
@@ -80,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onCreate(final SQLiteDatabase db) {
 		try{
 			db.beginTransaction();
-			db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime DATETIME NOT NULL); ");
+			db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime DATETIME NOT NULL, active BOOLEAN NOT NULL); ");
 			db.execSQL("CREATE TABLE " + DBHelper.TABLE_READING + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime DATETIME NOT NULL, longitude LONG NOT NULL, latitude LONG NOT NULL, altitude LONG, mood SMALLINT);");
 			db.execSQL("CREATE INDEX TripReading on " + DBHelper.TABLE_READING + " (trip DESC, id ASC);");
 			db.setTransactionSuccessful();

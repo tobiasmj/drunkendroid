@@ -1,14 +1,11 @@
 package itu.malta.drunkendroid.domain;
 
-import itu.malta.drunkendroid.Constants;
-import itu.malta.drunkendroid.domain.entities.NewTrip;
-import itu.malta.drunkendroid.domain.entities.OldTrip;
-import itu.malta.drunkendroid.domain.entities.Trip;
-import itu.malta.drunkendroid.tech.DBHelper;
 
+import itu.malta.drunkendroid.Constants;
+import itu.malta.drunkendroid.domain.entities.*;
+import itu.malta.drunkendroid.tech.DBHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,67 +16,117 @@ import android.util.Log;
 public class TripRepository {
 	private DBHelper dbHelper = null;
 	private SQLiteDatabase db = null;
+	private Long activeTripId = null;
 	
 	public TripRepository(Context context){
 		dbHelper = DBHelper.getInstance(context);
 		db = dbHelper.getDBInstance();
 	}
 	
-	/**
-	 * Inserts a trip including all of the accompanied readings. <br>
-	 * {@link Trip}
-	 * @param t a trip including the Readings
-	 * @return whether or not the insertion was a success.
-	 * @exception IllegalArgumentException if there are no attached Readings
-	 * @exception SQLException if something with the underlying database is wrong
-	 */
 	
-	public void insert(NewTrip t) throws IllegalArgumentException, SQLException {
+	public void insert(Reading r){
+		if(activeTripId == null){
+			startNewTrip(r.getDate());
+		}
 		
-		if(t.getTripReadings().isEmpty())
-			throw new IllegalArgumentException("There are no readings");
 		try{
-			ContentValues values = new ContentValues();
-			values.put("startDateTime", t.getStartDate().getTimeInMillis());
-			long tripId = db.insertOrThrow(DBHelper.TABLE_TRIP, null, values);
-			if(tripId < 0)
-				throw new SQLException("The new trip didn't get inserted to the trip table");
-			try{
-				db.beginTransaction();
-				for(Trip.Reading r : t.getTripReadings()){
-					//Prepare insert statements for all the readings, refering to the trip.
-					ContentValues readingValues = new ContentValues();
-					readingValues.put("trip", tripId);
-					readingValues.put("dateTime", r.getDate().getTimeInMillis());
-					readingValues.put("longitude", r.getLongitude());
-					readingValues.put("latitude", r.getLatitude());
-					readingValues.put("mood", r.getMood().intValue());
-					
-					long success = db.insertOrThrow(DBHelper.TABLE_READING, null, readingValues);
-					if(success == -1)
-						throw new SQLException("The readings where not inserted");
-				}
-				db.setTransactionSuccessful();
-			}
-			finally{
-				db.endTransaction();
-			}
+			db.beginTransaction();
+			ContentValues readingValues = new ContentValues();
+			readingValues.put("trip", activeTripId);
+			readingValues.put("dateTime", r.getDate().getTimeInMillis());
+			readingValues.put("longitude", r.getLongitude());
+			readingValues.put("latitude", r.getLatitude());
+			readingValues.put("mood", r.getMood().intValue());
+			
+			long success = db.insertOrThrow(DBHelper.TABLE_READING, null, readingValues);
+			if(success == -1)
+				throw new SQLException("The reading where not inserted");
+			db.setTransactionSuccessful();
 		}
-		catch(SQLException e){
-			//TODO implement exception handling
-			Log.e(Constants.LOGTAG, "Tried to insert a Trip", e);
-			throw e;
-		}
+		finally{
+			db.endTransaction();
+		}	
 	}
 	
-	public OldTrip selectTripByStartDate(Calendar startDate){
-		OldTrip loadedTrip = new OldTrip();
+	private void startNewTrip(Calendar calendar) {
+		//Check to search for active trips in the db
+		if(getActiveTripId() == null){
+			ContentValues values = new ContentValues();
+			values.put("startDateTime", calendar.getTimeInMillis());
+			values.put("active", true);
+			// Add a value for the active state to the real sql table.
+			Long tripId = db.insertOrThrow(DBHelper.TABLE_TRIP, null, values);
+			if(tripId < 0)
+				throw new SQLException("The new trip didn't get inserted to the trip table");
+			
+			activeTripId = tripId;	
+		}
+		else{
+			activeTripId = getActiveTripId();
+		}
+	}
+
+	/**
+	 * 
+	 * @return the Id of the active Trip in the database
+	 */
+	private Long getActiveTripId(){
+		try{
+			final String[] returnColumns = {"tripId"};
+			final String whereClause = "active = ?";
+			final String[] whereArgs = {"true"};
+			db.beginTransaction();
+			Cursor result = db.query(DBHelper.TABLE_TRIP, returnColumns, whereClause, whereArgs, null, null, null);
+			db.setTransactionSuccessful();
+			
+			switch (result.getCount()) {
+			case 0:
+				return null;
+			case 1:
+				result.moveToFirst();
+				return result.getLong(0);
+			default:
+				throw new Exception("The database contains more than 1 active Trip");
+			}	
+		}
+		catch(SQLException e){
+			return null;	
+		}
+		catch(Exception e){
+			//This is not good.
+			//There is more than one active Trip in the database. how do we handle this in a clever way?
+			//We close all trips recursively until there is only one active trip.
+			Log.e(Constants.LOGTAG, "There is more than one active trip in the db, trying to solve the problem");
+			
+			final String[] returnColumns = {"tripId"};
+			final String whereClause = "active = ?";
+			final String[] whereArgs = {"true"};
+			
+			db.beginTransaction();
+			Cursor result = db.query(DBHelper.TABLE_TRIP, returnColumns, whereClause, whereArgs, null, null, null);
+			db.setTransactionSuccessful();
+			
+			result.moveToFirst();
+			//Begin closing trips.
+			this.activeTripId = result.getLong(0);
+			this.endTrip();
+			//Call this method recursively, we now hope there is only one active trip left in the db.
+			return this.getActiveTripId();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+
+
+	public Trip getTripByStartTime(Calendar startDate){
+		Trip loadedTrip = new Trip();
 		//TODO: Complete
 		String[] selectedColumns = {"id"};
 		String[] whereDateTimeEQ = {String.valueOf(startDate.getTimeInMillis())};
 		Cursor selectionCursor = db.query(DBHelper.TABLE_TRIP, selectedColumns, "startDateTime = ?", whereDateTimeEQ, null, null, null);
 		//Find the TripId
-		selectionCursor.moveToNext();
+		selectionCursor.moveToFirst();
 		long tripId = selectionCursor.getLong(0);
 		if(tripId < 0)
 			throw new IllegalArgumentException("The trip could not be located");
@@ -92,7 +139,7 @@ public class TripRepository {
 		Cursor selectionOfReadings = db.query(DBHelper.TABLE_READING, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
-			OldTrip.OldReading r = loadedTrip.newReading();
+			Reading r = new Reading();
 			//Set dateTime
 			Calendar c = Calendar.getInstance();
 			c.setTimeInMillis(selectionOfReadings.getLong(0));
@@ -110,7 +157,7 @@ public class TripRepository {
 		return loadedTrip;
 	}
 	
-	public ArrayList<Trip> selectAllTrips() {
+	public ArrayList<Trip> getAllTrips() {
 		ArrayList<Trip> trips = new ArrayList<Trip>();
 		String[] selectedTripColumns = {"startDateTime"};
 		Cursor returnedTrips = null;
@@ -128,7 +175,7 @@ public class TripRepository {
 		try{
 			while(returnedTrips.moveToNext()){
 				long startDateTime = returnedTrips.getLong(0);
-				OldTrip trip = new OldTrip();
+				Trip trip = new Trip();
 				trip.setDateInMilliSec(startDateTime);
 				trips.add(trip);
 			}
@@ -140,6 +187,26 @@ public class TripRepository {
 		return trips;
 	}
 
+	public void endTrip(){
+		final String activeColumn = "active";
+		final String whereClause = activeColumn + "= ?";
+		final String[] whereArgs = {String.valueOf(activeTripId)};
+			
+		//End the ongoing trip, by setting the trip in the db as stored.
+		// and set the activeTripId to null.
+		db.beginTransaction();
+		try{
+			
+			ContentValues values = new ContentValues();
+			values.put(activeColumn, false);
+			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
+			db.setTransactionSuccessful();
+			this.activeTripId = null;
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
 	public void cleanup() {
 		dbHelper.cleanup();
 	}
