@@ -16,7 +16,14 @@ public class DrunkendroidserverApplication extends Application {
   
         // Defines only one route  
         //router.attach("/drunkendroid", DrunkendroidResource.class);
+        // upload a trip
         router.attach("/drunkendroid/trip/{IMEI}", TripResource.class);
+        
+        // add a event to a trip
+        router.attach("/drunkendroid/trip/event/{IMEI}/{TripId}", EventResource.class);
+        
+        // get moodmap from server
+        router.attach("/drunkendroid/moodmap/{StartTimeStamp}/{EndTimeStamp}/{Latitude}/{Longitude}/{Height}/{Width}", MoodMapResource.class);
         return router;  
     }  
   
