@@ -159,8 +159,10 @@ public class DrunkenService extends Service {
     		public void onLocationChanged(Location location)
     		{
     			// Update application based on new location.
-    			Intent i = new Intent("LOCATION_CHANGE");
-    			startActivity(i);
+    			TripRepository tr = new TripRepository(DrunkenService.getInstance());
+    			tr.insert(location);
+    			tr.close();
+    			
     		}
     		public void onProviderDisabled(String provider)
     		{

@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.util.Log;
 
 public class TripRepository {
@@ -23,6 +24,15 @@ public class TripRepository {
 		db = dbHelper.getDBInstance();
 	}
 	
+	public void insert(Location location)
+	{
+		Reading reading = new Reading();
+		reading.setLatitude(location.getLatitude());
+		reading.setLongitude(location.getLongitude());
+		reading.setMood((short)0);
+		
+		insert(reading);
+	}	
 	
 	public void insert(Reading r){
 		if(activeTripId == null){
@@ -208,7 +218,7 @@ public class TripRepository {
 			db.endTransaction();
 		}
 	}
-	public void cleanup() {
+	public void close() {
 		dbHelper.cleanup();
 	}
 
