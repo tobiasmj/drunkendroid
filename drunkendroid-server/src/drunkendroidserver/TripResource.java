@@ -98,26 +98,26 @@ public class TripResource extends ServerResource {
 		            eltTripId.appendChild(d.createTextNode(Long.toString(returnId)));
 		            d.appendChild(eltTripId);
 		            
-		        } catch (IOException e) {  			
+		        } catch (IOException e) {
 		        	setStatus(Status.SERVER_ERROR_INTERNAL);
-		        	result = XmlResponse.generateErrorRepresentation("Error creating XML response", "6");				
+		        	result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");				
 		        }  
 			
 			} catch (DOMException e) {
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				result = XmlResponse.generateErrorRepresentation("Malformed XML", "2");
+				result = XmlResponse.generateErrorRepresentation("Malformed XML.", "2");
 			} catch (NumberFormatException e) {
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				result = XmlResponse.generateErrorRepresentation("Malformed Data in XML", "3");
+				result = XmlResponse.generateErrorRepresentation("Malformed Data in XML.", "3");
 			} catch (SQLException e) {
 				setStatus(Status.SERVER_ERROR_INTERNAL);
-				result = XmlResponse.generateErrorRepresentation("Error inserting data in database", "4");				
+				result = XmlResponse.generateErrorRepresentation("Error inserting data in database.", "4");				
 			}
 			
 		} else {
 		// not text/XML format
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			result = XmlResponse.generateErrorRepresentation("Payload not text/XML", "1");
+			result = XmlResponse.generateErrorRepresentation("Payload not text/XML.", "1");
 
 		}
 		return result;
@@ -151,19 +151,19 @@ public class TripResource extends ServerResource {
 				
 			} catch (DOMException e) {
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				result = XmlResponse.generateErrorRepresentation("Malformed XML", "2");
+				result = XmlResponse.generateErrorRepresentation("Malformed XML.", "2");
 			} catch (NumberFormatException e) {
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				result = XmlResponse.generateErrorRepresentation("Malformed Data in XML", "3");
+				result = XmlResponse.generateErrorRepresentation("Malformed Data in XML.", "3");
 			} catch (SQLException e) {
 				setStatus(Status.SERVER_ERROR_INTERNAL);
-				result = XmlResponse.generateErrorRepresentation("Error inserting data in database", "4");				
+				result = XmlResponse.generateErrorRepresentation("Error inserting data in database.", "4");				
 			}
 			
 		} else {
 		// not text/XML format
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			result = XmlResponse.generateErrorRepresentation("Payload not text/XML", "1");
+			result = XmlResponse.generateErrorRepresentation("Payload not text/XML.", "1");
 
 		}
 		
@@ -175,15 +175,20 @@ public class TripResource extends ServerResource {
 	@Get  
     public Representation represent() {  
     	imeiNumber = (String) getRequest().getAttributes().get("IMEI");
-    	Representation result = null;
-		setStatus(Status.SUCCESS_OK);
-		result = XmlResponse.generateSuccessRepresentation("Yey Victory! IMEINumber = " + imeiNumber );
-    	//return "yey"; //result;
+    	tripId = Integer.getInteger(getRequest().getAttributes().get("TripId").toString());
+
+    	DomRepresentation result = null;
     	try {
-    		System.out.println(result.getText());
-    	} catch (Exception e) {
-    		
+    		result = new getTrip(tripId).execute(); 
+    	} catch (SQLException se) {
+        	setStatus(Status.SERVER_ERROR_INTERNAL);
+        	result = XmlResponse.generateErrorRepresentation("Error getting data from database.", "5");
+    	} catch (IOException ioe) {
+        	setStatus(Status.SERVER_ERROR_INTERNAL);
+        	result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");
     	}
+    	
+    	setStatus(Status.SUCCESS_OK);
     	return result;
     }  
 }
