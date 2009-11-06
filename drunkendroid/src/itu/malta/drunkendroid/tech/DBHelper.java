@@ -1,11 +1,12 @@
 package itu.malta.drunkendroid.tech;
 
-import itu.malta.drunkendroid.Constants;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import itu.malta.drunkendroid.R;
 
 /**
  * This class is heavily inspired by the helper class DBHelper described in 
@@ -68,7 +69,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			db.setTransactionSuccessful();
 		}
 		catch(SQLException e){
-			Log.e(Constants.LOGTAG, "Tried to flush the database");
+			Log.e(Resources.getSystem().getString(R.string.log_tag), "Tried to flush the database");
 		}
 		finally{
 			db.endTransaction();
@@ -86,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			db.setTransactionSuccessful();
 		}
 		catch (SQLException e) {
-			Log.e(Constants.LOGTAG , DBHelper.CLASSNAME, e);
+			Log.e(Resources.getSystem().getString(R.string.log_tag), DBHelper.CLASSNAME, e);
 			//We should also notify the user that the program cannot save data.
 		}
 		finally{

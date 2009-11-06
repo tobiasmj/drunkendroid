@@ -13,6 +13,7 @@
     <string name="save_settings_button">Save changes</string>
     <string name="discard_settings_button">Discard changes</string>
     <string name="restore_settings_button">Restore defaults</string>
+    <string name="log_tag">DrunkenDroid</string>
     
     <string-array name="mood_read_intervals">
     	<item>15</item>

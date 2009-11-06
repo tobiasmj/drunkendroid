@@ -1,7 +1,7 @@
-package itu.malta.drunkendroid.services;
+package itu.malta.drunkendroid.control.services;
 
 import itu.malta.drunkendroid.R;
-import itu.malta.drunkendroid.domain.TripRepository;
+import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.entities.Reading;
 import itu.malta.drunkendroid.handlers.SMSHandler;
 import android.app.Service;
@@ -13,6 +13,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,11 +32,13 @@ public class DrunkenService extends Service {
 	private SMSObserver smsObserver = new SMSObserver(new Handler());
 	private MoodReadingReceiver moodReadingReceiver;
 	private int readingInterval;
-	private LocationManager locManager;
+	private LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+	private LocationListener locationListener;
+	private int t = 5000;
+	private int distance = 10;
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 
 		System.out.println("Service Started");
@@ -41,8 +46,7 @@ public class DrunkenService extends Service {
 		DrunkenService.drunkenService = this;
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
-		
-		
+		startLocationListener();
 	}
 
 	public static DrunkenService getInstance() {
@@ -137,6 +141,46 @@ public class DrunkenService extends Service {
 		System.out.println("Interval sat til " + readingInterval);
 	}
 
+	private void startLocationListener()
+	{
+		// Create criteria
+		Criteria criteria = new Criteria();
+    	criteria.setAccuracy(Criteria.ACCURACY_FINE);
+    	criteria.setAltitudeRequired(false);
+    	criteria.setBearingRequired(false);
+    	criteria.setCostAllowed(true);
+    	criteria.setPowerRequirement(Criteria.POWER_LOW);
+		
+		String provider = locationManager.getBestProvider(criteria, true);
+    	System.out.println("provider is " + provider.toString());
+    	
+    	locationListener = new LocationListener()
+    	{
+    		public void onLocationChanged(Location location)
+    		{
+    			// Update application based on new location.
+    			Intent i = new Intent("LOCATION_CHANGE");
+    			startActivity(i);
+    		}
+    		public void onProviderDisabled(String provider)
+    		{
+    			// TODO Update application if provider is disabled.
+    			
+    		}
+    		public void onProviderEnabled(String provider)
+    		{
+    			// TODO Update application if provider is enabled.
+    		}
+    		public void onStatusChanged(String provider, int status, Bundle extras)
+    		{
+    			// TODO Update application if provider hardware status changed.
+    		}
+    	};
+    	
+    	// Request location updates
+    	locationManager.requestLocationUpdates(provider, t, distance, locationListener);
+	}
+	
 	private class SMSReceiver extends BroadcastReceiver {
 
 		@Override

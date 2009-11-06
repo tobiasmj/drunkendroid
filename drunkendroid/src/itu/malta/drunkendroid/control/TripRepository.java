@@ -1,13 +1,13 @@
-package itu.malta.drunkendroid.domain;
+package itu.malta.drunkendroid.control;
 
-
-import itu.malta.drunkendroid.Constants;
+import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.domain.entities.*;
 import itu.malta.drunkendroid.tech.DBHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -97,7 +97,7 @@ public class TripRepository {
 			//This is not good.
 			//There is more than one active Trip in the database. how do we handle this in a clever way?
 			//We close all trips recursively until there is only one active trip.
-			Log.e(Constants.LOGTAG, "There is more than one active trip in the db, trying to solve the problem");
+			Log.e(Resources.getSystem().getString(R.string.log_tag), "There is more than one active trip in the db, trying to solve the problem");
 			
 			final String[] returnColumns = {"tripId"};
 			final String whereClause = "active = ?";
