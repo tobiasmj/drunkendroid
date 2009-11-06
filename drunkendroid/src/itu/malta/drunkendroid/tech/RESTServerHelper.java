@@ -2,8 +2,8 @@ package itu.malta.drunkendroid.tech;
 
 import java.io.IOException;
 
-import itu.malta.drunkendroid.domain.entities.Reading;
-import itu.malta.drunkendroid.domain.entities.Trip;
+import itu.malta.drunkendroid.domain.Reading;
+import itu.malta.drunkendroid.domain.Trip;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -13,12 +13,10 @@ import org.restlet.Response;
 import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.resource.ClientResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 
 /**
  * This class handles connections to the server, with the REST protocol.
