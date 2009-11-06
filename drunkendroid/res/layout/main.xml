@@ -4,6 +4,27 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+<FrameLayout android:id="@+id/MoodReadingLayout"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+	
+	<SeekBar android:id="@+id/SeekBar01"
+	android:max="255"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+	</SeekBar>
+	
+	</FrameLayout>
+	
+<Button android:id="@+id/startServiceBtn"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="start service" />
+<Button android:id="@+id/stopServiceBtn"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="stop service" />
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" android:text="This is out new app!!!"/>

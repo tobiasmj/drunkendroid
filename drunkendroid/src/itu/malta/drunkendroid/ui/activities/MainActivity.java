@@ -1,15 +1,16 @@
 package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
-import itu.malta.drunkendroid.services.DrunkenService;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 
 public class MainActivity extends Activity {
 	
@@ -22,6 +23,52 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        SeekBar seekBar = (SeekBar) findViewById(R.id.SeekBar01);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				Intent i = new Intent("NEW_MOOD_READING");
+				i.addCategory("itu.malta.drunkendroid");
+				i.putExtra("mood", (short)seekBar.getProgress());
+				
+				sendBroadcast(i);
+			}
+
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {}
+
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+		});
+        
+        final Button startServiceBtn = (Button)findViewById(R.id.startServiceBtn);
+        
+        startServiceBtn.setOnClickListener(new Button.OnClickListener() {
+    		public void onClick(View v) {
+    			try {
+    				Intent i = new Intent("TOGGLE_DRUNKEN_SERVICE");
+    				i.addCategory("itu.malta.drunkendroid.services");
+    				startService(i);
+    			}
+    			catch (Exception e) {
+    				System.out.println(e.getMessage());
+    			}
+    		}
+    	});
+        
+        final Button stopServiceBtn = (Button)findViewById(R.id.stopServiceBtn);
+        stopServiceBtn.setOnClickListener(new Button.OnClickListener() {
+    		public void onClick(View v) {
+    			try {
+    				Intent i = new Intent("TOGGLE_DRUNKEN_SERVICE");
+    				i.addCategory("itu.malta.drunkendroid.services");
+    				stopService(i);
+    			}
+    			catch (Exception e) {
+    				System.out.println(e.getMessage());
+    			}
+    		}
+    	});
         
         final Button mvBtn = (Button)findViewById(R.id.mapViewButton);
         

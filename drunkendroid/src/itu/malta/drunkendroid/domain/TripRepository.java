@@ -50,7 +50,8 @@ public class TripRepository {
 	
 	private void startNewTrip(Calendar calendar) {
 		//Check to search for active trips in the db
-		if(getActiveTripId() == null){
+		Long tmpActiveTripId = getActiveTripId();
+		if(tmpActiveTripId == null){
 			ContentValues values = new ContentValues();
 			values.put("startDateTime", calendar.getTimeInMillis());
 			values.put("active", true);
@@ -62,7 +63,7 @@ public class TripRepository {
 			activeTripId = tripId;	
 		}
 		else{
-			activeTripId = getActiveTripId();
+			activeTripId = tmpActiveTripId;
 		}
 	}
 

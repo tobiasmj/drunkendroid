@@ -29,11 +29,12 @@
         </activity>
         <service android:name=".services.DrunkenService">   
         	<intent-filter>
-        		<action android:name="START_DRUNKEN_SERVICE"></action>
+        		<action android:name="TOGGLE_DRUNKEN_SERVICE"></action>
         		<category android:name="itu.malta.drunkendroid.services"></category>
         	</intent-filter>
         </service>
     </application>
+    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SMS_RECEIVED" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
