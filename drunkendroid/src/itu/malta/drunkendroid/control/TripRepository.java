@@ -1,7 +1,7 @@
 package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.R;
-import itu.malta.drunkendroid.domain.entities.*;
+import itu.malta.drunkendroid.domain.*;
 import itu.malta.drunkendroid.tech.DBHelper;
 import java.util.ArrayList;
 import java.util.Calendar;

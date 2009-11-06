@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.domain.entities;
+package itu.malta.drunkendroid.domain;
 
 import java.util.Calendar;
 

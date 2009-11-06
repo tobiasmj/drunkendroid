@@ -2,7 +2,7 @@ package itu.malta.drunkendroid.control.services;
 
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
-import itu.malta.drunkendroid.domain.entities.Reading;
+import itu.malta.drunkendroid.domain.Reading;
 import itu.malta.drunkendroid.handlers.SMSHandler;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -32,9 +32,10 @@ public class DrunkenService extends Service {
 	private SMSObserver smsObserver = new SMSObserver(new Handler());
 	private MoodReadingReceiver moodReadingReceiver;
 	private int readingInterval;
-	private LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+	private LocationManager locationManager;
 	private LocationListener locationListener;
-	private int t = 5000;
+	private Location lastKnownLocation;
+	private int t = 60000;
 	private int distance = 10;
 
 	@Override
@@ -143,6 +144,9 @@ public class DrunkenService extends Service {
 
 	private void startLocationListener()
 	{
+		// Instantiate location manager
+		locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+		
 		// Create criteria
 		Criteria criteria = new Criteria();
     	criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -159,10 +163,11 @@ public class DrunkenService extends Service {
     		public void onLocationChanged(Location location)
     		{
     			// Update application based on new location.
+    			lastKnownLocation = location;    			
+    			
     			TripRepository tr = new TripRepository(DrunkenService.getInstance());
     			tr.insert(location);
     			tr.close();
-    			
     		}
     		public void onProviderDisabled(String provider)
     		{
@@ -212,8 +217,9 @@ public class DrunkenService extends Service {
 
 						Reading reading = new Reading();
 						reading.setMood(bundle.getShort("mood"));
-						// reading.setLatitude(locManager.getLastKnownLocation(provider))
-						//repo.insert(reading);
+						reading.setLatitude(lastKnownLocation.getLatitude());
+						reading.setLongitude(lastKnownLocation.getLongitude());
+						repo.insert(reading);
 						System.out.println(reading.getMood());
 					}
 				};
