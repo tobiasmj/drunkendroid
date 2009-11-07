@@ -1,22 +1,28 @@
 package itu.malta.drunkendroid.tech;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.net.ContentHandlerFactory;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import itu.malta.drunkendroid.domain.Reading;
 import itu.malta.drunkendroid.domain.Trip;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.util.Xml;
 
-import org.restlet.Client;
-import org.restlet.Response;
-import org.restlet.data.MediaType;
-import org.restlet.data.Protocol;
-import org.restlet.ext.xml.DomRepresentation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ContentHandler;
+import org.xmlpull.v1.XmlSerializer;
+
+import com.sun.xml.internal.ws.util.xml.ContentHandlerToXMLStreamWriter;
 
 /**
  * This class handles connections to the server, with the REST protocol.
@@ -29,8 +35,10 @@ public class RESTServerHelper {
 	private static final String TRIP = "trip";
 	private static final String TRIPID = "tripId";
 	private static final String STARTDATETIME = "startDateTime";
+	private static final String ENDDATETIME = "endDateTime";
 	private static final String EVENTS = "events";
 	private static final String EVENT = "event";
+	private static final String EVENTTYPE = "eventType";
 	private static final String DATETIME = "dateTime";
 	private static final String LONGITUDE = "longitude";
 	private static final String LATITUDE = "latitude";
@@ -45,7 +53,65 @@ public class RESTServerHelper {
 		IMEI = "4213371337";
 	}
 	
-	public Long uploadTrip(Trip t) throws IllegalArgumentException, IOException {
+	public Long uploadTrip(Trip t) throws ParserConfigurationException
+	{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = factory.newDocumentBuilder();
+		
+		XmlSerializer serializer = Xml.newSerializer();
+	    StringWriter writer = new StringWriter();
+	    try {
+	        serializer.setOutput(writer);
+	        serializer.startDocument("UTF-8", true);
+	        serializer.startTag("", TRIP);
+	        serializer.startTag("", EVENTS);
+	        for(Reading r : t.getTripReadings()){
+	            serializer.startTag("", EVENT);
+	            serializer.startTag("", EVENTTYPE);
+	            serializer.text("reading");
+	            serializer.endTag("", EVENTTYPE);
+	            serializer.startTag("", DATETIME);
+	            serializer.text(String.valueOf(r.getDate().getTimeInMillis()));
+	            serializer.endTag("", DATETIME);
+	            serializer.startTag("", LONGITUDE);
+	            serializer.text(String.valueOf(r.getLongitude()));
+	            serializer.endTag("", LONGITUDE);
+	            serializer.startTag("", LATITUDE);
+	            serializer.text(String.valueOf(r.getLatitude()));
+	            serializer.endTag("", LATITUDE);
+	            serializer.startTag("", DATA);
+	            serializer.startTag("", MOOD);
+	            serializer.text(String.valueOf(r.getMood()));
+	            serializer.endTag("", MOOD);
+	            serializer.endTag("", DATA);
+	            serializer.endTag("", EVENT);
+	        }
+	        serializer.endTag("", EVENTS);
+	        serializer.startTag("", STARTDATETIME);
+	        serializer.text(String.valueOf(t.getStartDate().getTimeInMillis()));
+	        serializer.endTag("", STARTDATETIME);
+	        serializer.startTag("", ENDDATETIME);
+	        serializer.text(String.valueOf(t.getStartDate().getTimeInMillis())); // Not correct
+	        serializer.endTag("", ENDDATETIME);
+	        serializer.startTag("", TRIP_NAME);
+	        serializer.text("Gin Saturdays");
+	        serializer.endTag("", TRIP_NAME);
+	        serializer.endTag("", TRIP);
+	        serializer.endDocument();
+	        
+	        System.out.println(writer);		
+			
+	        
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } 
+
+		
+		return new Long(1);
+	}
+	
+	/*
+	public Long uploadTripT(Trip t) throws IllegalArgumentException, IOException {
 		Long remoteTripId = null;
 		//Create the payload
 		try{
@@ -135,4 +201,5 @@ public class RESTServerHelper {
 		//Handle the response
 		return remoteTripId;
 	}
+	*/
 }
