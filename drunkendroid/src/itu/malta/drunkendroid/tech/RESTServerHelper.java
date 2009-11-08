@@ -14,11 +14,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Xml;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,8 +27,6 @@ import org.xmlpull.v1.XmlSerializer;
  * This class is inspired by the book: Beginning Android and http://www.smnirven.com/?p=15
  */
 public class RESTServerHelper {
-	private static final String BASE_URI = "http://192.168.0.13:8182/drunkendroid/";
-	private static final String targetDomain = "192.168.0.13";
 	private static final String TRIP_NAME = "name";
 	private static final String TRIP = "trip";
 	private static final String TRIPID = "tripId";
@@ -46,12 +40,14 @@ public class RESTServerHelper {
 	private static final String DATA = "data";
 	private static final String MOOD = "mood";
 	private static final String LOGTAG = "RESTServerHelper";
+	private static final String MESSAGE = "message";
 	private String IMEI = "";
+	IWebserviceConnection conn = null;
 	
-	
-	public RESTServerHelper(Context context){
+	public RESTServerHelper(Context context, IWebserviceConnection conn){
 		TelephonyManager mgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		IMEI = mgr.getDeviceId();
+		this.conn = conn;
 	}
 	
 	public Long uploadTrip(Trip t)
@@ -60,7 +56,7 @@ public class RESTServerHelper {
 	        //Build xml
 	    	String xml = buildXmlFromTrip(t);
 	        //Now try to send it
-	        HttpResponse response = postContent(BASE_URI + TRIP + "/"+IMEI, xml);
+	        HttpResponse response = conn.postTrip(TRIP + "/"+IMEI, xml);
 	        Long resultId = consumeTripUploadResponse(response);
 	        return resultId;
 	    }
@@ -75,7 +71,6 @@ public class RESTServerHelper {
 	    	return null;
 	    }
 	}
-	
 	
 	private String buildXmlFromTrip(Trip t) throws IOException{
 		XmlSerializer serializer = Xml.newSerializer();
@@ -142,7 +137,19 @@ public class RESTServerHelper {
         		}
         	}
 	        else{
-	        	throw new IllegalStateException(String.valueOf(response.getStatusLine().getStatusCode()));
+	        	int status = response.getStatusLine().getStatusCode();
+	        	//Handle these situations.
+	        	NodeList nodes = xmlDoc.getElementsByTagName(MESSAGE);
+        		Node messageContent = nodes.item(0).getFirstChild();
+        		if(messageContent.getNodeType() == Node.TEXT_NODE){
+        			Log.e(LOGTAG, messageContent.getNodeValue());
+        		}
+	        	//We are gonna forget about all of the data once we have logged the errorcode.
+	        	//so set everything to null.
+	        	nodes = null; messageContent = null; 
+	        	response = null; docFact = null; docBuilder = null; xmlDoc = null;
+	        	
+	        	throw new IllegalStateException(String.valueOf(status));
 	        }
     	}
     	catch(SAXException e){
@@ -158,31 +165,5 @@ public class RESTServerHelper {
     		Log.e(LOGTAG, e.getMessage());
     		return null;
     	}
-	}
-
-	private HttpResponse postContent(String URI, String xmlContent){
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-        
-        HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
-        // Using POST here
-        HttpPost httpPost = new HttpPost(URI);
-        // Make sure the server knows what kind of a response we will accept
-        httpPost.addHeader("Accept", "text/xml");
-        // Also be sure to tell the server what kind of content we are sending
-        httpPost.addHeader("Content-Type", "text/xml");
-                
-        try 
-        {
-            StringEntity entity = new StringEntity(xmlContent, "UTF-8");
-            entity.setContentType("text/xml");
-            httpPost.setEntity(entity);
-            
-            return httpClient.execute(targetHost, httpPost);
-         }
-        catch (Exception ex)
-        {
-                ex.printStackTrace();
-                return null;
-        }
 	}
 }
