@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import itu.malta.drunkendroid.control.TripRepository;
-import itu.malta.drunkendroid.domain.entities.*;
+import itu.malta.drunkendroid.domain.*;
 import android.test.AndroidTestCase;
 
 public class DBHelperTest extends AndroidTestCase {
