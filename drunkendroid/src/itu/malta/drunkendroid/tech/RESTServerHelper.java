@@ -49,7 +49,11 @@ public class RESTServerHelper {
 		IMEI = mgr.getDeviceId();
 		this.conn = conn;
 	}
-	
+	/**
+	 * Blocking call
+	 * @param t
+	 * @return
+	 */
 	public Long uploadTrip(Trip t)
 	{
 		try {
@@ -58,15 +62,35 @@ public class RESTServerHelper {
 	        //Now try to send it
 	        HttpResponse response = conn.postTrip(TRIP + "/"+IMEI, xml);
 	        Long resultId = consumeTripUploadResponse(response);
-	        return resultId;
+	        if(response.getStatusLine().getStatusCode() >= 400 && response.getStatusLine().getStatusCode() < 500){
+        		//We have sent some content which could not be read properly.
+	        	//This has been logged in the consume method.
+	        	return resultId;
+        	}
+        	if(response.getStatusLine().getStatusCode() <= 500){
+        		//The server has experienced and error. Try over, for a maximum of 3 times.
+        		int tries = 0;
+        		while(tries < 3 && resultId == null){
+        			//give the server some time to recover.
+        			try {
+						this.wait(1000);
+						//wait for a second before trying over.
+					} catch(InterruptedException e){
+						//Just go on.
+					}
+        			finally{
+						resultId = uploadTrip(t);
+	        			tries += 1;
+        			} 
+        		}
+        		return resultId;
+        	}
+        	else{
+        		return resultId;
+        	}
 	    }
-		catch (IllegalStateException e){
-			//We have recieved an error from the server.
-			//Handle it
-			
-			return null;
-		}
 	    catch(IOException e){
+	    	//Something was wrong when we tried to build up xml.
 	    	Log.e(LOGTAG, e.getMessage());
 	    	return null;
 	    }
@@ -144,12 +168,8 @@ public class RESTServerHelper {
         		if(messageContent.getNodeType() == Node.TEXT_NODE){
         			Log.e(LOGTAG, messageContent.getNodeValue());
         		}
-	        	//We are gonna forget about all of the data once we have logged the errorcode.
-	        	//so set everything to null.
-	        	nodes = null; messageContent = null; 
-	        	response = null; docFact = null; docBuilder = null; xmlDoc = null;
-	        	
-	        	throw new IllegalStateException(String.valueOf(status));
+        		
+	        	return null;
 	        }
     	}
     	catch(SAXException e){
