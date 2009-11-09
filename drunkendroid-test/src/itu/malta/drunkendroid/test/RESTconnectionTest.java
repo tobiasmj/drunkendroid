@@ -117,7 +117,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		expect(response1.getStatusLine()).andStubReturn(status1);
 		expect(response1.getEntity()).andStubReturn(entity1);
 		replay(response1);
-		//Secound try with the server
+		//Second try with the server
 		HttpResponse response2 = createMock(HttpResponse.class);
 		HttpEntity entity2 = createMock(HttpEntity.class);
 		StatusLine status2 = createMock(StatusLine.class);
