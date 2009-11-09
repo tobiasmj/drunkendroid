@@ -3,6 +3,7 @@
 	<name>drunkendroid-server</name>
 	<comment></comment>
 	<projects>
+		<project>drunkendroid</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
