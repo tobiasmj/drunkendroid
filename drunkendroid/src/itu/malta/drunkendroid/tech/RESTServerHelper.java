@@ -51,8 +51,8 @@ public class RESTServerHelper {
 	}
 	/**
 	 * Blocking call
-	 * @param t
-	 * @return
+	 * @param t the trip to be uploaded to the server, with containing events.
+	 * @return Can be null, if there was a problem which could not be solved.
 	 */
 	public Long uploadTrip(Trip t)
 	{
@@ -73,7 +73,7 @@ public class RESTServerHelper {
         		while(tries < 3 && resultId == null){
         			//give the server some time to recover.
         			try {
-						this.wait(1000);
+        				Thread.currentThread().sleep(1000);
 						//wait for a second before trying over.
 					} catch(InterruptedException e){
 						//Just go on.
