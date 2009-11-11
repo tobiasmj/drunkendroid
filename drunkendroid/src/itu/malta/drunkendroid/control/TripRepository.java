@@ -24,6 +24,10 @@ public class TripRepository {
 		db = dbHelper.getDBInstance();
 	}
 	
+	public void insertEvent(Event event) {
+		
+	}
+	
 	public void insert(Location location)
 	{
 		Reading reading = new Reading();
