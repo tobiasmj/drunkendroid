@@ -48,6 +48,11 @@ public class DrunkenService extends Service implements
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
 		manager = new GPSLocationAdapter(this);
+		
+		Intent i = new Intent("CONFIRM_LOCATION");
+		i.addCategory("itu.malta.drunkendroid");
+		i.putExtra("location", manager.GetLastKnownLocation());
+		startActivity(i);
 	}
 
 	public static DrunkenService getInstance() {
