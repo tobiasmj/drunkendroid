@@ -1,8 +1,10 @@
 package itu.malta.drunkendroid.domain;
 
+import android.location.Location;
+
 public class OutgoingSMSEvent extends SMSEvent {
 	
-	public OutgoingSMSEvent(Long datetime, Double latitude, Double longitude, String phonebookName, String phonenumber, String textMessage) {
-		super(datetime,latitude,longitude,phonebookName,phonenumber,textMessage);
+	public OutgoingSMSEvent(Location location, String phonebookName, String phonenumber, String textMessage) {
+		super(location,phonebookName,phonenumber,textMessage);
 	}
 }

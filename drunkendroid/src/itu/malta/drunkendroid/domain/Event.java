@@ -1,37 +1,26 @@
 package itu.malta.drunkendroid.domain;
 
-public class Event {
-	private Long datetime;
-	private Double latitude;
-	private Double longitude;
+import java.util.Calendar;
 
-	public Event(Long datetime, Double latitude, Double longitude) {
-		setDate(datetime);
-		setLatitude(latitude);
-		setLongitude(longitude);
+import android.location.Location;
+
+public class Event {
+	private Location location;
+
+	public Event(Location location) {
+		setLocation(location);
+		setDate(Calendar.getInstance().getTimeInMillis());
 	}
 	
-	public Long getDate() {
-		return datetime;
+	public Location getLocation() {
+		return location;
 	}
 
-	public void setDate(Long datetime) {
-		this.datetime = datetime;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
+	private void setDate(Long datetime) {
+		this.location.setTime(datetime);
 	}
 }

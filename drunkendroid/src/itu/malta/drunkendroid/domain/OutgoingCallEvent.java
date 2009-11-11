@@ -1,8 +1,10 @@
 package itu.malta.drunkendroid.domain;
 
+import android.location.Location;
+
 public class OutgoingCallEvent extends CallEvent {
 	
-	public OutgoingCallEvent(Long datetime, Double latitude, Double longitude, String phonebookName, String phonenumber, Long duration) {
-		super(datetime,latitude,longitude,phonebookName,phonenumber,duration);
+	public OutgoingCallEvent(Location location, String phonebookName, String phonenumber, Long duration) {
+		super(location,phonebookName,phonenumber,duration);
 	}
 }
