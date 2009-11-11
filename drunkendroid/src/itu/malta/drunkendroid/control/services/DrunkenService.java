@@ -2,7 +2,9 @@ package itu.malta.drunkendroid.control.services;
 
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
+import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.Reading;
+import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.handlers.SMSHandler;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -170,17 +172,11 @@ public class DrunkenService extends Service implements
 				Thread t = new Thread() {
 					@Override
 					public void run() {
-						TripRepository repo = new TripRepository(DrunkenService
-								.getInstance());
-
-						Reading reading = new Reading();
-						reading.setMood(bundle.getShort("mood"));
-						reading.setLatitude(manager.GetLastKnownLocation()
-								.getLatitude());
-						reading.setLongitude(manager.GetLastKnownLocation()
-								.getLongitude());
-						repo.insert(reading);
-						System.out.println(reading.getMood());
+						ReadingEvent readingEvent = new ReadingEvent(manager.GetLastKnownLocation(),bundle.getShort("mood"));
+						TripRepository repo = new TripRepository(DrunkenService.getInstance());
+						repo.insertEvent(readingEvent);
+						repo.close();
+						System.out.println(bundle.get("mood"));
 					}
 				};
 
@@ -228,6 +224,10 @@ public class DrunkenService extends Service implements
 	public void OnLocationChange(Location location) {
 		// The location of the device has changed. Save event to trip and check
 		// for possible events with unset locations.
+		LocationEvent locationEvent = new LocationEvent(location);
+		TripRepository repo = new TripRepository(DrunkenService.getInstance());
+		repo.insertEvent(locationEvent);
+		repo.close();
 	}
 
 }
