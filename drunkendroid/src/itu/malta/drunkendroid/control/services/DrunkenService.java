@@ -13,30 +13,28 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
-public class DrunkenService extends Service {
+public class DrunkenService extends Service implements
+		ILocationAdapterListener {
 
 	private static DrunkenService drunkenService = null;
 	private Handler moodReadHandler = new Handler();
 	private SMSHandler smsHandler = new SMSHandler();
 	private SMSReceiver SMSReceiver;
 	private SMSObserver smsObserver = new SMSObserver(new Handler());
+	private PhoneStateListener callHandler = new CallListener();
+	private TelephonyManager phoneManager;
 	private MoodReadingReceiver moodReadingReceiver;
 	private int readingInterval;
-	private LocationManager locationManager;
-	private LocationListener locationListener;
-	private Location lastKnownLocation;
-	private int t = 60000;
-	private int distance = 10;
+	private ILocationAdapter manager;
 
 	@Override
 	public void onCreate() {
@@ -47,7 +45,7 @@ public class DrunkenService extends Service {
 		DrunkenService.drunkenService = this;
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
-		startLocationListener();
+		manager = new GPSLocationAdapter(this);
 	}
 
 	public static DrunkenService getInstance() {
@@ -87,9 +85,9 @@ public class DrunkenService extends Service {
 		this.registerReceiver(this.SMSReceiver, filter);
 
 		// Register for incoming mood readings.
-		IntentFilter moodReadingFilter = new IntentFilter(
-				"NEW_MOOD_READING");
-		moodReadingFilter.addCategory("itu.malta.drunkendroid");
+		IntentFilter moodReadingFilter = new IntentFilter("NEW_MOOD_READING");
+		moodReadingFilter
+				.addCategory("itu.malta.drunkendroid.control.services");
 		this.moodReadingReceiver = new MoodReadingReceiver();
 		this.registerReceiver(moodReadingReceiver, moodReadingFilter);
 
@@ -112,11 +110,16 @@ public class DrunkenService extends Service {
 		ContentResolver contentResolver = getContentResolver();
 		contentResolver.registerContentObserver(Uri.parse("content://sms"),
 				true, smsObserver);
+
+		phoneManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		phoneManager.listen(callHandler, PhoneStateListener.LISTEN_CALL_STATE);
+
 	}
 
 	public void UnregisterReceivers() {
 		this.unregisterReceiver(this.SMSReceiver);
 		this.unregisterReceiver(this.moodReadingReceiver);
+		phoneManager.listen(callHandler, PhoneStateListener.LISTEN_NONE);
 	}
 
 	/**
@@ -142,52 +145,6 @@ public class DrunkenService extends Service {
 		System.out.println("Interval sat til " + readingInterval);
 	}
 
-	private void startLocationListener()
-	{
-		// Instantiate location manager
-		locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-		
-		// Create criteria
-		Criteria criteria = new Criteria();
-    	criteria.setAccuracy(Criteria.ACCURACY_FINE);
-    	criteria.setAltitudeRequired(false);
-    	criteria.setBearingRequired(false);
-    	criteria.setCostAllowed(true);
-    	criteria.setPowerRequirement(Criteria.POWER_LOW);
-		
-		String provider = locationManager.getBestProvider(criteria, true);
-    	System.out.println("provider is " + provider.toString());
-    	
-    	locationListener = new LocationListener()
-    	{
-    		public void onLocationChanged(Location location)
-    		{
-    			// Update application based on new location.
-    			lastKnownLocation = location;    			
-    			
-    			TripRepository tr = new TripRepository(DrunkenService.getInstance());
-    			tr.insert(location);
-    			tr.close();
-    		}
-    		public void onProviderDisabled(String provider)
-    		{
-    			// TODO Update application if provider is disabled.
-    			
-    		}
-    		public void onProviderEnabled(String provider)
-    		{
-    			// TODO Update application if provider is enabled.
-    		}
-    		public void onStatusChanged(String provider, int status, Bundle extras)
-    		{
-    			// TODO Update application if provider hardware status changed.
-    		}
-    	};
-    	
-    	// Request location updates
-    	locationManager.requestLocationUpdates(provider, t, distance, locationListener);
-	}
-	
 	private class SMSReceiver extends BroadcastReceiver {
 
 		@Override
@@ -209,6 +166,7 @@ public class DrunkenService extends Service {
 			final Bundle bundle = intent.getExtras();
 
 			if (bundle != null && bundle.getShort("mood") != 0) {
+				System.out.println("Mood Reading Received by Service!");
 				Thread t = new Thread() {
 					@Override
 					public void run() {
@@ -217,8 +175,10 @@ public class DrunkenService extends Service {
 
 						Reading reading = new Reading();
 						reading.setMood(bundle.getShort("mood"));
-						reading.setLatitude(lastKnownLocation.getLatitude());
-						reading.setLongitude(lastKnownLocation.getLongitude());
+						reading.setLatitude(manager.GetLastKnownLocation()
+								.getLatitude());
+						reading.setLongitude(manager.GetLastKnownLocation()
+								.getLongitude());
 						repo.insert(reading);
 						System.out.println(reading.getMood());
 					}
@@ -252,4 +212,22 @@ public class DrunkenService extends Service {
 				System.out.println("SMS afsendt!");
 		}
 	}
+
+	private class CallListener extends PhoneStateListener {
+
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			super.onCallStateChanged(state, incomingNumber);
+
+			if (state == android.telephony.TelephonyManager.CALL_STATE_RINGING) {
+				// Call trip repository with a new CallEvent.
+			}
+		}
+	}
+
+	public void OnLocationChange(Location location) {
+		// The location of the device has changed. Save event to trip and check
+		// for possible events with unset locations.
+	}
+
 }

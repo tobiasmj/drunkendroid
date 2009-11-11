@@ -7,15 +7,13 @@
 <FrameLayout android:id="@+id/MoodReadingLayout"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
-	
-	<SeekBar android:id="@+id/SeekBar01"
-	android:max="255"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	>
-	</SeekBar>
-	
-	</FrameLayout>
+
+<SeekBar android:id="@+id/SeekBar01"
+		 	android:max="255"
+			android:layout_width="fill_parent"
+		 	android:layout_height="fill_parent"/>
+
+</FrameLayout>
 	
 <Button android:id="@+id/startServiceBtn"
 	android:layout_width="wrap_content"
@@ -33,11 +31,5 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/mapViewButton"
 	android:text="See Map"
-	/>
-<Button 
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:id="@+id/stopServiceButton"
-	android:text="Stop Service"
 	/>
 </LinearLayout>

@@ -1,9 +1,11 @@
 package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
+import itu.malta.drunkendroid.control.services.DrunkenService;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,31 +23,15 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
         SeekBar seekBar = (SeekBar) findViewById(R.id.SeekBar01);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				Intent i = new Intent("NEW_MOOD_READING");
-				i.addCategory("itu.malta.drunkendroid");
-				i.putExtra("mood", (short)seekBar.getProgress());
-				
-				sendBroadcast(i);
-			}
-
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {}
-
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-		});
+        seekBar.setOnSeekBarChangeListener(new MySeekbarListener());
         
         final Button startServiceBtn = (Button)findViewById(R.id.startServiceBtn);
-        
         startServiceBtn.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			try {
     				Intent i = new Intent("TOGGLE_DRUNKEN_SERVICE");
-    				i.addCategory("itu.malta.drunkendroid.services");
+    				i.addCategory("itu.malta.drunkendroid.control.services");
     				startService(i);
     			}
     			catch (Exception e) {
@@ -59,7 +45,7 @@ public class MainActivity extends Activity {
     		public void onClick(View v) {
     			try {
     				Intent i = new Intent("TOGGLE_DRUNKEN_SERVICE");
-    				i.addCategory("itu.malta.drunkendroid.services");
+    				i.addCategory("itu.malta.drunkendroid.control.services");
     				stopService(i);
     			}
     			catch (Exception e) {
@@ -68,8 +54,14 @@ public class MainActivity extends Activity {
     		}
     	});
         
-        final Button mvBtn = (Button)findViewById(R.id.mapViewButton);
+//        if (DrunkenService.getInstance() == null) {
+//        	startServiceBtn.setVisibility(View.GONE);
+//        }
+//        else {
+//        	stopServiceBtn.setVisibility(View.GONE);
+//        }
         
+        final Button mvBtn = (Button)findViewById(R.id.mapViewButton);
     	mvBtn.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			try {
@@ -82,6 +74,19 @@ public class MainActivity extends Activity {
     		}
     	});
     }
+
+    private void Setup() {
+    	
+    }
+    
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Setup();
+	}
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +107,7 @@ public class MainActivity extends Activity {
 			intent = new Intent("VIEW_SETTINGS");
 			startActivity(intent);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.i(this.getString(R.string.log_tag),"Unable to fire intent:" + intent.getAction());
 			}
 			break;
 		case MainActivity.MENU_PREVIOUS_TRIPS:
@@ -110,18 +115,33 @@ public class MainActivity extends Activity {
 				intent = new Intent("VIEW_PREVIOUS_TRIPS");
 				startActivity(intent);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.i(this.getString(R.string.log_tag),"Unable to fire intent:" + intent.getAction());
 			}
 		case MainActivity.MENU_UPLOAD:
 			try {
 				intent = new Intent("VIEW_UPLOAD");
 				startActivity(intent);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.i(this.getString(R.string.log_tag),"Unable to fire intent:" + intent.getAction());
 			}
 			break;
 	
 		}		
 		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	private class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
+		public void onStopTrackingTouch(SeekBar seekBar) {
+			System.out.println("Sending Mood Reading!");
+			Intent i = new Intent("NEW_MOOD_READING");
+			i.addCategory("itu.malta.drunkendroid.control.services");
+			i.putExtra("mood", (short)seekBar.getProgress());
+			sendBroadcast(i);
+		}
+
+		public void onProgressChanged(SeekBar seekBar, int progress,
+				boolean fromUser) {}
+		
+		public void onStartTrackingTouch(SeekBar seekBar) {}
 	}
 }

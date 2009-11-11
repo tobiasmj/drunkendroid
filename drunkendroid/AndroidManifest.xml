@@ -30,7 +30,7 @@
         <service android:name=".control.services.DrunkenService">   
         	<intent-filter>
         		<action android:name="TOGGLE_DRUNKEN_SERVICE"></action>
-        		<category android:name="itu.malta.drunkendroid.services"></category>
+        		<category android:name="itu.malta.drunkendroid.control.services"></category>
         	</intent-filter>
         	<intent-filter>
         		<action android:name="LOCATION_CHANGED" />
@@ -38,10 +38,12 @@
         	</intent-filter>
         </service>
     </application>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SMS_RECEIVED" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-persmision android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-sdk android:minSdkVersion="3" />
