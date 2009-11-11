@@ -30,7 +30,7 @@
         <activity android:name=".ui.activities.ConfirmLocationActivity">
         	<intent-filter>
         		<action android:name="CONFIRM_LOCATION" />
-        		<category android:name="itu.malta.drunkendroid"></category>
+        		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
         <service android:name=".control.services.DrunkenService">   

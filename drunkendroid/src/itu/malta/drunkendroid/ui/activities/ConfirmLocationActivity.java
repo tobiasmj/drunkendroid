@@ -1,23 +1,21 @@
 package itu.malta.drunkendroid.ui.activities;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import itu.malta.drunkendroid.*;
 
-public class ConfirmLocationActivity extends Activity {
+public class ConfirmLocationActivity extends MapActivity {
 	MapView map;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		SetMap();
-	}	
-	
-	private void SetMap() {
+        setContentView(R.layout.confirmactivity);
+
 		map = (MapView)this.findViewById(R.id.confirmLocationMap);
 		Location location = (Location)this.getIntent().getExtras().get("location");
 		map.setBuiltInZoomControls(false);
@@ -34,6 +32,10 @@ public class ConfirmLocationActivity extends Activity {
         
         map.invalidate();
 	}
-	
 
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

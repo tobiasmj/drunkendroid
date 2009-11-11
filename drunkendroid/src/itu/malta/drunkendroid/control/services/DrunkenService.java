@@ -3,7 +3,6 @@ package itu.malta.drunkendroid.control.services;
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.LocationEvent;
-import itu.malta.drunkendroid.domain.Reading;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.handlers.SMSHandler;
 import android.app.Service;
@@ -48,9 +47,10 @@ public class DrunkenService extends Service implements
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
 		manager = new GPSLocationAdapter(this);
+		manager.RegisterLocationUpdates(this);
 		
 		Intent i = new Intent("CONFIRM_LOCATION");
-		i.addCategory("itu.malta.drunkendroid");
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.putExtra("location", manager.GetLastKnownLocation());
 		startActivity(i);
 	}
@@ -76,6 +76,7 @@ public class DrunkenService extends Service implements
 		super.onDestroy();
 		System.out.println("Service stopped");
 		UnregisterReceivers();
+		manager.UnregisterLocationUpdates(this);
 		moodReadHandler.removeMessages(0);
 		DrunkenService.drunkenService = null;
 	}
@@ -177,11 +178,13 @@ public class DrunkenService extends Service implements
 				Thread t = new Thread() {
 					@Override
 					public void run() {
-						ReadingEvent readingEvent = new ReadingEvent(manager.GetLastKnownLocation(),bundle.getShort("mood"));
+						Location location = manager.GetLastKnownLocation();
+						ReadingEvent readingEvent = new ReadingEvent(location,bundle.getShort("mood"));
 						TripRepository repo = new TripRepository(DrunkenService.getInstance());
 						repo.insertEvent(readingEvent);
 						repo.close();
-						System.out.println(bundle.get("mood"));
+						System.out.println(bundle.get("Sending MoodReading : " + location.getLatitude() + " x " +
+								location.getLongitude()));
 					}
 				};
 
@@ -233,6 +236,7 @@ public class DrunkenService extends Service implements
 		TripRepository repo = new TripRepository(DrunkenService.getInstance());
 		repo.insertEvent(locationEvent);
 		repo.close();
+		System.out.println("Sending LocationEvent: " + location.getLatitude() + " x " + location.getLongitude());
 	}
 
 }

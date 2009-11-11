@@ -12,31 +12,32 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	private LocationManager manager;
 	private LocationListener locationListener;
 	private Location lastKnownLocation;
-	private ArrayList<ILocationAdapterListener> listerners;
+	private ArrayList<ILocationAdapterListener> listeners = new ArrayList<ILocationAdapterListener>();
 	private String provider;
 	private int time = 60000;
 	private int distance = 10;
 	
 	public GPSLocationAdapter(Context context)
 	{
+		System.out.println("GPSLocationAdapter created");
 		this.manager = (LocationManager)context.getSystemService(android.content.Context.LOCATION_SERVICE);
 		this.locationListener = new LocationListener()
     	{
     		public void onLocationChanged(Location location)
     		{
+    			System.out.println("GPSLocationAdapter onLocationChanged..");
     			lastKnownLocation = location;
-    			for(ILocationAdapterListener i : listerners)
+    			for(ILocationAdapterListener i : listeners)
     				i.OnLocationChange(lastKnownLocation);
     		}
-    		public void onProviderDisabled(String provider)	{
-    			    			
-    		}
+    		public void onProviderDisabled(String provider)	{}
     		public void onProviderEnabled(String provider) {}
     		public void onStatusChanged(String provider, int status, Bundle extras) {}
     	};
     	
 		provider = manager.getBestProvider(GetCriteria(), true);
 		lastKnownLocation = manager.getLastKnownLocation(provider);
+		Connect();
 	}
 	
 	
@@ -68,19 +69,21 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	
 	public void RegisterLocationUpdates(ILocationAdapterListener interest) {
 		boolean found = false;
-		for(ILocationAdapterListener i : listerners) {
+		for(ILocationAdapterListener i : listeners) {
 			if (i == interest) {
 				found = true; break;
 			}
-		if(!found)
-			listerners.add(interest);
 		}
+		if(!found)
+			listeners.add(interest);
 	}
 	
 	public void UnregisterLocationUpdates(ILocationAdapterListener interest) {
-		for(int i = 0; i<listerners.size(); i++) {
-			if(listerners.get(i) == interest)
-				listerners.remove(i);
+		for(int i = 0; i<listeners.size(); i++) {
+			if(listeners.get(i) == interest) {
+				listeners.remove(i);
+				break;
+			}
 		}
 	}
 }
