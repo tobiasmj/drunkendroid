@@ -7,21 +7,19 @@ import org.apache.http.StatusLine;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.*;
-import java.util.Calendar;
-
-import itu.malta.drunkendroid.domain.Reading;
+import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
-import itu.malta.drunkendroid.tech.RESTServerHelper;
-import itu.malta.drunkendroid.tech.WebserviceConnection;
+import itu.malta.drunkendroid.tech.RESTServerFacade;
+import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
 import android.test.AndroidTestCase;
 import static org.easymock.EasyMock.*;
 
 public class RESTconnectionTest extends AndroidTestCase {
-	RESTServerHelper rest;
+	RESTServerFacade rest;
 
 	protected void setUp(){
-		 rest = new RESTServerHelper(this.getContext(), new WebserviceConnection());
+		 rest = new RESTServerFacade(this.getContext(), new WebserviceConnectionREST());
 	}
 	
 	protected void tearDown(){
@@ -54,7 +52,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		replay(response);
 		
 		expect(conn.postTrip((String)anyObject(), (String)anyObject())).andStubReturn(response);
-		rest = new RESTServerHelper(this.getContext(), conn);
+		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
 		Long tripIdResult = (Long) consume.invoke(rest, response);
 		assertEquals(2343456, tripIdResult.intValue());
@@ -85,7 +83,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		replay(conn);
 		
 		//Create a new RESTServerHelper class to test with.
-		rest = new RESTServerHelper(this.getContext(), conn);
+		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
 		Long tripIdResult = rest.uploadTrip(t);
 		//Don't know how to do these assertions right yet.
@@ -136,7 +134,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		replay(conn);
 		
 		//Create a new RESTServerHelper class to test with.
-		rest = new RESTServerHelper(this.getContext(), conn);
+		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
 		Long tripIdResult = rest.uploadTrip(t);
 		verify(conn);
@@ -147,35 +145,16 @@ public class RESTconnectionTest extends AndroidTestCase {
 
 	private Trip generateTrip() {
 		Trip t = new Trip();
-		// Reading 1
-		Reading r1 = new Reading();
-		Calendar c1 = Calendar.getInstance();
-		c1.setTimeInMillis(1255816133);
-		r1.setDate(c1);
-		r1.setLatitude(35.908422);
-		r1.setLongitude(14.502362);
-		r1.setMood((short)110);
-		// Reading 2
-		Reading r2 = new Reading();
-		Calendar c2 = Calendar.getInstance();
-		c2.setTimeInMillis(1255816433);
-		r2.setDate(c1);
-		r2.setLatitude(35.909141);
-		r2.setLongitude(14.503580);
-		r2.setMood((short)95);
-		// Reading 3
-		Reading r3 = new Reading();
-		Calendar c3 = Calendar.getInstance();
-		c3.setTimeInMillis(1255816733);
-		r3.setDate(c1);
-		r3.setLatitude(35.909275);
-		r3.setLongitude(14.502825);
-		r3.setMood((short)62);
-		t.AddReading(r1);
-		t.AddReading(r2);
-		t.AddReading(r3);
-		t.setDateInMilliSec(r1.getDate().getTimeInMillis());
-		
+		// ReadingEvent 1
+		ReadingEvent r1 = new ReadingEvent(new Long(1255816133), (Double)35.908422, (Double)14.502362, 110);
+		// ReadingEvent 2
+		ReadingEvent r2 = new ReadingEvent(new Long(1255816433), (Double)35.909141, (Double)14.503580, 95);
+		// ReadingEvent 3	
+		ReadingEvent r3 = new ReadingEvent(new Long(1255816733), (Double)35.909275, (Double)14.502825, 62);
+		t.AddEvent(r1);
+		t.AddEvent(r2);
+		t.AddEvent(r3);
+		t.setDateInMilliSec(1255816133);
 		return t;
 	}
 }
