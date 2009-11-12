@@ -7,8 +7,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import itu.malta.drunkendroid.domain.Reading;
-import itu.malta.drunkendroid.domain.Trip;
+import itu.malta.drunkendroid.control.IRemoteDataFacade;
+import itu.malta.drunkendroid.domain.*;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -26,7 +26,7 @@ import org.xmlpull.v1.XmlSerializer;
  * @author ExxKA
  * This class is inspired by the book: Beginning Android and http://www.smnirven.com/?p=15
  */
-public class RESTServerHelper {
+public class RESTServerFacade implements IRemoteDataFacade {
 	private static final String TRIP_NAME = "name";
 	private static final String TRIP = "trip";
 	private static final String TRIPID = "tripId";
@@ -44,7 +44,7 @@ public class RESTServerHelper {
 	private String IMEI = "";
 	IWebserviceConnection conn = null;
 	
-	public RESTServerHelper(Context context, IWebserviceConnection conn){
+	public RESTServerFacade(Context context, IWebserviceConnection conn){
 		TelephonyManager mgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		IMEI = mgr.getDeviceId();
 		this.conn = conn;
@@ -52,7 +52,7 @@ public class RESTServerHelper {
 	/**
 	 * Blocking call
 	 * @param t the trip to be uploaded to the server, with containing events.
-	 * @return Can be null, if there was a problem which could not be solved.
+	 * @return The foreign ID of the trip.Can be null, if there was a problem which could not be solved.
 	 */
 	public Long uploadTrip(Trip t)
 	{
@@ -73,7 +73,7 @@ public class RESTServerHelper {
         		while(tries < 3 && resultId == null){
         			//give the server some time to recover.
         			try {
-        				Thread.currentThread().sleep(1000);
+        				Thread.sleep(1000);
 						//wait for a second before trying over.
 					} catch(InterruptedException e){
 						//Just go on.
@@ -104,26 +104,10 @@ public class RESTServerHelper {
         serializer.startDocument("UTF-8", true);
         serializer.startTag("", TRIP);
         serializer.startTag("", EVENTS);
-        for(Reading r : t.getTripReadings()){
-            serializer.startTag("", EVENT);
-            serializer.startTag("", EVENTTYPE);
-            serializer.text("reading");
-            serializer.endTag("", EVENTTYPE);
-            serializer.startTag("", DATETIME);
-            serializer.text(String.valueOf(r.getDate().getTimeInMillis()));
-            serializer.endTag("", DATETIME);
-            serializer.startTag("", LONGITUDE);
-            serializer.text(String.valueOf(r.getLongitude()));
-            serializer.endTag("", LONGITUDE);
-            serializer.startTag("", LATITUDE);
-            serializer.text(String.valueOf(r.getLatitude()));
-            serializer.endTag("", LATITUDE);
-            serializer.startTag("", DATA);
-            serializer.startTag("", MOOD);
-            serializer.text(String.valueOf(r.getMood()));
-            serializer.endTag("", MOOD);
-            serializer.endTag("", DATA);
-            serializer.endTag("", EVENT);
+        for(Event r : t.getTripEvents()){
+        	if(ReadingEvent.class.isInstance(r)){
+        		addReadingXml(serializer,(ReadingEvent) r);	
+        	}
         }
         serializer.endTag("", EVENTS);
         serializer.startTag("", STARTDATETIME);
@@ -138,6 +122,27 @@ public class RESTServerHelper {
         return writer.toString();
 	}
 
+	private void addReadingXml(XmlSerializer serializer, ReadingEvent r) throws IllegalArgumentException, IllegalStateException, IOException {
+		serializer.startTag("", EVENT);
+        serializer.startTag("", EVENTTYPE);
+        serializer.text("reading");
+        serializer.endTag("", EVENTTYPE);
+        serializer.startTag("", DATETIME);
+        serializer.text(String.valueOf(r.dateTime));
+        serializer.endTag("", DATETIME);
+        serializer.startTag("", LONGITUDE);
+        serializer.text(String.valueOf(r.longitude));
+        serializer.endTag("", LONGITUDE);
+        serializer.startTag("", LATITUDE);
+        serializer.text(String.valueOf(r.latitude));
+        serializer.endTag("", LATITUDE);
+        serializer.startTag("", DATA);
+        serializer.startTag("", MOOD);
+        serializer.text(String.valueOf(r.mood));
+        serializer.endTag("", MOOD);
+        serializer.endTag("", DATA);
+        serializer.endTag("", EVENT);	
+	}
 	private Long consumeTripUploadResponse(HttpResponse response) throws IOException, IllegalStateException{
 		try{
         	//Getting ready to proceed
@@ -161,8 +166,6 @@ public class RESTServerHelper {
         		}
         	}
 	        else{
-	        	int status = response.getStatusLine().getStatusCode();
-	        	//Handle these situations.
 	        	NodeList nodes = xmlDoc.getElementsByTagName(MESSAGE);
         		Node messageContent = nodes.item(0).getFirstChild();
         		if(messageContent.getNodeType() == Node.TEXT_NODE){
@@ -185,5 +188,13 @@ public class RESTServerHelper {
     		Log.e(LOGTAG, e.getMessage());
     		return null;
     	}
+	}
+	public Trip getEvents(Long starTime, Long endTime, Long latitude, Long longitude, Long distance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Long updateTrip(Trip t, Event e) {
+		//Not implemented. 
+		return null;
 	}
 }

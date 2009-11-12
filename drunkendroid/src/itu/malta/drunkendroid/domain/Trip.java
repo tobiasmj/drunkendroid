@@ -4,8 +4,10 @@ import java.util.*;
 
 
 public class Trip {
-	protected ArrayList<Reading> readings = new ArrayList<Reading>();
+	private ArrayList<Event> events = new ArrayList<Event>();
 	private Calendar startDate = null;
+	private Long localId;
+	private Long remoteId;
 	
 	protected void setStartDate(Calendar d){
 		if(this.startDate != null){
@@ -27,11 +29,27 @@ public class Trip {
 		return this.startDate;
 	}
 	
-	public void AddReading(Reading r) {
-		readings.add(r);
+	public void AddEvent(Event e) {
+		events.add(e);
 	}
 	
-	public ArrayList<Reading> getTripReadings() {
-		return readings;
+	public ArrayList<Event> getTripEvents() {
+		return events;
+	}
+
+	public Long getLocalID() {
+		return localId;
+	}
+	
+	public void setLocalID(Long id){
+		this.localId = id;
+	}
+
+	public Long getRemoteID() {
+		return remoteId;
+	}
+	
+	public void setRemoteID(Long id){
+		this.remoteId = id;
 	}
 }

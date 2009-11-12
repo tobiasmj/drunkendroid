@@ -6,7 +6,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class WebserviceConnection implements IWebserviceConnection{
+public class WebserviceConnectionREST implements IWebserviceConnection{
 	private static final String BASE_URI = "http://192.168.0.13:8182/drunkendroid/";
 	private static final String targetDomain = "192.168.0.13";
 	

@@ -181,8 +181,8 @@ public class DrunkenService extends Service implements
 						Location location = manager.GetLastKnownLocation();
 						ReadingEvent readingEvent = new ReadingEvent(location,bundle.getShort("mood"));
 						TripRepository repo = new TripRepository(DrunkenService.getInstance());
-						repo.insertEvent(readingEvent);
-						repo.close();
+						repo.addEvent(readingEvent);
+						repo.closeRepository();
 						System.out.println(bundle.get("Sending MoodReading : " + location.getLatitude() + " x " +
 								location.getLongitude()));
 					}
@@ -234,8 +234,8 @@ public class DrunkenService extends Service implements
 		// for possible events with unset locations.
 		LocationEvent locationEvent = new LocationEvent(location);
 		TripRepository repo = new TripRepository(DrunkenService.getInstance());
-		repo.insertEvent(locationEvent);
-		repo.close();
+		repo.addEvent(locationEvent);
+		repo.closeRepository();
 		System.out.println("Sending LocationEvent: " + location.getLatitude() + " x " + location.getLongitude());
 	}
 
