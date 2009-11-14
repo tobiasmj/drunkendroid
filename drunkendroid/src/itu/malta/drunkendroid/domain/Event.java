@@ -1,5 +1,6 @@
 package itu.malta.drunkendroid.domain;
 
+import java.util.Calendar;
 
 import android.location.Location;
 
@@ -9,9 +10,12 @@ public class Event {
 	public Double longitude;
 	
 	public Event(Location location) {
-		this.dateTime = location.getTime();
-		this.latitude = location.getLatitude();
-		this.longitude = location.getLongitude();
+		this.dateTime = Calendar.getInstance().getTimeInMillis();
+		if(!location.getExtras().getBoolean("isOutdated",false))
+		{
+			this.latitude = location.getLatitude();
+			this.longitude = location.getLongitude();
+		}
 	}
 	
 	public Event(Long datetime, Double latitude, Double longitude) {
