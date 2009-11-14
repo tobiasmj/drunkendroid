@@ -1,69 +1,50 @@
 package itu.malta.drunkendroid.ui.map;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ComposeShader;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
-import android.graphics.Shader.TileMode;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.Projection;
 
 public class MoodOverlay extends Overlay
 {
+    private HeatMap _heatmap;
+    
 	@Override
 	public void draw(Canvas canvas, MapView mapView, boolean shadow)
 	{
-		Projection projection = mapView.getProjection();
-		Double lat = 35.908138*1E6;
-		Double lng = 14.500975*1E6;
-		int radius = mapView.getZoomLevel();
-		
-		GeoPoint gp = new GeoPoint(lat.intValue(), lng.intValue());
-		
 		if(shadow == false)
 		{
-			Point point = new Point();
-			projection.toPixels(gp, point);
-			Bitmap bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+			_heatmap = HeatMap.getInstance(mapView);
 			
-			// Create gradient circle
-			int[] gradientColors = new int[]{Color.RED,Color.YELLOW,Color.GREEN,Color.BLUE,Color.TRANSPARENT};
-			float[] gradientPositions = new float[]{0.4f,0.6f,0.8f,0.8f,0.2f};
-			Shader gradientShader = new RadialGradient(point.x, point.y, 40, gradientColors, null, TileMode.CLAMP);
-			Shader gradientShaderTwo = new RadialGradient(point.x-20, point.y-20, 40, gradientColors, null, TileMode.CLAMP);
-			Shader bitmapShader = new BitmapShader(bitmap, TileMode.CLAMP, TileMode.CLAMP);
-			Shader composerShader = new ComposeShader(gradientShader, bitmapShader, new PorterDuffXfermode(Mode.MULTIPLY));
-			Shader composerShaderTwo = new ComposeShader(gradientShaderTwo, bitmapShader, new PorterDuffXfermode(Mode.MULTIPLY));
+			Double lat1 = 35.908138*1E6;
+			Double lng1 = 14.500975*1E6;
+			Double lat2 = 35.909319*1E6;
+			Double lng2 = 14.503658*1E6;
+			Double lat3 = 35.909027*1E6;
+			Double lng3 = 14.504624*1E6;
+			Double lat4 = 35.909197*1E6;
+			Double lng4 = 14.504361*1E6;
+			Double lat5 = 35.909162*1E6;
+			Double lng5 = 14.503937*1E6;
 			
-			// Create and setup paint brush
-			Paint paint = new Paint();
-			paint.setARGB(250, 255, 0, 0);
-			paint.setAntiAlias(true);
-			paint.setFakeBoldText(true);
-			paint.setShader(gradientShader); // Add gradient circle
-			// Draw on the canvas
-			canvas.drawPaint(paint);
+	        GeoPoint gp1 = new GeoPoint(lat1.intValue(), lng1.intValue());
+	        GeoPoint gp2 = new GeoPoint(lat2.intValue(), lng2.intValue());
+	        GeoPoint gp3 = new GeoPoint(lat3.intValue(), lng3.intValue());
+	        GeoPoint gp4 = new GeoPoint(lat4.intValue(), lng4.intValue());
+	        GeoPoint gp5 = new GeoPoint(lat5.intValue(), lng5.intValue());
+	        
+			_heatmap.addGeoPoint(gp1);
+			_heatmap.addGeoPoint(gp2);
+			_heatmap.addGeoPoint(gp3);
+			_heatmap.addGeoPoint(gp4);
+			_heatmap.addGeoPoint(gp5);
 			
-			Paint paintTwo = new Paint();
-			paintTwo.setShader(gradientShaderTwo);
-			canvas.drawPaint(paintTwo);
-		}
-		else
-		{
-			
+			if(mapView.getZoomLevel() > 12)
+				_heatmap.createHeatmap(mapView);
 		}
 	}
-	
+    
 	@Override
 	public boolean onTap(GeoPoint geoPoint, MapView mapView)
 	{
