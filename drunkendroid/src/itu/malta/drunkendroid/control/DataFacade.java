@@ -12,6 +12,8 @@ import java.util.List;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import android.content.Context;
+import android.util.AndroidException;
+import android.util.AndroidRuntimeException;
 
 public class DataFacade implements IDataFacade {
 	private IRemoteDataFacade remote;
@@ -85,7 +87,7 @@ public class DataFacade implements IDataFacade {
 	 */
 	public void updateEventsWithoutLocation(Trip t, Long latitude,
 			Long Longitude) {
-		throw new NotImplementedException();
+		throw new AndroidRuntimeException("Not Implemented");
 		// TODO Auto-generated method stub
 
 	}
