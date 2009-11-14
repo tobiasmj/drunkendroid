@@ -6,13 +6,8 @@ import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.LocalDataFacadeForSQLite;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
 import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
-
 import java.util.List;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import android.content.Context;
-import android.util.AndroidException;
 import android.util.AndroidRuntimeException;
 
 public class DataFacade implements IDataFacade {

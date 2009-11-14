@@ -36,6 +36,7 @@ public class DrunkenService extends Service implements
 	private MoodReadingReceiver moodReadingReceiver;
 	private int readingInterval;
 	private ILocationAdapter manager;
+	private TripRepository repository;
 
 	@Override
 	public void onCreate() {
@@ -49,12 +50,16 @@ public class DrunkenService extends Service implements
 		manager = new GPSLocationAdapter(this);
 		manager.RegisterLocationUpdates(this);
 		
+		repository = new TripRepository(this);
+		
 		Intent i = new Intent("CONFIRM_LOCATION");
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.putExtra("location", manager.GetLastKnownLocation());
 		startActivity(i);
 	}
 
+	
+	
 	public static DrunkenService getInstance() {
 		return drunkenService;
 	}
@@ -62,6 +67,14 @@ public class DrunkenService extends Service implements
 	@Override
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
+		if(intent.getExtras()!=null) {
+			if(intent.getBooleanExtra("deleteLocation", false)) {
+				Location location = (Location)intent.getExtras().get("location");
+				if(location.getTime() == manager.GetLastKnownLocation().getTime()) {
+					manager.OutdateLocation();
+				}
+			}
+		}	
 	}
 
 	@Override
@@ -76,6 +89,7 @@ public class DrunkenService extends Service implements
 		super.onDestroy();
 		System.out.println("Service stopped");
 		UnregisterReceivers();
+		repository.closeRepository();
 		manager.UnregisterLocationUpdates(this);
 		moodReadHandler.removeMessages(0);
 		DrunkenService.drunkenService = null;
@@ -180,9 +194,8 @@ public class DrunkenService extends Service implements
 					public void run() {
 						Location location = manager.GetLastKnownLocation();
 						ReadingEvent readingEvent = new ReadingEvent(location,bundle.getShort("mood"));
-						TripRepository repo = new TripRepository(DrunkenService.getInstance());
-						repo.addEvent(readingEvent);
-						repo.closeRepository();
+						repository.addEvent(readingEvent);
+						repository.closeRepository();
 						System.out.println(bundle.get("Sending MoodReading : " + location.getLatitude() + " x " +
 								location.getLongitude()));
 					}
@@ -233,10 +246,8 @@ public class DrunkenService extends Service implements
 		// The location of the device has changed. Save event to trip and check
 		// for possible events with unset locations.
 		LocationEvent locationEvent = new LocationEvent(location);
-		TripRepository repo = new TripRepository(DrunkenService.getInstance());
-		repo.addEvent(locationEvent);
-		repo.closeRepository();
+		repository.addEvent(locationEvent);
+		repository.closeRepository();
 		System.out.println("Sending LocationEvent: " + location.getLatitude() + " x " + location.getLongitude());
 	}
-
 }

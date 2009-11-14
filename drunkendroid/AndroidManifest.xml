@@ -27,22 +27,13 @@
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
-        <activity android:name=".ui.activities.ConfirmLocationActivity">
+        <activity android:name=".ui.activities.ConfirmLocationActivity" android:theme="@style/Dialog_No_Title">
         	<intent-filter>
         		<action android:name="CONFIRM_LOCATION" />
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
-        <service android:name=".control.services.DrunkenService">   
-        	<intent-filter>
-        		<action android:name="TOGGLE_DRUNKEN_SERVICE"></action>
-        		<category android:name="itu.malta.drunkendroid.control.services"></category>
-        	</intent-filter>
-        	<intent-filter>
-        		<action android:name="LOCATION_CHANGED" />
-        		<category android:name="android.intent.category.DEFAULT"></category>
-        	</intent-filter>
-        </service>
+        <service android:name=".control.services.DrunkenService" />
     </application>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_SMS" />

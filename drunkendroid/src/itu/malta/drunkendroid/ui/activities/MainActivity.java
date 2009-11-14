@@ -30,8 +30,7 @@ public class MainActivity extends Activity {
         startServiceBtn.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			try {
-    				Intent i = new Intent("TOGGLE_DRUNKEN_SERVICE");
-    				i.addCategory("itu.malta.drunkendroid.control.services");
+    				Intent i = new Intent(MainActivity.this, itu.malta.drunkendroid.control.services.DrunkenService.class);
     				startService(i);
     			}
     			catch (Exception e) {
@@ -44,8 +43,7 @@ public class MainActivity extends Activity {
         stopServiceBtn.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			try {
-    				Intent i = new Intent("TOGGLE_DRUNKEN_SERVICE");
-    				i.addCategory("itu.malta.drunkendroid.control.services");
+    				Intent i = new Intent(MainActivity.this, itu.malta.drunkendroid.control.services.DrunkenService.class);
     				stopService(i);
     			}
     			catch (Exception e) {

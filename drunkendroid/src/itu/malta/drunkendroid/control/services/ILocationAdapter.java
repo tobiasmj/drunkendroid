@@ -8,4 +8,5 @@ public interface ILocationAdapter {
 	public void Disconnect();
 	public void RegisterLocationUpdates(ILocationAdapterListener interest);
 	public void UnregisterLocationUpdates(ILocationAdapterListener interest);
+	public void OutdateLocation();
 }

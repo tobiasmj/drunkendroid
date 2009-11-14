@@ -40,7 +40,6 @@ public class GPSLocationAdapter implements ILocationAdapter {
 		Connect();
 	}
 	
-	
 	public void Connect() {
 		// Request location updates
     	manager.requestLocationUpdates(provider, time, distance, locationListener);
@@ -85,5 +84,13 @@ public class GPSLocationAdapter implements ILocationAdapter {
 				break;
 			}
 		}
+		if(listeners.size() == 0)
+			Disconnect();
+	}
+
+	public void OutdateLocation() {
+		Bundle bundle = new Bundle();
+		bundle.putBoolean("isOutdated", true);
+		lastKnownLocation.setExtras(bundle);
 	}
 }
