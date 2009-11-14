@@ -1,5 +1,7 @@
 package itu.malta.drunkendroidserver;
 
+import itu.malta.drunkendroidserver.control.Repository;
+import itu.malta.drunkendroidserver.tech.DatabaseConnection;
 import itu.malta.drunkendroidserver.util.XmlResponse;
 
 import java.io.IOException;
@@ -19,7 +21,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 
 
@@ -35,7 +36,7 @@ public class TripResource extends ServerResource {
 	public Representation storeRepresentation(Representation entity) throws ResourceException {
 		DomRepresentation result = null;
 		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
-		
+		Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
 			
@@ -51,12 +52,11 @@ public class TripResource extends ServerResource {
 					
 				}
 				name = domDocument.getNode("//trip/name").getTextContent();
-				// insert the DBinsertTripCommand
-				InsertTrip tripComm;
+				Trip trip;
 				if(endTime == null) {
-					tripComm = new InsertTrip(imeiNumber,startTime,name);
+					trip = new Trip(imeiNumber,startTime,name);
 				} else {
-					tripComm = new InsertTrip(imeiNumber,startTime,endTime,name);
+					trip = new Trip(imeiNumber,startTime,endTime,name);
 				}
 				
 				long eventTime;
@@ -78,7 +78,7 @@ public class TripResource extends ServerResource {
 					if(eventType.equals("reading")) {
 						mood = Integer.parseInt(events.get(i).getChildNodes().item(4).getFirstChild().getTextContent()); 
 						// insert the DBInsertReadingCommand
-						tripComm.addCommand(new InsertReading(eventTime,latitude,longitude,mood));
+						trip.addEvent(new Reading(eventTime,latitude,longitude,mood));
 					}
 					if(eventType == "sms") {
 						//To be implemented
@@ -98,7 +98,9 @@ public class TripResource extends ServerResource {
 				}
 				
 				// Commit the Transaction Object to the database
-				returnId = tripComm.execute();
+				
+				returnId = rep.insertTrip(trip);
+				//tripComm.execute();
 				
 				// set the status and build an response 
 				setStatus(Status.SUCCESS_CREATED);
@@ -148,6 +150,7 @@ public class TripResource extends ServerResource {
 			
 			//Build the DOMTree
 			DomRepresentation domDocument = new DomRepresentation(entity);
+			Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 			
 			//Assuming only one trip per post, get the startTime and endTime
 			try{
@@ -155,12 +158,11 @@ public class TripResource extends ServerResource {
 				endTime = Long.parseLong(domDocument.getNode("//trip/endDateTime").getTextContent());
 				name = domDocument.getNode("//trip/name").getTextContent();
 				tripId = Integer.parseInt(domDocument.getNode("//trip/tripId").getTextContent()); 
+				
 				// Create the updateObejct
-				updateTrip tripComm;
-				tripComm = new updateTrip(tripId,imeiNumber,startTime,endTime,name);
-		
-		
-				tripComm.execute();
+				Trip trip = new Trip(tripId,imeiNumber,startTime,endTime,name);
+				rep.updateTrip(trip);
+
 				
 			} catch (DOMException e) {
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -186,13 +188,14 @@ public class TripResource extends ServerResource {
 	
 	
 	@Get  
-    public Representation represent() {  
+    public Representation represent() {
+		Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
     	imeiNumber = (String) getRequest().getAttributes().get("IMEI");
     	tripId = Integer.getInteger(getRequest().getAttributes().get("TripId").toString());
 
     	DomRepresentation result = null;
     	try {
-    		result = new getTrip(tripId).execute(); 
+    		result = rep.getTrip(new Trip(tripId));
     	} catch (SQLException se) {
         	setStatus(Status.SERVER_ERROR_INTERNAL);
         	result = XmlResponse.generateErrorRepresentation("Error getting data from database.", "5");

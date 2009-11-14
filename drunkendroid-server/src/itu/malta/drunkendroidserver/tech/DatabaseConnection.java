@@ -1,11 +1,13 @@
-package itu.malta.drunkendroidserver.util;
+package itu.malta.drunkendroidserver.tech;
+
+import itu.malta.drunkendroidserver.interfaces.IDatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
-public class DatabaseConnection {
+public class DatabaseConnection implements IDatabaseConnection {
 	private String connURL = null;
 	private DatabaseConnection(){
 			connURL = databaseConfiguration.getString("DatabaseConnection.1"); //$NON-NLS-1$
@@ -13,12 +15,15 @@ public class DatabaseConnection {
 	}
 	
 	private static class DatabaseConnectionSingleton {
-		private static final DatabaseConnection INSTANCE = new DatabaseConnection();
+		private static final IDatabaseConnection INSTANCE = new DatabaseConnection();
 	}
 
-	public static DatabaseConnection getInstance(){
+	public static IDatabaseConnection getInstance(){
 		return DatabaseConnectionSingleton.INSTANCE;
 	}
+	/* (non-Javadoc)
+	 * @see itu.malta.drunkendroidserver.util.IDatabaseConnection#getConn()
+	 */
 	public Connection getConn(){
 		Connection conn = null;
 		try{

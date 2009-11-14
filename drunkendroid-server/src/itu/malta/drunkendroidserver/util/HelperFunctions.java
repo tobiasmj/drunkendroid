@@ -1,4 +1,5 @@
 package itu.malta.drunkendroidserver.util;
+
 public class HelperFunctions {
 	/*
 	 import math

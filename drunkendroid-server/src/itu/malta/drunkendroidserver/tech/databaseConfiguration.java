@@ -1,4 +1,4 @@
-package itu.malta.drunkendroidserver.util;
+package itu.malta.drunkendroidserver.tech;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

@@ -64,7 +64,7 @@ public class EventResource extends ServerResource {
 					if(eventType == "reading") {
 						mood = Integer.parseInt(domDocument.getNode("//trip/events/event[" + i+1 + "]/data/mood").getTextContent()); 
 						// insert the DBInsertReadingCommand
-						InsertReading reading  = new InsertReading(eventTime,latitude,longitude,mood);
+						Reading reading  = new Reading(eventTime,latitude,longitude,mood);
 						reading.setTripID(tripId);
 						reading.execute();
 					}

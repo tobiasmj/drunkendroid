@@ -1,6 +1,6 @@
 package itu.malta.drunkendroidserver;
 
-import itu.malta.drunkendroidserver.util.DatabaseConnection;
+import itu.malta.drunkendroidserver.tech.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,17 +12,23 @@ import java.sql.Statement;
  * Class used for inserting readings in to the database.
  *
  */
-public class InsertReading {
+public class Reading{
 
 	long readingTime;
 	double latitude, longitude;
 	int mood = -1;
 	private long tripID = 0;
 	
+	/* (non-Javadoc)
+	 * @see itu.malta.drunkendroidserver.IInsertEvent#getTripID()
+	 */
 	public long getTripID() {
 		return tripID;
 	}
 
+	/* (non-Javadoc)
+	 * @see itu.malta.drunkendroidserver.IInsertEvent#setTripID(long)
+	 */
 	public void setTripID(long tripId) {
 		this.tripID = tripId;
 	}
@@ -33,7 +39,7 @@ public class InsertReading {
 	 * @param longitude the longitude of the reading
 	 * @param mood the mood valued 0-255
 	 */
-	public InsertReading (long readingTime, double latitude, double longitude, int mood ) {
+	public Reading (long readingTime, double latitude, double longitude, int mood ) {
 		this.readingTime = readingTime;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -47,7 +53,7 @@ public class InsertReading {
 	 * @param longitude the longitude of the reading
 	 * @param mood the mood valued 0-255
 	 */
-	public InsertReading (long tripId, long readingTime, double latitude, double longitude, int mood ) {
+	public Reading (long tripId, long readingTime, double latitude, double longitude, int mood ) {
 		this.tripID = tripId;
 		this.readingTime = readingTime;
 		this.latitude = latitude;
@@ -55,9 +61,8 @@ public class InsertReading {
 		this.mood = mood;
 	}
 	
-	/**
-	 * executes the insert
-	 * @throws SQLException thrown when an error communicating with the database occurs.
+	/* (non-Javadoc)
+	 * @see itu.malta.drunkendroidserver.IInsertEvent#execute()
 	 */
 	public void execute() throws SQLException{
 		if (tripID != 0) {
@@ -93,5 +98,24 @@ public class InsertReading {
 		} else {
 			throw new SQLException("TripId not initialized before committing to database");
 		}
+	}
+
+	public long getDateTime() {
+		return readingTime;
+	}
+
+	public String getEventType() {
+		return "reading";
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+	public int getMood() {
+		return mood;
 	}
 }

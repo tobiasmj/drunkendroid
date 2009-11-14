@@ -1,6 +1,8 @@
 package itu.malta.drunkendroidserver;
 
-import itu.malta.drunkendroidserver.util.DatabaseConnection;
+import itu.malta.drunkendroidserver.tech.DatabaseConnection;
+import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
+import itu.malta.drunkendroidserver.GridCell;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,6 +16,8 @@ import org.restlet.representation.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.thoughtworks.xstream.XStream;
+
 /**
  * 
  * Class that can create a xml-response moodmap.
@@ -22,12 +26,38 @@ import org.w3c.dom.Element;
 public class MoodMap {
 
 	long startReadingTime, endReadingTime;
+
 	double ULlatitude, ULlongitude, LRlatitude, LRlongitude;
 	int gridX = 60 , gridY = 60;
 	double latMax, latMin;
 	double longMax, longMin;
 	
-	gridCell[][] moodMapGrid = new gridCell[gridX][gridY];
+	GridCell[][] moodMapGrid = new GridCell[gridX][gridY];
+	
+	public double getULlatitude() {
+		return ULlatitude;
+	}
+	public double getULlongitude() {
+		return ULlongitude;
+	}
+	public long getStartReadingTime() {
+		return startReadingTime;
+	}
+	public long getEndReadingTime() {
+		return endReadingTime;
+	}
+	public double getLatMax() {
+		return latMax;
+	}
+	public double getLatMin() {
+		return latMin;
+	}
+	public double getLongMax() {
+		return longMax;
+	}
+	public double getLongMin() {
+		return longMin;
+	}
 	/***
 	 * 
 	 * @param readingTime timeStamp of the requested moodmap 
@@ -88,7 +118,7 @@ public class MoodMap {
 				xCoord = (int)((readingLong - longMin)/gridWidth) -1;
 				yCoord = (int)((readingLat - latMin)/gridHeight) -1;
 				if(moodMapGrid[xCoord][yCoord] == null) {
-					moodMapGrid[xCoord][yCoord] = new gridCell((xCoord + 0.5)*gridWidth+ULlongitude,(yCoord + 0.5)*gridHeight+ULlatitude);
+					moodMapGrid[xCoord][yCoord] = new GridCell((xCoord + 0.5)*gridWidth+ULlongitude,(yCoord + 0.5)*gridHeight+ULlatitude);
 					moodMapGrid[xCoord][yCoord].addValue(rs.getInt("mood"));
 				} else {
 					moodMapGrid[xCoord][yCoord].addValue(rs.getInt("mood"));
@@ -125,6 +155,12 @@ public class MoodMap {
 	public Representation getMoodMap() throws IOException{
 		DomRepresentation result = null;
 		
+		XStream xStream = new XStream();
+		xStream.registerConverter(new MoodMapConverter());
+		xStream.alias("MoodMapReading", GridCell.class);
+
+		
+		
             result = new DomRepresentation(MediaType.TEXT_XML);  
             // Generate a DOM document representing the list of  
             // MoodMapReadings.  
@@ -132,10 +168,11 @@ public class MoodMap {
   
             Element eltMoodMap = d.createElement("MoodMap");  
             d.appendChild(eltMoodMap);
+            String xmlMoodMapReadings = null;
             for(int i = 0; i < gridY; i++){
             	for(int j = 0; j < gridX; j++){
             		if (moodMapGrid[i][j] != null){
-            			Element eltMoodMapReading = d.createElement("MoodMapReading");
+            			/*Element eltMoodMapReading = d.createElement("MoodMapReading");
             			
             			Element eltMoodMapReadingValue = d.createElement("MoodMapValue");
             			eltMoodMapReadingValue.appendChild(d.createTextNode(Integer.toString(moodMapGrid[i][j].getAvarage())));  
@@ -149,39 +186,16 @@ public class MoodMap {
             			eltMoodMapLatitudeValue.appendChild(d.createTextNode(Double.toString(moodMapGrid[i][j].getLatitude())));  
             			eltMoodMapReading.appendChild(eltMoodMapLatitudeValue);
             			
-            			eltMoodMap.appendChild(eltMoodMapReading);  
-            		}
+            			eltMoodMap.appendChild(eltMoodMapReading);*/
+            			
+            			xmlMoodMapReadings = xmlMoodMapReadings + xStream.toXML(moodMapGrid[i][j]);
+             		}
             	}
             }
-            
+  			eltMoodMap.setTextContent(xmlMoodMapReadings);
+  			 
 		return result;
 	}
-	/**
-	 * private class to represent a gridCell in the matrice.
-	 * @author tobiasmj
-	 *
-	 */
-	private class gridCell {
-		private double longitude, latitude;
-		private int value, count;
-		private gridCell(double longitude, double latitude) {
-			this.longitude = longitude;
-			this.latitude = latitude;
-		}
-		private void addValue(int value){
-			this.count = this.count +1;
-			this.value = this.value + value;
-		}
-		private int getAvarage() {
-			return (this.value/this.count);
-		}
-		private double getLongitude(){
-			return this.longitude;
-		}
-		private double getLatitude(){
-			return this.latitude;
-		}
-	
-	}
-
 }
+
+
