@@ -54,7 +54,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 
         ContentValues values = new ContentValues();
-        values.put("startDateTime", Calendar.getInstance().getTimeInMillis());
+        Long currentTime = Calendar.getInstance().getTimeInMillis();
+        values.put("startDateTime", currentTime);
         values.put("active", true);
         // Add a value for the active state to the real sql table.
 
@@ -64,6 +65,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			throw new SQLException("The new trip didn't get inserted to the trip table");
 	    }
 	    Trip newTrip = new Trip();
+	    newTrip.setDateInMilliSec(currentTime);
 	    newTrip.setLocalID(tripId);
 	    return newTrip;
 	}
