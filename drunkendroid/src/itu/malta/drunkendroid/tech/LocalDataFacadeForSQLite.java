@@ -218,8 +218,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 	public void addRemoteIdToTrip(Trip t) {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
-		final String whereClause = "id = ?";
-		final String[] whereArgs = {String.valueOf(t.getLocalID())};
+		final String whereClause = "startDateTime = ?";
+		final String[] whereArgs = {String.valueOf(t.getStartDate().getTimeInMillis())};
 		
 		values.put("foreignId", String.valueOf(t.getRemoteID()));
 		try{

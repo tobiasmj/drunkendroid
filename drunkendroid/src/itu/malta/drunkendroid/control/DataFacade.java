@@ -33,6 +33,8 @@ public class DataFacade implements IDataFacade {
 		//also upload to the server!
 		if(t.getRemoteID() == null){
 			remote.uploadTrip(t);
+			//persist the change
+			local.addRemoteIdToTrip(t);
 		}
 		else{
 			remote.updateTrip(t, e);

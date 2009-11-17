@@ -77,4 +77,25 @@ public class LocalSQLTest extends AndroidTestCase {
 		}
 		
 	}
+	
+	public void testUpdateForeignId(){
+		try{
+			this.insertTestData();
+			List<Trip> trips = dbh.getAllTrips();
+			Trip testTrip = trips.get(1);
+			Long foreignId = new Long(123456789);
+			Long testTripStartDate = testTrip.getStartDate().getTimeInMillis();
+			
+			//Build
+			testTrip.setRemoteID(foreignId);
+			dbh.addRemoteIdToTrip(testTrip);
+			testTrip = dbh.getTrip(testTripStartDate);
+			
+			//verify
+			assertEquals(foreignId, testTrip.getRemoteID());
+		}
+		finally{
+			this.flushDB();
+		}
+	}
 }
