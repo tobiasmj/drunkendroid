@@ -10,12 +10,14 @@ public class TripRepository{
 	
 	public TripRepository(Context context){
 		data = new DataFacade(context);
-	}
-
-	public void addEvent(Event e) {
+		
+		activeTrip = data.getActiveTrip();
 		if(activeTrip == null){
 			activeTrip = data.startTrip();
 		}
+	}
+
+	public void addEvent(Event e) {
 		data.addEvent(activeTrip, e);
 	}
 

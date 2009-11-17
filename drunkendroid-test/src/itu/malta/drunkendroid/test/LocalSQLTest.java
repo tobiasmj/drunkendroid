@@ -58,22 +58,23 @@ public class LocalSQLTest extends AndroidTestCase {
 		this.flushDB();
 	}
 	
-//	public void testSelectTripByStartDate(){
-//		//new to get a list of trips first and then fetch one of thoose.. Since the local facade
-//		//will set the datetime itself, so I can't predict it.
-//		try{
-//			this.insertTestData();
-//			final long startDate = 1255816133;
-//			
-//			Trip returnedTrip;
-//			returnedTrip = dbh.getTrip(startDate);
-//			
-//			assertEquals(3, returnedTrip.getTripEvents().size());
-//			assertEquals(startDate, returnedTrip.getStartDate().getTimeInMillis());
-//		}
-//		finally{
-//			this.flushDB();
-//		}
-//		
-//	}
+	public void testSelectTripByStartDate(){
+		//new to get a list of trips first and then fetch one of thoose.. Since the local facade
+		//will set the datetime itself, so I can't predict it.
+		try{
+			this.insertTestData();
+			
+			List<Trip> returnedTrips = dbh.getAllTrips();
+			assertTrue(returnedTrips.size() > 0);
+			Trip someTrip = returnedTrips.get(1);
+			long someTripStartDate = someTrip.getStartDate().getTimeInMillis();
+			
+			Trip returnedTrip = dbh.getTrip(someTripStartDate);
+			assertEquals(someTripStartDate, returnedTrip.getStartDate().getTimeInMillis());
+		}
+		finally{
+			this.flushDB();
+		}
+		
+	}
 }

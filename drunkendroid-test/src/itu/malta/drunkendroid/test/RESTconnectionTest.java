@@ -85,9 +85,9 @@ public class RESTconnectionTest extends AndroidTestCase {
 		//Create a new RESTServerHelper class to test with.
 		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
-		Long tripIdResult = rest.uploadTrip(t);
+		rest.uploadTrip(t);
 		//Don't know how to do these assertions right yet.
-		assertNull(tripIdResult);
+		assertNull(t.getRemoteID());
 	}
 	
 	public void testConsumeWithServerError() throws IllegalStateException, IOException{
@@ -136,7 +136,8 @@ public class RESTconnectionTest extends AndroidTestCase {
 		//Create a new RESTServerHelper class to test with.
 		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
-		Long tripIdResult = rest.uploadTrip(t);
+		rest.uploadTrip(t);
+		Long tripIdResult = t.getRemoteID();
 		verify(conn);
 		//Don't know how to do these assertions right yet.
 		assertEquals(2343456, tripIdResult.intValue());

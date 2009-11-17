@@ -10,8 +10,9 @@ public interface ILocalDataFacade {
 	public void updateEventsWithoutLocation(Trip t, Long latitude, Long Longitude);
 	public List<Trip> getAllTrips();
 	public Trip getTrip(Long startTime);
-	public List<Trip> getOpenTrips();
+	public List<Trip> getActiveTrips();
 	public Trip startTrip();
+	public void addRemoteIdToTrip(Trip t);
 	public void closeTrip(Trip t);
 	public void closeFacade();
 }

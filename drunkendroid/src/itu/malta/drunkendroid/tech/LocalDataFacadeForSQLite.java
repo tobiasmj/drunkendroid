@@ -2,6 +2,7 @@ package itu.malta.drunkendroid.tech;
 
 import itu.malta.drunkendroid.control.ILocalDataFacade;
 import itu.malta.drunkendroid.domain.*;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -120,12 +121,12 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 
 	}
 
-	public List<Trip> getOpenTrips() {
+	public List<Trip> getActiveTrips() {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		List<Trip> resultList = new ArrayList<Trip>();
 		
 		try{
-			final String[] returnColumns = {"tripId", "startDateTime"};
+			final String[] returnColumns = {"id", "foreignId", "startDateTime"};
 			final String whereClause = "active = ?";
 			final String[] whereArgs = {"true"};
 			db.beginTransaction();
@@ -136,9 +137,11 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				Trip trip = new Trip();
 				
 				long tripId = result.getLong(0);
-				long startTime = result.getLong(1);
+				long foreignId = result.getLong(1);
+				long startTime = result.getLong(2);
 				
 				trip.setLocalID(tripId);
+				trip.setRemoteID(foreignId);
 				trip.setDateInMilliSec(startTime);
 				
 				resultList.add(trip);
@@ -161,16 +164,17 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		Trip loadedTrip = new Trip();
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
-		String[] selectedColumns = {"id"};
+		String[] selectedColumns = {"id", "foreignId"};
 		String[] whereDateTimeEQ = {String.valueOf(startTime)};
 		Cursor selectionCursor = db.query(DBHelper.TABLE_TRIP, selectedColumns, "startDateTime = ?", whereDateTimeEQ, null, null, null);
 		//Find the TripId
-		selectionCursor.moveToFirst();
-		long tripId = selectionCursor.getLong(0);
-		if(tripId < 0)
+		if(!selectionCursor.moveToFirst())
 			throw new IllegalArgumentException("The trip could not be located");
-		//The trip was located, which means we now know the startdate
+		//The trip was located, fill it with info
 		loadedTrip.setDateInMilliSec(startTime);
+		Long tripId = selectionCursor.getLong(0);
+		loadedTrip.setLocalID(tripId);
+		loadedTrip.setRemoteID(selectionCursor.getLong(1));
 		selectionCursor.close();
 		//Build the trip
 		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood"};
@@ -193,18 +197,37 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		throw new AndroidRuntimeException("Not yet implemented");
 	}
 	
+	/**
+	 * Close the facade and all instanciated sub-components.
+	 * Don't close active trips. Since they should also be persisted.
+	 */
 	public void closeFacade() {
-		//We ought to also implement a method which closes all trips at the same time.
-		//first, close all active trips.
-		List<Trip> openTrips = this.getOpenTrips();
-		for(Trip t : openTrips){
-			this.closeTrip(t);
-		}
+		//Cleanup the helper nicely.
 		dbHelper.cleanup();
 	}
 
 	public void flushDatabase() {
 		dbHelper.flushDatabase();
 	}
-
+	/**
+	 * Set the remoteId of a Trip already contained in the database.
+	 * @param t The trip which contains a remoteId, but needs to get it set in the database.
+	 */
+	public void addRemoteIdToTrip(Trip t) {
+		SQLiteDatabase db = dbHelper.getDBInstance();
+		ContentValues values = new ContentValues(1);
+		final String whereClause = "id = ?";
+		final String[] whereArgs = {String.valueOf(t.getLocalID())};
+		
+		values.put("foreignId", String.valueOf(t.getRemoteID()));
+		try{
+			db.beginTransaction();
+			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+		
+	}
 }

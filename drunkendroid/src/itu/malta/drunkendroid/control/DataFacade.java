@@ -28,9 +28,15 @@ public class DataFacade implements IDataFacade {
 	 * Add an event to the local and foreign database.
 	 */
 	public void addEvent(Trip t, Event e) {
+		//TODO is an event doesn't contain a geolocation, don't add it to the remote db yet.
 		local.addEvent(t, e);
 		//also upload to the server!
-		remote.updateTrip(t, e);
+		if(t.getRemoteID() == null){
+			remote.uploadTrip(t);
+		}
+		else{
+			remote.updateTrip(t, e);
+		}
 	}
 	
 	/**
@@ -46,6 +52,7 @@ public class DataFacade implements IDataFacade {
 	 */
 	public void closeTrip(Trip t) {
 		local.closeTrip(t);
+		//We could also consider closing all active trips.
 	}
 
 	/**
@@ -95,5 +102,29 @@ public class DataFacade implements IDataFacade {
 		//remote doesn't need to get closed.
 		local = null;
 		remote = null;
+	}
+
+	/**
+	 * If a trip has not been ended correctly, it is still open,
+	 * and can be retrieved by calling this method.
+	 * @return will return null if no active trips are available.
+	 */
+	public Trip getActiveTrip() {
+		List<Trip> trips = local.getActiveTrips();
+		/**
+		 * More than one Trip could in theory be active, if a Trip has not been ended correctly.
+		 * Sometimes the UI layer will expect a single trip to be active, for instance when
+		 * the UI is shutdown due to memory deallocation or another application comming in to focus,
+		 * the active trip should still be in persistence for later use.
+		 */
+		
+		if(trips.size() < 1){
+			return null;
+		}
+		else{
+			//Maybe we should implement a more intelligent way of choosing the trip
+			//But the error with multiple active trips should be solved elsewhere.
+			return trips.get(1);
+		}
 	}
 }

@@ -11,6 +11,7 @@ import itu.malta.drunkendroid.control.IRemoteDataFacade;
 import itu.malta.drunkendroid.domain.*;
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.util.AndroidRuntimeException;
 import android.util.Log;
 import android.util.Xml;
 
@@ -54,20 +55,17 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @param t the trip to be uploaded to the server, with containing events.
 	 * @return The foreign ID of the trip.Can be null, if there was a problem which could not be solved.
 	 */
-	public Long uploadTrip(Trip t)
+	public void uploadTrip(Trip t)
 	{
 		try {
 	        //Build xml
 	    	String xml = buildXmlFromTrip(t);
 	        //Now try to send it
 	        HttpResponse response = conn.postTrip(TRIP + "/"+IMEI, xml);
+	        //Status codes in the 400 range are logged in the consume method.
+	        //These occur if the XML is malformed.
 	        Long resultId = consumeTripUploadResponse(response);
-	        if(response.getStatusLine().getStatusCode() >= 400 && response.getStatusLine().getStatusCode() < 500){
-        		//We have sent some content which could not be read properly.
-	        	//This has been logged in the consume method.
-	        	return resultId;
-        	}
-        	if(response.getStatusLine().getStatusCode() <= 500){
+	        if(response.getStatusLine().getStatusCode() <= 500){
         		//The server has experienced and error. Try over, for a maximum of 3 times.
         		int tries = 0;
         		while(tries < 3 && resultId == null){
@@ -79,20 +77,21 @@ public class RESTServerFacade implements IRemoteDataFacade {
 						//Just go on.
 					}
         			finally{
-						resultId = uploadTrip(t);
-	        			tries += 1;
+						response = conn.postTrip(TRIP + "/"+IMEI, xml);
+						resultId = consumeTripUploadResponse(response);
+        				tries += 1;
         			} 
         		}
-        		return resultId;
+        		t.setRemoteID(resultId);
         	}
+	        //Everything is fine
         	else{
-        		return resultId;
+        		t.setRemoteID(resultId);
         	}
 	    }
 	    catch(IOException e){
 	    	//Something was wrong when we tried to build up xml.
 	    	Log.e(LOGTAG, e.getMessage());
-	    	return null;
 	    }
 	}
 	
@@ -166,6 +165,9 @@ public class RESTServerFacade implements IRemoteDataFacade {
         		}
         	}
 	        else{
+	        	//There was a problem.
+	        	//If it's a status 400 this is all there will be done.
+	        	//a code 500 will result in additional tries in the upload method.
 	        	NodeList nodes = xmlDoc.getElementsByTagName(MESSAGE);
         		Node messageContent = nodes.item(0).getFirstChild();
         		if(messageContent.getNodeType() == Node.TEXT_NODE){
@@ -193,8 +195,12 @@ public class RESTServerFacade implements IRemoteDataFacade {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	public Long updateTrip(Trip t, Event e) {
+	/**
+	 * This method expects a Trip which already has a remoteId.
+	 * To obtain a remoteId call the upLoad function.
+	 */
+	public void updateTrip(Trip t, Event e) {
 		//Not implemented. 
-		return null;
+		throw new AndroidRuntimeException("Not implemented");
 	}
 }
