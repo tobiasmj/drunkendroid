@@ -17,9 +17,9 @@ import itu.malta.drunkendroid.R;
  */
 public class DBHelper extends SQLiteOpenHelper {
 	public static final String DB_NAME = "drunkendroid";
-	public static final Integer DB_VERSION = 6;
+	public static final Integer DB_VERSION = 9;
 	public static final String TABLE_TRIP = "Trip";
-	public static final String TABLE_READING = "Event";
+	public static final String TABLE_EVENT = "Event";
 	public static final String CLASSNAME = "DBHelper";
 	
 	private static DBHelper helper;
@@ -65,7 +65,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		try{
 			db.beginTransaction();
 			db.execSQL(deleteAllContentIN + TABLE_TRIP );
-			db.execSQL(deleteAllContentIN + TABLE_READING);
+			db.execSQL(deleteAllContentIN + TABLE_EVENT);
 			db.setTransactionSuccessful();
 		}
 		catch(SQLException e){
@@ -82,8 +82,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		try{
 			db.beginTransaction();
 			db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime DATETIME NOT NULL, active BOOLEAN NOT NULL, foreignId LONG); ");
-			db.execSQL("CREATE TABLE " + DBHelper.TABLE_READING + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime DATETIME NOT NULL, longitude LONG, latitude LONG, altitude LONG, mood SMALLINT);");
-			db.execSQL("CREATE INDEX TripReading on " + DBHelper.TABLE_READING + " (trip DESC, id ASC);");
+			db.execSQL("CREATE TABLE " + DBHelper.TABLE_EVENT + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime DATETIME NOT NULL, longitude LONG, latitude LONG, altitude LONG, mood SMALLINT);");
+			db.execSQL("CREATE INDEX TripReading on " + DBHelper.TABLE_EVENT + " (trip DESC, id ASC);");
 			db.setTransactionSuccessful();
 		}
 		catch (SQLException e) {
@@ -106,8 +106,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		//Start by tearing down the tables
 		try{
 		db.beginTransaction();
+		db.execSQL("DROP TABLE IF EXISTS " + "Reading" + "; "); //This should be called event by now
 		db.execSQL("DROP TABLE IF EXISTS " + DBHelper.TABLE_TRIP + "; ");
-		db.execSQL("DROP TABLE IF EXISTS " + DBHelper.TABLE_READING + "; ");
+		db.execSQL("DROP TABLE IF EXISTS " + DBHelper.TABLE_EVENT + "; ");
 		db.setTransactionSuccessful();
 		}
 		finally{

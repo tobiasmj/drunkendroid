@@ -41,7 +41,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				readingValues.put("mood", r.mood);
 			}
 			
-			long success = db.insertOrThrow(DBHelper.TABLE_READING, null, readingValues);
+			long success = db.insertOrThrow(DBHelper.TABLE_EVENT, null, readingValues);
 			if(success == -1)
 				throw new SQLException("The reading was not inserted");
 			db.setTransactionSuccessful();
@@ -181,7 +181,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		//Build the trip
 		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood"};
 		String[] whereTripEQ = {String.valueOf(tripId)};
-		Cursor selectionOfReadings = db.query(DBHelper.TABLE_READING, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
+		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
 			ReadingEvent r = new ReadingEvent(selectionOfReadings.getLong(0), 
