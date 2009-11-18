@@ -193,6 +193,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			//Add to the trip
 			loadedTrip.AddEvent(r);
 		}
+		selectionOfReadings.close();
+		
 		return loadedTrip;
 	}
 
