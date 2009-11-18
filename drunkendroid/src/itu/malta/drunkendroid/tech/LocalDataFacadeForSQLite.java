@@ -148,6 +148,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				
 				resultList.add(trip);
 			}
+			//Remember to close the Cursor.
+			result.close();
 			
 		}
 		catch(SQLException e){
