@@ -93,7 +93,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 
 	public List<Trip> getAllTrips() {
 		ArrayList<Trip> trips = new ArrayList<Trip>();
-		String[] selectedTripColumns = {"startDateTime"};
+		String[] selectedTripColumns = {"startDateTime, id, foreignId"};
 		Cursor returnedTrips = null;
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
@@ -110,8 +110,12 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		try{
 			while(returnedTrips.moveToNext()){
 				long startDateTime = returnedTrips.getLong(0);
+				long localId = returnedTrips.getLong(1);
+				long remoteId = returnedTrips.getLong(2);
 				Trip trip = new Trip();
 				trip.setDateInMilliSec(startDateTime);
+				trip.setLocalID(localId);
+				trip.setRemoteID(remoteId);
 				trips.add(trip);
 			}
 		}
@@ -235,5 +239,29 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			db.endTransaction();
 		}
 		
+	}
+	public int getEventCount(Trip t) {
+		Long localTripId = t.getLocalID();
+		SQLiteDatabase db = dbHelper.getDBInstance();
+		final String[] columns = {"count(*)"};
+		final String whereClause = " trip = ?";
+		final String[] whereArgs = {String.valueOf(localTripId)};
+		int result = 0;
+		db.beginTransaction();
+		Cursor cursor = db.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
+		
+		try{
+			if(cursor.moveToFirst()){
+				//Get the count
+				result = cursor.getInt(0);
+				db.setTransactionSuccessful();
+			}
+		}
+		finally{
+			db.endTransaction();
+			cursor.close();
+		}
+		
+		return result;
 	}
 }

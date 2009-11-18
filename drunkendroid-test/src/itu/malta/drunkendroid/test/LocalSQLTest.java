@@ -98,4 +98,22 @@ public class LocalSQLTest extends AndroidTestCase {
 			this.flushDB();
 		}
 	}
+	
+	public void testGetCountFromTrip(){
+		try{
+			this.insertTestData();
+			List<Trip> trips = dbh.getAllTrips();
+			Trip testTrip = trips.get(1);
+			
+			Trip controlTrip = dbh.getTrip(testTrip.getStartDate().getTimeInMillis());
+			int eventCount = controlTrip.getTripEvents().size();
+			int testCount = dbh.getEventCount(testTrip);
+			
+			assertTrue(eventCount > 0);
+			assertEquals(eventCount, testCount);
+		}
+		finally{
+			this.flushDB();
+		}
+	}
 }

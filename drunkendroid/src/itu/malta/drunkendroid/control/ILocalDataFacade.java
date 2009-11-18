@@ -8,6 +8,13 @@ import java.util.List;
 public interface ILocalDataFacade {
 	public void addEvent(Trip t, Event e);
 	public void updateEventsWithoutLocation(Trip t, Long latitude, Long Longitude);
+	
+	/**
+	 * 
+	 * @param t
+	 * @return The number of Events registered for t
+	 */
+	public int getEventCount(Trip t);
 	public List<Trip> getAllTrips();
 	public Trip getTrip(Long startTime);
 	public List<Trip> getActiveTrips();
