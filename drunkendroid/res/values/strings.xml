@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="appName">DrunkenDroid</string>
-    <string name="activity_main">DrunkenDroid : Menu</string>
-    <string name="activity_mood_map">DrunkenDroid : Mood Map</string>
-    <string name="activity_app_settings">DrunkenDroid : Settings</string>
-    <string name="txt_first_time_use">Please configure DrunkenDroid for first-time use</string>
+	<string name="appName">DrunkDroid</string>
+    <string name="activity_main">DrunkDroid : Menu</string>
+    <string name="activity_mood_map">DrunkDroid : Mood Map</string>
+    <string name="activity_app_settings">DrunkDroid : Settings</string>
+    <string name="txt_first_time_use">Please configure DrunkDroid for first-time use</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_previous_trips">Prev. Trips</string> 
     <string name="menu_upload">Upload</string>
@@ -13,7 +13,7 @@
     <string name="save_settings_button">Save changes</string>
     <string name="discard_settings_button">Discard changes</string>
     <string name="restore_settings_button">Restore defaults</string>
-    <string name="log_tag">DrunkenDroid</string>
+    <string name="log_tag">DrunkDroid</string>
     
     <string-array name="mood_read_intervals">
     	<item>15</item>
