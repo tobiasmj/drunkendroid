@@ -22,7 +22,9 @@ public class TripRepository{
 	}
 
 	public void closeRepository() {
-		data.closeFacade();
+		if(data != null){
+			data.closeFacade();
+		}
 	}
 
 	public void endTrip() {
