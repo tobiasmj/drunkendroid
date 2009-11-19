@@ -77,6 +77,9 @@ public class DataFacade implements IDataFacade {
 	}
 
 
+	public int getEventCount(Trip t){
+		return local.getEventCount(t);
+	}
 	/**
 	 * @return The trip belonging to the user, which started on the unique moment.
 	 * @param startTime the unique start.

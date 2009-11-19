@@ -20,6 +20,10 @@ public class TripRepository{
 	public void addEvent(Event e) {
 		data.addEvent(activeTrip, e);
 	}
+	
+	public int getEventCount(Trip t){
+		return data.getEventCount(t);
+	}
 
 	public void closeRepository() {
 		if(data != null){

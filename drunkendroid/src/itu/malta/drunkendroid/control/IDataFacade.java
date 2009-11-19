@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IDataFacade {
 	public void addEvent(Trip t, Event e);
+	public int getEventCount(Trip t);
 	public void updateEventsWithoutLocation(Trip t, Long latitude, Long Longitude);
 	public List<Trip> getAllTrips();
 	public Trip getTrip(Long startTime);
