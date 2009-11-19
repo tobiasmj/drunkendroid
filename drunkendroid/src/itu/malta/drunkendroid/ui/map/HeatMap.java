@@ -24,21 +24,19 @@ public class HeatMap{
 	private Bitmap _colorImage;
 	private int[] _colorTable;
 	private Bitmap _bitmap;
-	private Projection _projection;
+	private Canvas _canvas;
 	private int _zoomLevel;
 	private int _radius;
 	
-	private HeatMap(MapView mapView)
+	private HeatMap()
 	{
 		_colorImage = createGradientImage(new Point(256, 1));
 		_colorTable = createColorLookupTable(_colorImage,1.0f);
-		_projection = mapView.getProjection();
-		_bitmap = Bitmap.createBitmap(mapView.getWidth(), mapView.getHeight(), Config.ARGB_8888);
 	}
 	
-	public static HeatMap getInstance(MapView mapView)
+	public static HeatMap getInstance()
 	{
-		if(_instance == null) _instance = new HeatMap(mapView);
+		if(_instance == null) _instance = new HeatMap();
 		return _instance;
 	}
 	
@@ -48,12 +46,16 @@ public class HeatMap{
 			_moods.add(gp);
 	}
 	
+	public Bitmap getHeatmap()
+	{
+		return _bitmap;
+	}
+	
 	public Bitmap createHeatmap(MapView mapView)
 	{
-		System.out.println("Creating heatmap..");
-		
-        Bitmap bitmap = Bitmap.createBitmap(_bitmap.getWidth(),_bitmap.getHeight(),Config.ARGB_8888);
-		Canvas canvas = new Canvas(bitmap);
+		Projection projection = mapView.getProjection();
+		_bitmap = Bitmap.createBitmap(mapView.getWidth(), mapView.getHeight(), Config.RGB_565);
+		_canvas = new Canvas(_bitmap);
 		
 		if(mapView.getZoomLevel() != _zoomLevel)
 			calculateRadius(mapView.getZoomLevel());
@@ -61,35 +63,23 @@ public class HeatMap{
 		// Drawing geopoints
         for(GeoPoint gp : _moods)
         {
-        	canvas = drawCircle(canvas, gp);
+        	_canvas = drawCircle(_canvas, projection, gp);
         }
-        
-        System.out.println("Start test loop");
-        for (int i = 0; i < 320; i++)
-        {
-        	for (int j = 0; j < 480; j++)
-        	{
-        		
-        	}
-        }
-        System.out.println("End test loop");
 
-        System.out.println("Start bitmap loop");
-		for (int i = 0; i < bitmap.getWidth(); ++i)
+        int width = _bitmap.getWidth();
+        int height = _bitmap.getHeight();
+        
+		for (int i = 0; i < width; ++i)
 		{ 
-			for (int j = 0; j < bitmap.getHeight(); ++j)
+			for (int j = 0; j < height; ++j)
 			{
+				int alpha = Color.alpha(_bitmap.getPixel(i, j));
+				if(alpha != 0)
+					_bitmap.setPixel(i, j, _colorTable[alpha]);
 			}
 		}
-        System.out.println("End bitmap loop");
-
-
-		//int alpha = Color.alpha(bmp.getPixel(i, j));
-		//if(alpha != 0)
-		//	bitmap.setPixel(i, j, _colorTable[alpha]);
-		
-		System.out.println("Heatmap created ...");
-        return bitmap;
+		System.out.println("");
+        return _bitmap;
 	}
 	
 	private static Bitmap createGradientImage(Point size)
@@ -97,13 +87,14 @@ public class HeatMap{
 		Bitmap bmp = Bitmap.createBitmap( size.x, size.y, Config.ARGB_8888);
 		Canvas tempCanvas = new Canvas(bmp);
 		Paint paint = new Paint();
-		int[] gradientColors = new int[]{Color.WHITE, 
-											Color.RED, 
-											Color.YELLOW, 
-											Color.GREEN, 
-											Color.CYAN, 
+		int[] gradientColors = new int[]{Color.argb(255, 0, 0, 102),
+											Color.WHITE, 
 											Color.BLUE, 
-											Color.argb(0, 150, 150, 150)}; // Should be dark blue
+											Color.CYAN, 
+											Color.GREEN, 
+											Color.YELLOW, 
+											Color.RED, 
+											Color.WHITE}; // Should be dark blue
 		LinearGradient gradient = new LinearGradient(0, 0, bmp.getWidth(), bmp.getHeight(), gradientColors, null, TileMode.CLAMP);
 		paint.setShader(gradient);
 		
@@ -139,13 +130,12 @@ public class HeatMap{
 		}
 	}
 	
-    private Canvas drawCircle(Canvas canvas, GeoPoint gp)
+    private Canvas drawCircle(Canvas canvas, Projection projection, GeoPoint gp)
     {
-		Point p = new Point();
-		_projection.toPixels(gp, p);
+		Point p = projection.toPixels(gp, null);
 		
 		// Create gradient circle
-		int[] gradientColors = new int[]{Color.BLACK,Color.TRANSPARENT};
+		int[] gradientColors = new int[]{Color.argb(180, 255, 255, 255),Color.TRANSPARENT};
 		Shader gradientShader = new RadialGradient(p.x, p.y, _radius, gradientColors, null, TileMode.CLAMP);
 		
 		// Create and setup paint brush
