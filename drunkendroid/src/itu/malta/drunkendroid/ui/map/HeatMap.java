@@ -24,14 +24,13 @@ public class HeatMap{
 	private Bitmap _colorImage;
 	private int[] _colorTable;
 	private Bitmap _bitmap;
-	private Canvas _canvas;
 	private int _zoomLevel;
 	private int _radius;
 	
 	private HeatMap()
 	{
-		_colorImage = createGradientImage(new Point(256, 1));
-		_colorTable = createColorLookupTable(_colorImage,1.0f);
+		_colorImage = createGradientImage();
+		_colorTable = createColorLookupTable(_colorImage);
 	}
 	
 	public static HeatMap getInstance()
@@ -54,56 +53,58 @@ public class HeatMap{
 	public Bitmap createHeatmap(MapView mapView)
 	{
 		Projection projection = mapView.getProjection();
-		_bitmap = Bitmap.createBitmap(mapView.getWidth(), mapView.getHeight(), Config.RGB_565);
-		_canvas = new Canvas(_bitmap);
+		Bitmap bitmap = Bitmap.createBitmap(mapView.getWidth(), mapView.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
 		
 		if(mapView.getZoomLevel() != _zoomLevel)
 			calculateRadius(mapView.getZoomLevel());
 
 		// Drawing geopoints
         for(GeoPoint gp : _moods)
-        {
-        	_canvas = drawCircle(_canvas, projection, gp);
-        }
+        	canvas = drawCircle(canvas, projection, gp);
 
-        int width = _bitmap.getWidth();
-        int height = _bitmap.getHeight();
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
         
-		for (int i = 0; i < width; ++i)
-		{ 
-			for (int j = 0; j < height; ++j)
-			{
-				int alpha = Color.alpha(_bitmap.getPixel(i, j));
-				if(alpha != 0)
-					_bitmap.setPixel(i, j, _colorTable[alpha]);
-			}
-		}
-		System.out.println("");
+        int[] pixels = new int[width*height];
+        
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        
+        // Change alpha value to the appropriate color from the color table
+        for(int i = 0; i < pixels.length; i++)
+        {
+        	int alpha = Color.alpha(pixels[i]);
+        	if(alpha > 0)
+        		pixels[i] = _colorTable[alpha];
+        }
+        
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        
+        _bitmap = bitmap;
+        
         return _bitmap;
 	}
 	
-	private static Bitmap createGradientImage(Point size)
+	private static Bitmap createGradientImage()
 	{
-		Bitmap bmp = Bitmap.createBitmap( size.x, size.y, Config.ARGB_8888);
-		Canvas tempCanvas = new Canvas(bmp);
+		Bitmap bmp = Bitmap.createBitmap(256, 1, Config.ARGB_8888);
+		Canvas canvas = new Canvas(bmp);
 		Paint paint = new Paint();
-		int[] gradientColors = new int[]{Color.argb(255, 0, 0, 102),
-											Color.WHITE, 
-											Color.BLUE, 
-											Color.CYAN, 
-											Color.GREEN, 
-											Color.YELLOW, 
-											Color.RED, 
-											Color.WHITE}; // Should be dark blue
+		int[] gradientColors = new int[]{Color.TRANSPARENT,
+				 Color.argb(155, 255, 255, 255), // White
+				 Color.argb(155, 74, 135, 248), // Blue
+				 Color.argb(155, 128, 223, 59), // Green
+				 Color.argb(155, 255, 200, 0), // Yellow
+				 Color.argb(155, 216, 15, 15)}; // Red
 		LinearGradient gradient = new LinearGradient(0, 0, bmp.getWidth(), bmp.getHeight(), gradientColors, null, TileMode.CLAMP);
 		paint.setShader(gradient);
 		
-		tempCanvas.drawPaint(paint);
+		canvas.drawPaint(paint);
 
 		return bmp;
 	}
 	
-	private static int[] createColorLookupTable(Bitmap bmp, float alpha)
+	private static int[] createColorLookupTable(Bitmap bmp)
 	{
 		int tableSize = 256;
 		int[] colorTable = new int[tableSize];
@@ -135,7 +136,7 @@ public class HeatMap{
 		Point p = projection.toPixels(gp, null);
 		
 		// Create gradient circle
-		int[] gradientColors = new int[]{Color.argb(180, 255, 255, 255),Color.TRANSPARENT};
+		int[] gradientColors = new int[]{Color.WHITE, Color.TRANSPARENT};
 		Shader gradientShader = new RadialGradient(p.x, p.y, _radius, gradientColors, null, TileMode.CLAMP);
 		
 		// Create and setup paint brush
