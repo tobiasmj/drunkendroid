@@ -6,11 +6,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.util.AndroidRuntimeException;
+
 public class WebserviceConnectionREST implements IWebserviceConnection{
 	private static final String BASE_URI = "http://192.168.0.13:8182/drunkendroid/";
 	private static final String targetDomain = "192.168.0.13";
 	
-	public HttpResponse postTrip(String URI, String xmlContent){
+	public HttpResponse post(String URI, String xmlContent){
 		DefaultHttpClient httpClient = new DefaultHttpClient();
         
         HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
@@ -34,6 +36,11 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
                 ex.printStackTrace();
                 return null;
         }
+	}
+
+	public HttpResponse get(String string) {
+		// TODO Auto-generated method stub
+		throw new AndroidRuntimeException("Not yet implemented");
 	}
 
 }

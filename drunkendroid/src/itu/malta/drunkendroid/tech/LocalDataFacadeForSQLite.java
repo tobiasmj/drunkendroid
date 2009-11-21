@@ -11,7 +11,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.AndroidRuntimeException;
 import android.util.Log;
 
 public class LocalDataFacadeForSQLite implements ILocalDataFacade {
@@ -190,6 +189,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
+			//Error. This might also be something different than a ReadingEvent. Implement a type in the db.
 			ReadingEvent r = new ReadingEvent(selectionOfReadings.getLong(0), 
 					selectionOfReadings.getDouble(1), 
 					selectionOfReadings.getDouble(2), 
@@ -202,9 +202,60 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		return loadedTrip;
 	}
 
-	public void updateEventsWithoutLocation(Trip t, Long latitude, Long Longitude) {
-		// TODO Auto-generated method stub
-		throw new AndroidRuntimeException("Not yet implemented");
+	public List<Event> updateEventsWithoutLocation(Trip t, Double latitude, Double longitude) {
+		SQLiteDatabase db = dbHelper.getDBInstance();
+		
+		//Find the events which will be updated.
+		final String[] columns = {"dateTime", "mood"}; //the location is not known silly.
+		final String selection = " longitude = NULL AND latitude = NULL";
+		List<Event> events = new ArrayList<Event>();
+		
+		db.beginTransaction();
+		Cursor cursor = db.query(DBHelper.TABLE_EVENT, columns, selection, null, null, null, null);
+		try{
+			while(cursor.moveToNext()){
+				//So there is another event.
+				Long date = cursor.getLong(0);
+				
+				//does the event has a mood?
+				if(cursor.isNull(1)){
+					//No
+					//This is an ordinary event
+					events.add(new Event(date, latitude, longitude));
+				}
+				else{
+					//Yes
+					//This is a ReadingEvent
+					int mood = cursor.getInt(1);
+					events.add(new ReadingEvent(date, latitude, longitude, mood));
+				}
+				
+			}
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+		
+		//Now do the update
+		ContentValues values = new ContentValues(2);
+		final String whereClause = "tripId = ?";
+		final String[] whereArgs = {String.valueOf(t.getLocalID())};
+		
+		values.put("longitude", String.valueOf(longitude));
+		values.put("latitude",  String.valueOf(latitude));
+		
+		try{
+			db.beginTransaction();
+			db.update(DBHelper.TABLE_EVENT, values, whereClause, whereArgs);
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+		
+		//return the event which where updated.
+		return events;
 	}
 	
 	/**
@@ -226,8 +277,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 	public void addRemoteIdToTrip(Trip t) {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
-		final String whereClause = "startDateTime = ?";
-		final String[] whereArgs = {String.valueOf(t.getStartDate().getTimeInMillis())};
+		final String whereClause = "id = ?";
+		final String[] whereArgs = {String.valueOf(t.getLocalID())};
 		
 		values.put("foreignId", String.valueOf(t.getRemoteID()));
 		try{

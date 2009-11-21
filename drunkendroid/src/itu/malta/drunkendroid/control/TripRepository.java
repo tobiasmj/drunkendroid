@@ -40,17 +40,17 @@ public class TripRepository{
 		return data.getAllTrips();
 	}
 
-	public Trip getEvents(Long starTime, Long endTime, Long latitude,
-			Long longitude, Long distance) {
-		return data.getEvents(starTime, endTime, latitude, longitude, distance);
+	public List<ReadingEvent> getEvents(Long starTime, Long endTime, Double latitude,
+			Double longitude, Long distance) {
+		return data.getReadingEvents(starTime, endTime, latitude, longitude, distance);
 	}
 
 	public Trip getTrip(Long startTime) {
 		return data.getTrip(startTime);
 	}
 
-	public void updateEventsWithoutLocation(Long latitude,
-			Long Longitude) {
+	public void updateEventsWithoutLocation(Double latitude,
+			Double Longitude) {
 		data.updateEventsWithoutLocation(activeTrip, latitude, Longitude);
 	}
 }

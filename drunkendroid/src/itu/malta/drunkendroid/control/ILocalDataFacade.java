@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ILocalDataFacade {
 	public void addEvent(Trip t, Event e);
-	public void updateEventsWithoutLocation(Trip t, Long latitude, Long Longitude);
-	
+	public List<Event> updateEventsWithoutLocation(Trip t, Double latitude, Double longitude);
+
 	/**
 	 * 
 	 * @param t

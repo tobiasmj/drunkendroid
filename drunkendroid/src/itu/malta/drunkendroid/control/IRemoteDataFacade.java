@@ -1,5 +1,7 @@
 package itu.malta.drunkendroid.control;
 
+import java.util.List;
+
 import itu.malta.drunkendroid.domain.*;
 
 public interface IRemoteDataFacade {
@@ -12,7 +14,7 @@ public interface IRemoteDataFacade {
 	 * @param distance
 	 * @return A synthesized Trip which contains events returned by the query.
 	 */
-	public Trip getEvents(Long starTime, Long endTime, Long latitude, Long longitude, Long distance);
+	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double latitude, Double longitude, Long distance);
 	
 	/**
 	 * Upload a trip to the server

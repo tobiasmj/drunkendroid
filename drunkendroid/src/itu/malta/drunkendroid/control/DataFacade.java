@@ -1,6 +1,7 @@
 package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.domain.Event;
+import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.LocalDataFacadeForSQLite;
@@ -8,9 +9,10 @@ import itu.malta.drunkendroid.tech.RESTServerFacade;
 import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
 import java.util.List;
 import android.content.Context;
-import android.util.AndroidRuntimeException;
+import android.util.Log;
 
 public class DataFacade implements IDataFacade {
+	private static final String LOGTAG = "Drunkendroid DataFacade";
 	private IRemoteDataFacade remote;
 	private ILocalDataFacade local;
 	
@@ -28,17 +30,19 @@ public class DataFacade implements IDataFacade {
 	 * Add an event to the local and foreign database.
 	 */
 	public void addEvent(Trip t, Event e) {
-		//TODO is an event doesn't contain a geolocation, don't add it to the remote db yet.
 		local.addEvent(t, e);
-		//also upload to the server!
-//		if(t.getRemoteID() == null){
-//			remote.uploadTrip(t);
-//			//persist the change
-//			local.addRemoteIdToTrip(t);
-//		}
-//		else{
-//			remote.updateTrip(t, e);
-//		}
+
+		if(e.latitude != null && e.longitude != null){
+			//also upload to the server, if the location is known.
+			if(t.getRemoteID() == null){
+				remote.uploadTrip(t);
+				//persist the change
+				local.addRemoteIdToTrip(t);
+			}
+			else{
+				remote.updateTrip(t, e);
+			}	
+		}	
 	}
 	
 	/**
@@ -71,9 +75,9 @@ public class DataFacade implements IDataFacade {
 	 * @param latiude latitude of the center of the area of interest.
 	 * @param longitude longitude of the center of the area of interest.
 	 */
-	public Trip getEvents(Long startTime, Long endTime, Long latitude,
-			Long longitude, Long distance) {
-		return remote.getEvents(startTime, endTime, latitude, longitude, distance);
+	public List<ReadingEvent> getReadingEvents(Long startTime, Long endTime, Double latitude,
+			Double longitude, Long distance) {
+		return remote.getReadingEvents(startTime, endTime, latitude, longitude, distance);
 	}
 
 
@@ -92,11 +96,15 @@ public class DataFacade implements IDataFacade {
 	 * This method handles events which have not yet been equipped with a location.
 	 * This might be due to a failure or delay from the GPS module
 	 */
-	public void updateEventsWithoutLocation(Trip t, Long latitude,
-			Long Longitude) {
-		throw new AndroidRuntimeException("Not Implemented");
-		// TODO Auto-generated method stub
-
+	public void updateEventsWithoutLocation(Trip t, Double latitude,
+			Double longitude) {
+		Log.i(LOGTAG, "Trying to update events witouth location in the trip with id " + t.getLocalID());
+		List<Event> updatedEvents = local.updateEventsWithoutLocation(t, latitude, longitude);
+		//now update the trip on the server.
+		for(Event e : updatedEvents){
+			//This ought to be done in a different thread.
+			remote.updateTrip(t, e);
+		}
 	}
 
 	/**
