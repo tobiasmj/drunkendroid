@@ -2,14 +2,12 @@ package itu.malta.drunkendroid.ui.map;
 
 import java.util.ArrayList;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Projection;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RadialGradient;
@@ -20,8 +18,7 @@ import android.graphics.Shader.TileMode;
 public class HeatMap{
 
 	private static HeatMap _instance = null;
-	private ArrayList<GeoPoint> _moods = new ArrayList<GeoPoint>();
-	private Bitmap _colorImage;
+	private ArrayList<MoodMapPoint> _moods = new ArrayList<MoodMapPoint>();
 	private int[] _colorTable;
 	private Bitmap _bitmap;
 	private int _zoomLevel;
@@ -29,8 +26,7 @@ public class HeatMap{
 	
 	private HeatMap()
 	{
-		_colorImage = createGradientImage();
-		_colorTable = createColorLookupTable(_colorImage);
+		_colorTable = ColorTable.getColorTable();
 	}
 	
 	public static HeatMap getInstance()
@@ -39,10 +35,10 @@ public class HeatMap{
 		return _instance;
 	}
 	
-	public void addGeoPoint(GeoPoint gp)
+	public void addMoodMapPoint(MoodMapPoint mp)
 	{
-		if(!_moods.contains(gp))
-			_moods.add(gp);
+		if(!_moods.contains(mp))
+			_moods.add(mp);
 	}
 	
 	public Bitmap getHeatmap()
@@ -60,8 +56,8 @@ public class HeatMap{
 			calculateRadius(mapView.getZoomLevel());
 
 		// Drawing geopoints
-        for(GeoPoint gp : _moods)
-        	canvas = drawCircle(canvas, projection, gp);
+        for(MoodMapPoint mp : _moods)
+        	canvas = drawCircle(canvas, projection, mp);
 
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -85,35 +81,6 @@ public class HeatMap{
         return _bitmap;
 	}
 	
-	private static Bitmap createGradientImage()
-	{
-		Bitmap bmp = Bitmap.createBitmap(256, 1, Config.ARGB_8888);
-		Canvas canvas = new Canvas(bmp);
-		Paint paint = new Paint();
-		int[] gradientColors = new int[]{Color.TRANSPARENT,
-				 Color.argb(155, 255, 255, 255), // White
-				 Color.argb(155, 74, 135, 248), // Blue
-				 Color.argb(155, 128, 223, 59), // Green
-				 Color.argb(155, 255, 200, 0), // Yellow
-				 Color.argb(155, 216, 15, 15)}; // Red
-		LinearGradient gradient = new LinearGradient(0, 0, bmp.getWidth(), bmp.getHeight(), gradientColors, null, TileMode.CLAMP);
-		paint.setShader(gradient);
-		
-		canvas.drawPaint(paint);
-
-		return bmp;
-	}
-	
-	private static int[] createColorLookupTable(Bitmap bmp)
-	{
-		int tableSize = 256;
-		int[] colorTable = new int[tableSize];
-		for (int i = 0; i < tableSize; ++i)
-			colorTable[i] = bmp.getPixel(i, 0);
-
-		return colorTable;
-	}
-	
 	private void calculateRadius(int zoomLevel)
 	{
 		_zoomLevel = zoomLevel;
@@ -131,13 +98,14 @@ public class HeatMap{
 		}
 	}
 	
-    private Canvas drawCircle(Canvas canvas, Projection projection, GeoPoint gp)
+    private Canvas drawCircle(Canvas canvas, Projection projection, MoodMapPoint mp)
     {
-		Point p = projection.toPixels(gp, null);
+		Point p = projection.toPixels(mp.getGeoPoint(), null);
+		int radius = (_radius * mp.getMood()) / 255;
 		
 		// Create gradient circle
-		int[] gradientColors = new int[]{Color.WHITE, Color.TRANSPARENT};
-		Shader gradientShader = new RadialGradient(p.x, p.y, _radius, gradientColors, null, TileMode.CLAMP);
+		int[] gradientColors = new int[]{Color.argb(mp.getMood(), 255, 255, 255), Color.TRANSPARENT};
+		Shader gradientShader = new RadialGradient(p.x, p.y, radius, gradientColors, null, TileMode.CLAMP);
 		
 		// Create and setup paint brush
 		Paint paint = new Paint();

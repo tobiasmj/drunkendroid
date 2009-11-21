@@ -31,14 +31,14 @@ public class DataFacade implements IDataFacade {
 		//TODO is an event doesn't contain a geolocation, don't add it to the remote db yet.
 		local.addEvent(t, e);
 		//also upload to the server!
-		if(t.getRemoteID() == null){
-			remote.uploadTrip(t);
-			//persist the change
-			local.addRemoteIdToTrip(t);
-		}
-		else{
-			remote.updateTrip(t, e);
-		}
+//		if(t.getRemoteID() == null){
+//			remote.uploadTrip(t);
+//			//persist the change
+//			local.addRemoteIdToTrip(t);
+//		}
+//		else{
+//			remote.updateTrip(t, e);
+//		}
 	}
 	
 	/**

@@ -204,8 +204,8 @@ public class DrunkenService extends Service implements
 						Location location = manager.GetLastKnownLocation();
 						ReadingEvent readingEvent = new ReadingEvent(location,bundle.getShort("mood"));
 						repository.addEvent(readingEvent);
-						System.out.println(bundle.get("Sending MoodReading : " + location.getLatitude() + " x " +
-								location.getLongitude()));
+						System.out.println("Sending MoodReading : " + location.getLatitude() + " x " +
+								location.getLongitude());
 					}
 				};
 

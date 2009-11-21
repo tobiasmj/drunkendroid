@@ -1,7 +1,6 @@
 package itu.malta.drunkendroid.ui.map;
 
 import android.graphics.Canvas;
-import android.graphics.Point;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -36,12 +35,18 @@ public class MoodOverlay extends Overlay
 		        GeoPoint gp3 = new GeoPoint(lat3.intValue(), lng3.intValue());
 		        GeoPoint gp4 = new GeoPoint(lat4.intValue(), lng4.intValue());
 		        GeoPoint gp5 = new GeoPoint(lat5.intValue(), lng5.intValue());
+
+		        MoodMapPoint mp1 = new MoodMapPoint(gp1, 48);
+		        MoodMapPoint mp2 = new MoodMapPoint(gp2, 255);
+		        MoodMapPoint mp3 = new MoodMapPoint(gp3, 168);
+		        MoodMapPoint mp4 = new MoodMapPoint(gp4, 98);
+		        MoodMapPoint mp5 = new MoodMapPoint(gp5, 145);
 		        
-				_heatmap.addGeoPoint(gp1);
-				_heatmap.addGeoPoint(gp2);
-				_heatmap.addGeoPoint(gp3);
-				_heatmap.addGeoPoint(gp4);
-				_heatmap.addGeoPoint(gp5);
+				_heatmap.addMoodMapPoint(mp1);
+				_heatmap.addMoodMapPoint(mp2);
+				_heatmap.addMoodMapPoint(mp3);
+				_heatmap.addMoodMapPoint(mp4);
+				_heatmap.addMoodMapPoint(mp5);
 
 				_mapView = mapView;
 				System.out.println("Creating heatmap");
