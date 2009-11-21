@@ -199,8 +199,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			else{
 				//This is a reading event
 				ReadingEvent r = new ReadingEvent(date, 
-						longitude, 
 						latitude, 
+						longitude, 
 						selectionOfReadings.getInt(3)); //Add mood
 				//Add to the trip
 				loadedTrip.AddEvent(r);
@@ -246,6 +246,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		}
 		finally{
 			db.endTransaction();
+			cursor.close();
 		}
 		
 		//Now do the update
