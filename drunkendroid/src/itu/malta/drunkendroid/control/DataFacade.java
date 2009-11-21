@@ -7,6 +7,8 @@ import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.LocalDataFacadeForSQLite;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
 import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
+import itu.malta.drunkendroid.tech.dummy.DummyRESTserver;
+
 import java.util.List;
 import android.content.Context;
 import android.util.Log;
@@ -22,7 +24,8 @@ public class DataFacade implements IDataFacade {
 	
 	public DataFacade(Context context){
 		IWebserviceConnection connection = new WebserviceConnectionREST();
-		remote = new RESTServerFacade(context, connection);
+		//remote = new RESTServerFacade(context, connection);
+		remote = new DummyRESTserver();
 		local = new LocalDataFacadeForSQLite(context);
 	}
 	

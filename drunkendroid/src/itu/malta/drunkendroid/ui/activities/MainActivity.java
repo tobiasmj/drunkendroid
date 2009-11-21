@@ -152,6 +152,9 @@ public class MainActivity extends Activity {
 							MainActivity.this,
 							itu.malta.drunkendroid.control.services.DrunkenService.class);
 					startService(i);
+					
+					stopServiceBtn.setVisibility(View.GONE);
+					startServiceBtn.setVisibility(View.VISIBLE);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
@@ -161,6 +164,9 @@ public class MainActivity extends Activity {
 					stopService(new Intent(
 							MainActivity.this,
 							itu.malta.drunkendroid.control.services.DrunkenService.class));
+					
+					stopServiceBtn.setVisibility(View.VISIBLE);
+					startServiceBtn.setVisibility(View.GONE);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}

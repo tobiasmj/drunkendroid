@@ -250,7 +250,7 @@ public class DrunkenService extends Service implements
 	public void OnLocationChange(Location location) {
 		// The location of the device has changed. Save event to trip and check
 		// for possible events with unset locations.
-		Toast toast = Toast.makeText(this, "Location changed!", 5);
+		Toast toast = Toast.makeText(this, "Location changed! Accuracy: " + location.getAccuracy(), 5);
 		toast.show();
 		LocationEvent locationEvent = new LocationEvent(location);
 		repository.addEvent(locationEvent);

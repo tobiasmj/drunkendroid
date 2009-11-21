@@ -43,10 +43,10 @@ public class ViewTripActivity extends MapActivity {
             Trip trip = tripRep.getTrip(startTime);
             tripRep.closeRepository();
             
-        	Double minLat = null;
-        	Double maxLat = null;
-        	Double minLong = null;
-        	Double maxLong = null;
+        	Double minLat = Double.POSITIVE_INFINITY;
+        	Double maxLat = Double.NEGATIVE_INFINITY;
+        	Double minLong = Double.POSITIVE_INFINITY;
+        	Double maxLong = Double.NEGATIVE_INFINITY;
         	ArrayList<LocationEvent> locationEvents = new ArrayList<LocationEvent>();
             
             for(Event e : trip.getTripEvents())
@@ -72,7 +72,7 @@ public class ViewTripActivity extends MapActivity {
             	
             }
             
-            float[] span = null;
+            float[] span = new float[2];
             Location.distanceBetween(minLat, minLong, maxLat, maxLong, span);
 
             _mapController.zoomToSpan((int)(span[0]*1E6), (int)(span[1]*1E6));
