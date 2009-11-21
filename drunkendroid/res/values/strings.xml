@@ -16,6 +16,7 @@
     <string name="restore_settings_button">Restore defaults</string>
     <string name="log_tag">DrunkDroid</string>
     <string name="no_previous_trips">There are no previous trips</string>
+    <string name="view_trip">View trip</string>
     
     <string-array name="mood_read_intervals">
     	<item>15</item>

@@ -19,6 +19,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activities.ViewTripActivity"
+                  android:label="@string/view_trip">
+            <intent-filter>
+                <action android:name="VIEW_TRIP" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.activities.AppSettingsActivity" 
         	      android:label="@string/activity_app_settings"
         	      android:theme="@style/BrightTheme">
