@@ -253,6 +253,7 @@ public class DrunkenService extends Service implements
 		Toast toast = Toast.makeText(this, "Location changed! Accuracy: " + location.getAccuracy(), 5);
 		toast.show();
 		LocationEvent locationEvent = new LocationEvent(location);
+		repository.updateEventsWithoutLocation(location);
 		repository.addEvent(locationEvent);
 		System.out.println("Sending LocationEvent: " + location.getLatitude() + " x " + location.getLongitude());
 	}

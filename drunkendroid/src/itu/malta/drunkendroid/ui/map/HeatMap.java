@@ -18,8 +18,8 @@ import android.graphics.Shader.TileMode;
 public class HeatMap{
 
 	private static HeatMap _instance = null;
+	private static int[] _colorTable;
 	private ArrayList<MoodMapPoint> _moods = new ArrayList<MoodMapPoint>();
-	private int[] _colorTable;
 	private Bitmap _bitmap;
 	private int _zoomLevel;
 	private int _radius;
@@ -55,7 +55,7 @@ public class HeatMap{
 		if(mapView.getZoomLevel() != _zoomLevel)
 			calculateRadius(mapView.getZoomLevel());
 
-		// Drawing geopoints
+		// Drawing moodmappoints
         for(MoodMapPoint mp : _moods)
         	canvas = drawCircle(canvas, projection, mp);
 

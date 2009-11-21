@@ -11,7 +11,8 @@ public abstract class Event {
 	
 	public Event(Location location) {
 		this.dateTime = Calendar.getInstance().getTimeInMillis();
-		if(location.getExtras() != null && !location.getExtras().getBoolean("isOutdated",false))
+		/* TODO: Needs to be handled correctly */
+		if(location.getExtras() == null)
 		{
 			this.latitude = location.getLatitude();
 			this.longitude = location.getLongitude();
