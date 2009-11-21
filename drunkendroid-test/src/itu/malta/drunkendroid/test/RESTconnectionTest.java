@@ -51,7 +51,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		expect(response.getEntity()).andStubReturn(entity);
 		replay(response);
 		
-		expect(conn.postTrip((String)anyObject(), (String)anyObject())).andStubReturn(response);
+		expect(conn.post((String)anyObject(), (String)anyObject())).andStubReturn(response);
 		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
 		Long tripIdResult = (Long) consume.invoke(rest, response);
@@ -79,7 +79,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		expect(response.getStatusLine()).andStubReturn(status);
 		expect(response.getEntity()).andStubReturn(entity);
 		replay(response);
-		expect(conn.postTrip((String)anyObject(), (String)anyObject())).andStubReturn(response);
+		expect(conn.post((String)anyObject(), (String)anyObject())).andStubReturn(response);
 		replay(conn);
 		
 		//Create a new RESTServerHelper class to test with.
@@ -128,7 +128,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		expect(response2.getEntity()).andStubReturn(entity2);
 		replay(response2);
 		
-		expect(conn.postTrip((String)anyObject(), (String)anyObject()))
+		expect(conn.post((String)anyObject(), (String)anyObject()))
 			.andReturn(response1)
 			.andReturn(response2);
 		replay(conn);

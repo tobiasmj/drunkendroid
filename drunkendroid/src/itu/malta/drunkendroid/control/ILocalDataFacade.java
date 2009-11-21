@@ -16,6 +16,11 @@ public interface ILocalDataFacade {
 	 */
 	public int getEventCount(Trip t);
 	public List<Trip> getAllTrips();
+	/**
+	 * 
+	 * @param startTime
+	 * @return a Trip full of associated Event
+	 */
 	public Trip getTrip(Long startTime);
 	public List<Trip> getActiveTrips();
 	public Trip startTrip();

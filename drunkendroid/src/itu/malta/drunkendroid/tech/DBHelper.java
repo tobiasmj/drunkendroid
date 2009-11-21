@@ -17,7 +17,7 @@ import itu.malta.drunkendroid.R;
  */
 public class DBHelper extends SQLiteOpenHelper {
 	public static final String DB_NAME = "drunkendroid";
-	public static final Integer DB_VERSION = 9;
+	public static final Integer DB_VERSION = 12;
 	public static final String TABLE_TRIP = "Trip";
 	public static final String TABLE_EVENT = "Event";
 	public static final String CLASSNAME = "DBHelper";
@@ -81,8 +81,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onCreate(final SQLiteDatabase db) {
 		try{
 			db.beginTransaction();
-			db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime DATETIME NOT NULL, active BOOLEAN NOT NULL, foreignId LONG); ");
-			db.execSQL("CREATE TABLE " + DBHelper.TABLE_EVENT + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime DATETIME NOT NULL, longitude LONG, latitude LONG, altitude LONG, mood SMALLINT);");
+			db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime LONG NOT NULL, active BOOLEAN NOT NULL, foreignId LONG); ");
+			db.execSQL("CREATE TABLE " + DBHelper.TABLE_EVENT + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime LONG NOT NULL, longitude DOUBLE, latitude DOUBLE, altitude LONG, mood SMALLINT);");
 			db.execSQL("CREATE INDEX TripReading on " + DBHelper.TABLE_EVENT + " (trip DESC, id ASC);");
 			db.setTransactionSuccessful();
 		}

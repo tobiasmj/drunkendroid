@@ -1,5 +1,6 @@
 package itu.malta.drunkendroid.test;
 
+import java.util.Calendar;
 import java.util.List;
 import itu.malta.drunkendroid.control.ILocalDataFacade;
 import itu.malta.drunkendroid.domain.*;
@@ -111,6 +112,51 @@ public class LocalSQLTest extends AndroidTestCase {
 			
 			assertTrue(eventCount > 0);
 			assertEquals(eventCount, testCount);
+		}
+		finally{
+			this.flushDB();
+		}
+	}
+	
+	public void testWithoutLocation(){
+		try{
+			this.insertTestData();
+			List<Trip> trips = dbh.getAllTrips();
+			Trip testTrip = trips.get(1);
+			int testTripStartCount = dbh.getEventCount(testTrip);
+			//Create a few events without locations
+			Long currentTime1 = Calendar.getInstance().getTimeInMillis();
+			Long currentTime2 = currentTime1 + 10;
+			Event e1 = new ReadingEvent(
+					currentTime1, 
+					null, 
+					null,
+					60);
+			Event e2 = new Event(
+					currentTime2,
+					null,
+					null);
+			//Add them
+			dbh.addEvent(testTrip, e1);
+			dbh.addEvent(testTrip, e2);
+			//Now update them.	
+			Double latitude = 36.008165;
+			Double longitude = 14.703580;
+			List<Event> updatedEvents = dbh.updateEventsWithoutLocation(testTrip, latitude, longitude);
+			
+			//Build verifications objects.
+			testTrip = dbh.getTrip(testTrip.getStartDate().getTimeInMillis());
+			List<Event> testEvents = testTrip.getTripEvents();
+			
+			//Verify
+			assertEquals(2, updatedEvents.size());
+			assertEquals(testTripStartCount + 2, dbh.getEventCount(testTrip));
+			for(Event e : testEvents){
+				if(e.dateTime == currentTime1 || e.dateTime == currentTime2){
+					assertEquals(latitude, e.latitude);
+					assertEquals(longitude, e.longitude);
+				}
+			}
 		}
 		finally{
 			this.flushDB();
