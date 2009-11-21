@@ -189,13 +189,22 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
-			//Error. This might also be something different than a ReadingEvent. Implement a type in the db.
-			ReadingEvent r = new ReadingEvent(selectionOfReadings.getLong(0), 
-					selectionOfReadings.getDouble(1), 
-					selectionOfReadings.getDouble(2), 
-					selectionOfReadings.getInt(3)); //Add mood
-			//Add to the trip
-			loadedTrip.AddEvent(r);
+			Long date = selectionOfReadings.getLong(0);
+			Double longitude = selectionOfReadings.getDouble(1);
+			Double latitude = selectionOfReadings.getDouble(2);
+			if(selectionOfReadings.isNull(3)){
+				//This is just a Location event
+				loadedTrip.AddEvent(new LocationEvent(date, latitude, longitude));
+			}
+			else{
+				//This is a reading event
+				ReadingEvent r = new ReadingEvent(date, 
+						longitude, 
+						latitude, 
+						selectionOfReadings.getInt(3)); //Add mood
+				//Add to the trip
+				loadedTrip.AddEvent(r);
+			}
 		}
 		selectionOfReadings.close();
 		
@@ -222,7 +231,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 					if(cursor.isNull(1)){
 						//No
 						//This is an ordinary event
-						events.add(new Event(date, latitude, longitude));
+						events.add(new LocationEvent(date, latitude, longitude));
 					}
 					else{
 						//Yes
@@ -241,7 +250,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		
 		//Now do the update
 		ContentValues values = new ContentValues(2);
-		final String whereClause = "trip = ?";
+		final String whereClause = " longitude IS NULL AND latitude IS NULL AND trip = ?";
 		final String[] whereArgs = {String.valueOf(t.getLocalID())};
 		
 		values.put("longitude", String.valueOf(longitude));
