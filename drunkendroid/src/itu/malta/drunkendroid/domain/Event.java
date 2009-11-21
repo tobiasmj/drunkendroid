@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import android.location.Location;
 
-public class Event {
+public abstract class Event {
 	public Long dateTime;
 	public Double latitude;
 	public Double longitude;
