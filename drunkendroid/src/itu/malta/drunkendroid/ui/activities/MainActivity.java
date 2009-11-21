@@ -1,15 +1,17 @@
 package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
+import itu.malta.drunkendroid.control.services.DrunkenService;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SlidingDrawer;
 
@@ -19,7 +21,9 @@ public class MainActivity extends Activity {
 	private static final int MENU_PREVIOUS_TRIPS = Menu.FIRST + 1;
 	private static final int MENU_UPLOAD = Menu.FIRST + 2;
 	SlidingDrawer slider;
-	Button.OnClickListener buttonListener = new MyOnClickListener();
+	ImageView startServiceBtn;
+	ImageView stopServiceBtn;
+	View.OnClickListener buttonListener = new MyOnClickListener();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,21 +43,16 @@ public class MainActivity extends Activity {
 		final Button newReadingBtn = (Button) findViewById(R.id.NewReadingBtn);
 		newReadingBtn.setOnClickListener(buttonListener);
 
-		final Button startServiceBtn = (Button) findViewById(R.id.startServiceBtn);
+		startServiceBtn = (ImageView) findViewById(R.id.startServiceBtn);
 		startServiceBtn.setOnClickListener(buttonListener);
 
-		final Button stopServiceBtn = (Button) findViewById(R.id.stopServiceBtn);
+		stopServiceBtn = (ImageView) findViewById(R.id.stopServiceBtn);
 		stopServiceBtn.setOnClickListener(buttonListener);
 
-		// if (DrunkenService.getInstance() == null) {
-		// startServiceBtn.setVisibility(View.GONE);
-		// }
-		// else {
-		// stopServiceBtn.setVisibility(View.GONE);
-		// }
-
-		final Button mvBtn = (Button) findViewById(R.id.mapViewButton);
+		final ImageView mvBtn = (ImageView) findViewById(R.id.mapViewBtn);
 		mvBtn.setOnClickListener(buttonListener);
+
+		ToggleServiceButtons();
 	}
 
 	@Override
@@ -61,6 +60,16 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		Setup();
+	}
+	
+	private void ToggleServiceButtons() {
+		if (DrunkenService.getInstance() == null) {
+			stopServiceBtn.setVisibility(View.GONE);
+			startServiceBtn.setVisibility(View.VISIBLE);
+		} else {
+			startServiceBtn.setVisibility(View.GONE);
+			stopServiceBtn.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -131,8 +140,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private class MyOnClickListener implements Button.OnClickListener {
-
+	private class MyOnClickListener implements View.OnClickListener {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.NewReadingBtn:
@@ -157,12 +165,12 @@ public class MainActivity extends Activity {
 					System.out.println(e.getMessage());
 				}
 				break;
-			case R.id.mapViewButton:
+			case R.id.mapViewBtn:
 				try {
 					startActivity(new Intent("VIEW_MAP"));
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-				}		
+				}
 				break;
 			}
 		}

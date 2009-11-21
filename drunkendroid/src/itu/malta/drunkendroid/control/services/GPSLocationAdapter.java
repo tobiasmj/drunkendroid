@@ -14,7 +14,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	private Location lastKnownLocation;
 	private ArrayList<ILocationAdapterListener> listeners = new ArrayList<ILocationAdapterListener>();
 	private String provider;
-	private int time = 60000;
+	private int time = 120000;
 	private int distance = 10;
 	
 	public GPSLocationAdapter(Context context)
@@ -37,6 +37,9 @@ public class GPSLocationAdapter implements ILocationAdapter {
     	
 		provider = manager.getBestProvider(GetCriteria(), true);
 		lastKnownLocation = manager.getLastKnownLocation(provider);
+		
+		OutdateLocation();
+		
 		Connect();
 	}
 	

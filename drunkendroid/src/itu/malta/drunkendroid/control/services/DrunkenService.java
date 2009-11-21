@@ -5,7 +5,10 @@ import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.handlers.SMSHandler;
+import itu.malta.drunkendroid.tech.DBHelper;
+import android.app.ActivityManager;
 import android.app.Service;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -22,6 +25,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 public class DrunkenService extends Service implements
 		ILocationAdapterListener {
@@ -49,15 +53,13 @@ public class DrunkenService extends Service implements
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
 		manager = new GPSLocationAdapter(this);
 		manager.RegisterLocationUpdates(this);
-		
+		 
 		repository = new TripRepository(this);
 		
-		Intent i = new Intent("CONFIRM_LOCATION");
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		i.putExtra("location", manager.GetLastKnownLocation());
-		startActivity(i);
-	}
-
+		Toast toast = Toast.makeText(this, "Trip started!", 5);
+		toast.show();
+	}	
+	
 	
 	
 	public static DrunkenService getInstance() {
@@ -67,14 +69,21 @@ public class DrunkenService extends Service implements
 	@Override
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
-		if(intent.getExtras()!=null) {
-			if(intent.getBooleanExtra("deleteLocation", false)) {
-				Location location = (Location)intent.getExtras().get("location");
-				if(location.getTime() == manager.GetLastKnownLocation().getTime()) {
-					manager.OutdateLocation();
-				}
-			}
-		}	
+//		if(intent.getExtras()!=null) {
+//			if(intent.getBooleanExtra("deleteLocation", false)) {
+//				Location location = (Location)intent.getExtras().get("location");
+//				if(location.getTime() == manager.GetLastKnownLocation().getTime()) {
+//					manager.OutdateLocation();
+//				}
+//			}
+//		}	
+//		else 
+//		{
+//			Intent i = new Intent("CONFIRM_LOCATION");
+//			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			i.putExtra("location", manager.GetLastKnownLocation());
+//			startActivity(i);
+//		}
 	}
 
 	@Override
@@ -244,6 +253,8 @@ public class DrunkenService extends Service implements
 	public void OnLocationChange(Location location) {
 		// The location of the device has changed. Save event to trip and check
 		// for possible events with unset locations.
+		Toast toast = Toast.makeText(this, "Location changed!", 5);
+		toast.show();
 		LocationEvent locationEvent = new LocationEvent(location);
 		repository.addEvent(locationEvent);
 		System.out.println("Sending LocationEvent: " + location.getLatitude() + " x " + location.getLongitude());

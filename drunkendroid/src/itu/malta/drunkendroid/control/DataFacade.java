@@ -129,7 +129,7 @@ public class DataFacade implements IDataFacade {
 		else{
 			//Maybe we should implement a more intelligent way of choosing the trip
 			//But the error with multiple active trips should be solved elsewhere.
-			return trips.get(1);
+			return trips.get(0);
 		}
 	}
 }

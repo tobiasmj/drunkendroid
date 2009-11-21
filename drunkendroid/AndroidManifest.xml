@@ -27,6 +27,13 @@
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
+        <activity android:name=".ui.activities.PreviousTripsActivity" 
+        	      android:label="@string/activity_previous_trips">        	    
+        	<intent-filter>
+        		<action android:name="VIEW_PREVIOUS_TRIPS" />
+        		<category android:name="android.intent.category.DEFAULT"></category>
+        	</intent-filter>
+        </activity>       
         <activity android:name=".ui.activities.ConfirmLocationActivity" android:theme="@style/Dialog_No_Title">
         	<intent-filter>
         		<action android:name="CONFIRM_LOCATION" />
@@ -43,5 +50,5 @@
     <uses-persmision android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="3" />
 </manifest> 
