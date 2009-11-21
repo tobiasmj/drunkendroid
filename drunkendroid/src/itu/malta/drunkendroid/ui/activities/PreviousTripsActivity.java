@@ -10,6 +10,7 @@ import java.util.List;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +53,9 @@ public class PreviousTripsActivity extends ListActivity{
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 		if(_trips.size() > 0) {
-			
+			Intent i = new Intent("VIEW_TRIP");
+			i.putExtra("startTime", _trips.get(position).getStartDate().getTimeInMillis());
+			startActivity(i);
 		}
 	}
 	
@@ -124,5 +127,5 @@ public class PreviousTripsActivity extends ListActivity{
                 return v;
         }
         
-}
+    }    
 }
