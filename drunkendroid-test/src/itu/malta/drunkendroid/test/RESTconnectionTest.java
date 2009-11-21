@@ -3,10 +3,15 @@ package itu.malta.drunkendroid.test;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
+import org.easymock.Capture;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.*;
+import java.util.Calendar;
+
+import itu.malta.drunkendroid.domain.Event;
+import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
@@ -142,6 +147,29 @@ public class RESTconnectionTest extends AndroidTestCase {
 		//Don't know how to do these assertions right yet.
 		assertEquals(2343456, tripIdResult.intValue());
 	
+	}
+	
+	public void testBuildXMLFromStandAloneEvent(){
+		Trip t = this.generateTrip();
+		Event e1 = new LocationEvent(Calendar.getInstance().getTimeInMillis(), (Double)34.123456, (Double)14.123456);
+		
+		//Build a mock of IWebserviceConnection
+		IWebserviceConnection conn = createMock(IWebserviceConnection.class);
+		HttpResponse response = createMock(HttpResponse.class);
+		StatusLine statusline = createMock(StatusLine.class);
+		expect(statusline.getStatusCode()).andStubReturn(new Integer(400));
+		expect(response.getStatusLine()).andStubReturn(statusline);
+		
+		Capture<String> uri = new Capture<String>();
+		Capture<String> xmlContent = new Capture<String>();
+		expect(conn.post(capture(uri), capture(xmlContent))).andStubReturn(response);
+		
+		replay(statusline);
+		replay(response);
+		replay(conn);
+		
+		//not done yet
+		assertFalse(true);
 	}
 
 	private Trip generateTrip() {

@@ -132,7 +132,7 @@ public class LocalSQLTest extends AndroidTestCase {
 					null, 
 					null,
 					60);
-			Event e2 = new Event(
+			Event e2 = new LocationEvent(
 					currentTime2,
 					null,
 					null);
