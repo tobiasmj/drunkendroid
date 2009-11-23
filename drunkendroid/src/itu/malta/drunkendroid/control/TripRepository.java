@@ -49,8 +49,13 @@ public class TripRepository{
 	public Trip getTrip(Long startTime) {
 		return data.getTrip(startTime);
 	}
-
+		
 	public void updateEventsWithoutLocation(Location location) {
-		data.updateEventsWithoutLocation(activeTrip, location.getLatitude(), location.getLongitude());
+		if(activeTrip == null){
+			data.getActiveTrip();
+		}
+		if(activeTrip != null){
+			data.updateEventsWithoutLocation(activeTrip, location.getLatitude(), location.getLongitude());
+		}
 	}
 }
