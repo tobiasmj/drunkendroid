@@ -118,6 +118,15 @@ public class LocalSQLTest extends AndroidTestCase {
 		}
 	}
 	
+	public void testGetActiveTrip(){
+		try{
+			
+		}
+		finally{
+			this.flushDB();
+		}
+	}
+	
 	public void testWithoutLocation(){
 		try{
 			this.insertTestData();

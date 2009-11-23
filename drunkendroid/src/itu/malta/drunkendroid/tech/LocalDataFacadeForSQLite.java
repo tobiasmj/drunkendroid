@@ -133,7 +133,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		try{
 			final String[] returnColumns = {"id", "foreignId", "startDateTime"};
 			final String whereClause = "active = ?";
-			final String[] whereArgs = {"true"};
+			final String[] whereArgs = {"1"}; //1 == true in SQLite3
 			db.beginTransaction();
 			Cursor result = db.query(DBHelper.TABLE_TRIP, returnColumns, whereClause, whereArgs, null, null, null);
 			db.setTransactionSuccessful();
