@@ -33,8 +33,10 @@ public class TripRepository{
 	}
 
 	public void endTrip() {
-		if(!(activeTrip != null))
+		if(activeTrip != null)
+		{
 			data.closeTrip(activeTrip);
+		}
 		activeTrip = null;
 	}
 

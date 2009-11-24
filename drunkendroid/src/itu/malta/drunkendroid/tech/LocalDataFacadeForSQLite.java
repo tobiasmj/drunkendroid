@@ -55,7 +55,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
         ContentValues values = new ContentValues();
         Long currentTime = Calendar.getInstance().getTimeInMillis();
         values.put("startDateTime", currentTime);
-        values.put("active", true);
+        values.put("active", 1); //1 == true in sqlite3
         // Add a value for the active state to the real sql table.
 
         Long tripId = db.insertOrThrow(DBHelper.TABLE_TRIP, null, values);
@@ -81,7 +81,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		try{
 			
 			ContentValues values = new ContentValues();
-			values.put(activeColumn, false);
+			values.put(activeColumn, 0);// 0 == false in sqlite3
 			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
