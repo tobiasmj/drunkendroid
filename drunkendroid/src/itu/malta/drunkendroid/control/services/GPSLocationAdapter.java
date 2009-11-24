@@ -1,6 +1,8 @@
 package itu.malta.drunkendroid.control.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -37,8 +39,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
     	
 		provider = manager.getBestProvider(GetCriteria(), true);
 		lastKnownLocation = new Location(provider);
-
-		//lastKnownLocation = manager.getLastKnownLocation(provider);
+		lastKnownLocation.setTime(Calendar.getInstance().getTimeInMillis());
 		
 		OutdateLocation();
 		

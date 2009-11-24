@@ -5,6 +5,7 @@ import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.handlers.SMSHandler;
+import itu.malta.drunkendroid.ui.activities.MainActivity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -38,6 +39,8 @@ public class DrunkenService extends Service implements
 	private int readingInterval;
 	private ILocationAdapter manager;
 	private TripRepository repository;
+	public final static int SERVICE_COMMAND_START_TRIP = 1;
+	public final static int SERVICE_COMMAND_END_TRIP = 2;
 
 	@Override
 	public void onCreate() {
@@ -52,12 +55,7 @@ public class DrunkenService extends Service implements
 		manager.RegisterLocationUpdates(this);
 		 
 		repository = new TripRepository(this);
-		
-		Toast toast = Toast.makeText(this, "Trip started!", 5);
-		toast.show();
 	}	
-	
-	
 	
 	public static DrunkenService getInstance() {
 		return drunkenService;
@@ -66,21 +64,25 @@ public class DrunkenService extends Service implements
 	@Override
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
-//		if(intent.getExtras()!=null) {
-//			if(intent.getBooleanExtra("deleteLocation", false)) {
-//				Location location = (Location)intent.getExtras().get("location");
-//				if(location.getTime() == manager.GetLastKnownLocation().getTime()) {
-//					manager.OutdateLocation();
-//				}
-//			}
-//		}	
-//		else 
-//		{
-//			Intent i = new Intent("CONFIRM_LOCATION");
-//			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			i.putExtra("location", manager.GetLastKnownLocation());
-//			startActivity(i);
-//		}
+		if(intent.getExtras()!=null) {
+			Toast toast;
+			switch(intent.getExtras().getInt("command")) {
+				case SERVICE_COMMAND_START_TRIP:
+					toast = Toast.makeText(this, "Trip started!", 5);
+					toast.show();
+					break;
+				case SERVICE_COMMAND_END_TRIP:
+					repository.endTrip();
+					toast = Toast.makeText(this, "Trip ended!", 5);
+					toast.show();
+					stopSelf();
+					break;
+			}
+		}	
+		else
+		{
+			//No arguments, assume that service has been restarted by Android framework.
+		}
 	}
 
 	@Override

@@ -40,10 +40,16 @@
         		<action android:name="VIEW_PREVIOUS_TRIPS" />
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
-        </activity>       
+        </activity>      
         <activity android:name=".ui.activities.ConfirmLocationActivity" android:theme="@style/Dialog_No_Title">
         	<intent-filter>
         		<action android:name="CONFIRM_LOCATION" />
+        		<category android:name="android.intent.category.DEFAULT"></category>
+        	</intent-filter>
+        </activity>
+        <activity android:name=".ui.activities.MoodReadActivity" android:theme="@style/Dialog_No_Title">
+        	<intent-filter>
+        		<action android:name="MOOD_READING" />
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>

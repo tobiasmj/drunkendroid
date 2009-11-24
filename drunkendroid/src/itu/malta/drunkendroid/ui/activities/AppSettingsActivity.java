@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class AppSettingsActivity extends Activity {
 	
@@ -29,9 +31,16 @@ public class AppSettingsActivity extends Activity {
 		setContentView(R.layout.appsettings);
 
 		moodReadSpinner = (Spinner)this.findViewById(R.id.MoodReadIntervalSpinner);
-		ArrayAdapter moodReadAdapter = ArrayAdapter.createFromResource(this, R.array.mood_read_intervals, R.layout.custom_bright_spinner);
+		ArrayAdapter<CharSequence> moodReadAdapter = ArrayAdapter.createFromResource(this, R.array.mood_read_intervals, R.layout.custom_bright_spinner);
 		moodReadAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		moodReadSpinner.setAdapter(moodReadAdapter);
+		moodReadSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+			    view.setBackgroundColor(android.R.color.transparent);
+			  }
+			  public void onNothingSelected(AdapterView<?> parent) {}
+			}
+		); 
 		
 		registerVolumeCheckBox = (CheckBox) this.findViewById(R.id.RegisterVolumeCheckBox);
 		

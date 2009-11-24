@@ -1,5 +1,7 @@
 package itu.malta.drunkendroid.ui.activities;
 
+import java.awt.Color;
+
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.services.DrunkenService;
 import android.app.Activity;
@@ -35,8 +37,8 @@ public class MainActivity extends Activity {
 
 	private void Setup() {
 		SeekBar seekBar = (SeekBar) findViewById(R.id.SeekBar01);
-		seekBar.setOnSeekBarChangeListener(new MySeekbarListener());
-
+		seekBar.setOnSeekBarChangeListener(new MySeekbarListener());		
+		
 		slider = (SlidingDrawer) this.findViewById(R.id.moodSlider);
 		slider.open();
 
@@ -59,7 +61,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Setup();
+		ToggleServiceButtons();
 	}
 	
 	private void ToggleServiceButtons() {
@@ -110,7 +112,7 @@ public class MainActivity extends Activity {
 			break;
 		case MainActivity.MENU_UPLOAD:
 			try {
-				intent = new Intent("VIEW_UPLOAD");
+				intent = new Intent("MOOD_READING");
 				startActivity(intent);
 			} catch (Exception e) {
 				Log.i(this.getString(R.string.log_tag),
@@ -151,22 +153,22 @@ public class MainActivity extends Activity {
 					Intent i = new Intent(
 							MainActivity.this,
 							itu.malta.drunkendroid.control.services.DrunkenService.class);
+					i.putExtra("command", DrunkenService.SERVICE_COMMAND_START_TRIP);
 					startService(i);
 					
-					stopServiceBtn.setVisibility(View.GONE);
-					startServiceBtn.setVisibility(View.VISIBLE);
+					stopServiceBtn.setVisibility(View.VISIBLE);
+					startServiceBtn.setVisibility(View.GONE);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
 				break;
 			case R.id.stopServiceBtn:
 				try {
-					stopService(new Intent(
-							MainActivity.this,
-							itu.malta.drunkendroid.control.services.DrunkenService.class));
-					
-					stopServiceBtn.setVisibility(View.VISIBLE);
-					startServiceBtn.setVisibility(View.GONE);
+					Intent i = new Intent(MainActivity.this, itu.malta.drunkendroid.control.services.DrunkenService.class);
+					i.putExtra("command", DrunkenService.SERVICE_COMMAND_END_TRIP);
+					startService(i);
+					stopServiceBtn.setVisibility(View.GONE);
+					startServiceBtn.setVisibility(View.VISIBLE);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}

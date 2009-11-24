@@ -1,5 +1,6 @@
 package itu.malta.drunkendroid.ui.activities;
 
+import itu.malta.drunkendroid.R;
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -9,9 +10,7 @@ public class MoodReadActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-		
-		
+		setContentView(R.layout.moodreading);		
 	}
 
 	@Override

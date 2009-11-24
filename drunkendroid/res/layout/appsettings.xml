@@ -25,7 +25,8 @@
 	    android:prompt="@string/mood_read_interval_spinner_prompt"
 		android:drawSelectorOnTop="true"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:colorForeground="@android:color/transparent">
 	</Spinner>
 	<LinearLayout 
 		android:orientation="horizontal"

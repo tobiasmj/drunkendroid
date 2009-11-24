@@ -18,7 +18,8 @@
 				android:background="#000000">
 				<SeekBar android:id="@+id/SeekBar01" android:max="256"
 					android:layout_width="fill_parent" android:layout_margin="10px"
-					android:layout_height="wrap_content" android:layout_gravity="center" />
+					android:layout_height="wrap_content" android:layout_gravity="center"
+					/>
 			</LinearLayout>
 		</SlidingDrawer>
 	</RelativeLayout>
