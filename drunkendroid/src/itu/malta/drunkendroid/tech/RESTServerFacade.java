@@ -1,7 +1,6 @@
 package itu.malta.drunkendroid.tech;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,13 +14,11 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
-import android.util.Xml;
 import org.apache.http.HttpResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlSerializer;
 
 /**
  * This class handles connections to the server, with the REST protocol.
@@ -29,18 +26,9 @@ import org.xmlpull.v1.XmlSerializer;
  * This class is inspired by the book: Beginning Android and http://www.smnirven.com/?p=15
  */
 public class RESTServerFacade implements IRemoteDataFacade {
-	private static final String TRIP_NAME = "name";
 	private static final String TRIP = "trip";
 	private static final String TRIPID = "tripId";
-	private static final String STARTDATETIME = "startDateTime";
-	private static final String EVENTS = "events";
 	private static final String EVENT = "event";
-	private static final String EVENTTYPE = "eventType";
-	private static final String DATETIME = "dateTime";
-	private static final String LONGITUDE = "longitude";
-	private static final String LATITUDE = "latitude";
-	private static final String DATA = "data";
-	private static final String MOOD = "mood";
 	private static final String LOGTAG = "RESTServerHelper";
 	private static final String MESSAGE = "message";
 	private static final String MOODMAP = "moodmap";
@@ -94,10 +82,14 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * To obtain a remoteId call the upload function.
 	 */
 	public void updateTrip(Trip t, Event e) {
+		if(t.getRemoteID() == null){
+			throw new IllegalStateException("Tried to update a trip which has not been uploaded");
+		}
+		
 		try {
 			//Build xml
 	    	String xml;
-			xml = buildXmlFromStandAloneEvent(e);
+			xml = XMLBuilder.buildXmlFromStandAloneEvent(e);
 			//Now try to send it
 	        HttpResponse response = conn.post(TRIP + "/" + EVENT + "/" +IMEI + "/" + 
 	        		String.valueOf(t.getRemoteID()), xml);
@@ -105,7 +97,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	        int responseCode = response.getStatusLine().getStatusCode();
 	        if(responseCode >= 400 && responseCode < 500){
 	        	//This is in the 400: We have done something wrong.
-	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.getStartDate().getTimeInMillis() + ", the server returned malformed xml");
+	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.getStartDate() + ", the server returned malformed xml");
 	        }
 	        else if(responseCode >= 500 && responseCode < 600){
 	        	//This is in the 500 range
@@ -137,7 +129,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	{
 		try {
 	        //Build xml
-	    	String xml = buildXmlFromTrip(t);
+	    	String xml = XMLBuilder.buildXmlFromTrip(t);
 	        //Now try to send it
 	        HttpResponse response = conn.post(TRIP + "/"+IMEI, xml);
 	        //Status codes in the 400 range are logged in the consume method.
@@ -171,73 +163,6 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	    	//Something was wrong when we tried to build up xml.
 	    	Log.e(LOGTAG, e.getMessage());
 	    }
-	}
-	
-	private String buildXmlFromTrip(Trip t) throws IOException{
-		XmlSerializer serializer = Xml.newSerializer();
-	    final StringWriter writer = new StringWriter();
-	    
-		serializer.setOutput(writer);
-        serializer.startDocument("UTF-8", true);
-        serializer.startTag("", TRIP);
-        serializer.startTag("", EVENTS);
-        for(Event e : t.getTripEvents()){
-        		addEventXml(serializer, e);	
-        }
-        serializer.endTag("", EVENTS);
-        serializer.startTag("", STARTDATETIME);
-        serializer.text(String.valueOf(t.getStartDate().getTimeInMillis()));
-        serializer.endTag("", STARTDATETIME);
-        serializer.startTag("", TRIP_NAME);
-        serializer.text("Gin Saturdays");
-        serializer.endTag("", TRIP_NAME);
-        serializer.endTag("", TRIP);
-        serializer.endDocument();
-       
-        return writer.toString();
-	}
-	
-	private String buildXmlFromStandAloneEvent(Event e) throws IOException{
-		XmlSerializer serializer = Xml.newSerializer();
-	    final StringWriter writer = new StringWriter();
-	    
-		serializer.setOutput(writer);
-        serializer.startDocument("UTF-8", true);
-        serializer.startTag("", EVENTS);
-        addEventXml(serializer, e);	
-        serializer.endTag("", EVENTS);
-        serializer.endDocument();
-       
-        return writer.toString();
-	}
-
-	private void addEventXml(XmlSerializer serializer, Event e) 
-			throws IllegalArgumentException, IllegalStateException, IOException{
-		serializer.startTag("", EVENT);
-        serializer.startTag("", EVENTTYPE);
-        serializer.text("event");
-        serializer.endTag("", EVENTTYPE);
-        serializer.startTag("", DATETIME);
-        serializer.text(String.valueOf(e.dateTime));
-        serializer.endTag("", DATETIME);
-        serializer.startTag("", LONGITUDE);
-        serializer.text(String.valueOf(e.longitude));
-        serializer.endTag("", LONGITUDE);
-        serializer.startTag("", LATITUDE);
-        serializer.text(String.valueOf(e.latitude));
-        serializer.endTag("", LATITUDE);
-        serializer.startTag("", DATA);
-        if(ReadingEvent.class.isInstance(e)){
-        	 this.addReadingXml(serializer, (ReadingEvent)e);
-        }
-        serializer.endTag("", DATA);
-        serializer.endTag("", EVENT);
-	}
-	private void addReadingXml(XmlSerializer serializer, ReadingEvent r) 
-			throws IllegalArgumentException, IllegalStateException, IOException {
-		serializer.startTag("", MOOD);
-        serializer.text(String.valueOf(r.mood));
-        serializer.endTag("", MOOD);	
 	}
 	
 	private Long consumeTripUploadResponse(HttpResponse response) throws IOException, IllegalStateException{

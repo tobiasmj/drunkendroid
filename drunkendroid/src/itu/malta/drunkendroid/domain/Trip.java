@@ -5,13 +5,13 @@ import java.util.*;
 
 public class Trip {
 	private ArrayList<Event> events = new ArrayList<Event>();
-	private Calendar startDate = null;
+	private Long startDate = null;
 	private Long localId;
 	private Long remoteId;
 	
-	protected void setStartDate(Calendar d){
+	protected void setStartDate(Long d){
 		if(this.startDate != null){
-			if(this.startDate.after(d))
+			if(this.startDate < d)
 				startDate = d;
 		}//If the startDate is earlier than the suggested one.
 		else{
@@ -20,12 +20,10 @@ public class Trip {
 	}
 
 	public void setDateInMilliSec(long timeInMillis) {
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(timeInMillis);
-		setStartDate(c);
+		setStartDate(timeInMillis);
 	}
 	
-	public Calendar getStartDate(){
+	public Long getStartDate(){
 		return this.startDate;
 	}
 	

@@ -54,7 +54,7 @@ public class PreviousTripsActivity extends ListActivity{
 		super.onListItemClick(l, v, position, id);
 		if(_trips.size() > 0) {
 			Intent i = new Intent("VIEW_TRIP");
-			i.putExtra("startTime", _trips.get(position).getStartDate().getTimeInMillis());
+			i.putExtra("startTime", _trips.get(position).getStartDate());
 			startActivity(i);
 		}
 	}
@@ -119,7 +119,7 @@ public class PreviousTripsActivity extends ListActivity{
                         TextView tt = (TextView) v.findViewById(R.id.toptext);
                         TextView bt = (TextView) v.findViewById(R.id.bottomtext);
                         if (tt != null) {
-                              tt.setText("Date: "+ new Date(t.getStartDate().getTimeInMillis()).toLocaleString());                            }
+                              tt.setText("Date: "+ new Date(t.getStartDate()).toLocaleString());                            }
                         if(bt != null){
                               bt.setText("Events: "+ _repo.getEventCount(t));
                         }

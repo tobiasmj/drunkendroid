@@ -16,27 +16,24 @@ import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
-import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
+import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.test.AndroidTestCase;
 import static org.easymock.EasyMock.*;
 
 public class RESTconnectionTest extends AndroidTestCase {
-	RESTServerFacade rest;
+	RESTServerFacade rest = null;
 
 	protected void setUp(){
-		 rest = new RESTServerFacade(this.getContext(), new WebserviceConnectionREST());
+		
 	}
 	
 	protected void tearDown(){
-		rest = null;
 	}
 	
-	public void testConsumeResponseWithStatus201() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException{
+	public void testConsumePostResponseWithStatus201() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException{
 		//Build
 		final String content = "<tripId>2343456</tripId>";
-		//Make the private method accessible using reflection.
-		Method consume = rest.getClass().getDeclaredMethod("consumeTripUploadResponse", HttpResponse.class);
-		consume.setAccessible(true);
 		//Build an inputStream from to provide the mock object with.
 		ByteArrayInputStream bstream = new ByteArrayInputStream(content.getBytes());
 		
@@ -58,12 +55,16 @@ public class RESTconnectionTest extends AndroidTestCase {
 		
 		expect(conn.post((String)anyObject(), (String)anyObject())).andStubReturn(response);
 		rest = new RESTServerFacade(this.getContext(), conn);
+		//Make the private method accessible using reflection.
+		Method consume = rest.getClass().getDeclaredMethod("consumeTripUploadResponse", HttpResponse.class);
+		consume.setAccessible(true);
+		
 		//Verify
 		Long tripIdResult = (Long) consume.invoke(rest, response);
 		assertEquals(2343456, tripIdResult.intValue());
 	}
 	
-	public void testConsumeResponseWithMalformedXML() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException{
+	public void testConsumePostResponseWithMalformedXML() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException{
 		//Build
 		final String content = "<error><code>1</code><message>Payload not text/XML</message></error>";
 		//Build an inputStream from to provide the mock object with.
@@ -95,7 +96,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		assertNull(t.getRemoteID());
 	}
 	
-	public void testConsumeWithServerError() throws IllegalStateException, IOException{
+	public void testConsumePostWithServerError() throws IllegalStateException, IOException{
 		//Build
 		final String content1 = "<error><code>7</code><message>Dummy server error. Unit testing</message></error>";
 		//Build an inputStream from to provide the mock object with.
@@ -151,13 +152,33 @@ public class RESTconnectionTest extends AndroidTestCase {
 	
 	public void testBuildXMLFromStandAloneEvent(){
 		Trip t = this.generateTrip();
+		t.setRemoteID(42L); //just a random test number
 		Event e1 = new LocationEvent(Calendar.getInstance().getTimeInMillis(), (Double)34.123456, (Double)14.123456);
+		//Expected results
+		String expectedURI;
+		TelephonyManager mgr = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+		if(mgr.getDeviceId() == null || mgr.getDeviceId() == "null"){
+			expectedURI = "trip/event/null/42"; //Null because the IMEI number is not known in the standard emulator.
+		}
+		else{
+			expectedURI = "trip/event/" + mgr.getDeviceId() + "/42";
+		}
+		String expectedXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>" +
+				"<events>" +
+					"<event>" +
+						"<eventType>event</eventType>" +
+						"<dateTime>"+ String.valueOf(e1.dateTime) +"</dateTime>" +
+						"<longitude>"+ String.valueOf(e1.longitude) +"</longitude>" +
+						"<latitude>"+ String.valueOf(e1.latitude)+"</latitude>" +
+					"<data />" +
+					"</event>" +
+				"</events>";
 		
 		//Build a mock of IWebserviceConnection
 		IWebserviceConnection conn = createMock(IWebserviceConnection.class);
 		HttpResponse response = createMock(HttpResponse.class);
 		StatusLine statusline = createMock(StatusLine.class);
-		expect(statusline.getStatusCode()).andStubReturn(new Integer(400));
+		expect(statusline.getStatusCode()).andStubReturn(new Integer(200));
 		expect(response.getStatusLine()).andStubReturn(statusline);
 		
 		Capture<String> uri = new Capture<String>();
@@ -168,8 +189,70 @@ public class RESTconnectionTest extends AndroidTestCase {
 		replay(response);
 		replay(conn);
 		
-		//not done yet
-		assertFalse(true);
+		rest = new RESTServerFacade(this.getContext(), conn);
+		
+		//Execute
+		rest.updateTrip(t, e1);
+		
+		//Verify
+		assertTrue(uri.hasCaptured());
+		assertTrue(xmlContent.hasCaptured());
+		assertEquals(expectedURI, uri.getValue());
+		assertEquals(expectedXML, xmlContent.getValue());
+	}
+
+	public void testBuildXMLFromStandAloneReadingEvent(){
+		Trip t = this.generateTrip();
+		t.setRemoteID(42L); //just a random test number
+		int mood = 90;
+		ReadingEvent e1 = new ReadingEvent(Calendar.getInstance().getTimeInMillis(), (Double)34.123456, (Double)14.123456, mood);
+		//Expected results
+		String expectedURI;
+		TelephonyManager mgr = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+		if(mgr.getDeviceId() == null || mgr.getDeviceId() == "null"){
+			expectedURI = "trip/event/null/42"; //Null because the IMEI number is not known in the standard emulator.
+		}
+		else{
+			expectedURI = "trip/event/" + mgr.getDeviceId() + "/42";
+		}
+		String expectedXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>" +
+				"<events>" +
+					"<event>" +
+						"<eventType>reading</eventType>" +
+						"<dateTime>"+ String.valueOf(e1.dateTime) +"</dateTime>" +
+						"<longitude>"+ String.valueOf(e1.longitude) +"</longitude>" +
+						"<latitude>"+ String.valueOf(e1.latitude)+"</latitude>" +
+					"<data>" +
+					"<mood>" + String.valueOf(e1.mood) +"</mood>"+
+					"</data>" +
+					"</event>" +
+				"</events>";
+		
+		//Build a mock of IWebserviceConnection
+		IWebserviceConnection conn = createMock(IWebserviceConnection.class);
+		HttpResponse response = createMock(HttpResponse.class);
+		StatusLine statusline = createMock(StatusLine.class);
+		expect(statusline.getStatusCode()).andStubReturn(new Integer(200));
+		expect(response.getStatusLine()).andStubReturn(statusline);
+		
+		Capture<String> uri = new Capture<String>();
+		Capture<String> xmlContent = new Capture<String>();
+		expect(conn.post(capture(uri), capture(xmlContent))).andStubReturn(response);
+		
+		replay(statusline);
+		replay(response);
+		replay(conn);
+		
+		rest = new RESTServerFacade(this.getContext(), conn);
+		
+		//Execute
+		rest.updateTrip(t, e1);
+		
+		//Verify
+		assertTrue(uri.hasCaptured());
+		assertTrue(xmlContent.hasCaptured());
+		assertEquals(expectedURI, uri.getValue());
+		assertEquals(expectedXML, xmlContent.getValue());
 	}
 
 	private Trip generateTrip() {

@@ -2,6 +2,9 @@ package itu.malta.drunkendroid.test;
 
 import java.util.Calendar;
 import java.util.List;
+
+import itu.malta.drunkendroid.control.DataFacade;
+import itu.malta.drunkendroid.control.IDataFacade;
 import itu.malta.drunkendroid.control.ILocalDataFacade;
 import itu.malta.drunkendroid.domain.*;
 import itu.malta.drunkendroid.tech.DBHelper;
@@ -35,7 +38,7 @@ public class LocalSQLTest extends AndroidTestCase {
 		dbh.addEvent(t, r1);
 		dbh.addEvent(t, r2);
 		dbh.addEvent(t, r3);
-		dbh.closeTrip(t);
+		//dbh.closeTrip(t);
 		
 		// ReadingEvent 1
 		Trip t2 = dbh.startTrip();
@@ -68,10 +71,10 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Trip> returnedTrips = dbh.getAllTrips();
 			assertTrue(returnedTrips.size() > 0);
 			Trip someTrip = returnedTrips.get(1);
-			long someTripStartDate = someTrip.getStartDate().getTimeInMillis();
+			Long someTripStartDate = someTrip.getStartDate();
 			
 			Trip returnedTrip = dbh.getTrip(someTripStartDate);
-			assertEquals(someTripStartDate, returnedTrip.getStartDate().getTimeInMillis());
+			assertEquals(someTripStartDate, returnedTrip.getStartDate());
 		}
 		finally{
 			this.flushDB();
@@ -85,7 +88,7 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Trip> trips = dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
 			Long foreignId = new Long(123456789);
-			Long testTripStartDate = testTrip.getStartDate().getTimeInMillis();
+			Long testTripStartDate = testTrip.getStartDate();
 			
 			//Build
 			testTrip.setRemoteID(foreignId);
@@ -106,7 +109,7 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Trip> trips = dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
 			
-			Trip controlTrip = dbh.getTrip(testTrip.getStartDate().getTimeInMillis());
+			Trip controlTrip = dbh.getTrip(testTrip.getStartDate());
 			int eventCount = controlTrip.getTripEvents().size();
 			int testCount = dbh.getEventCount(testTrip);
 			
@@ -118,9 +121,55 @@ public class LocalSQLTest extends AndroidTestCase {
 		}
 	}
 	
-	public void testGetActiveTrip(){
+	public void testGetActiveTripFromRepo(){
+		IDataFacade data = new DataFacade(this.getContext());
+		
 		try{
+			//Build
+			this.insertTestData();
 			
+			//Execute
+			Trip testTrip1 = data.getActiveTrip();
+			data.closeTrip(testTrip1);
+			//Verify
+			assertNotNull(testTrip1);
+			
+			//Execute
+			testTrip1 = data.getActiveTrip();
+			data.closeTrip(testTrip1);
+			//Verify
+			assertNotNull(testTrip1);
+			
+			//Execute
+			testTrip1 = data.getActiveTrip();
+			//Verify
+			assertNull(testTrip1);
+			
+		}
+		finally{
+			data.closeFacade();
+		}
+	}
+	public void testGetActiveTripSizes(){
+		try{
+			//Build
+			this.insertTestData();
+			//Execute
+			List<Trip> trips = dbh.getActiveTrips();
+			//Verify
+			assertEquals(2, trips.size()); //from insertTestData
+			
+			//Execute
+			dbh.closeTrip(trips.get(0));
+			trips = dbh.getActiveTrips();
+			//Verify
+			assertEquals(1, trips.size());
+			
+			//Execute
+			dbh.closeTrip(trips.get(0));
+			trips = dbh.getActiveTrips();
+			//Verify
+			assertEquals(0, trips.size());
 		}
 		finally{
 			this.flushDB();
@@ -154,7 +203,7 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Event> updatedEvents = dbh.updateEventsWithoutLocation(testTrip, latitude, longitude);
 			
 			//Build verifications objects.
-			testTrip = dbh.getTrip(testTrip.getStartDate().getTimeInMillis());
+			testTrip = dbh.getTrip(testTrip.getStartDate());
 			List<Event> testEvents = testTrip.getTripEvents();
 			
 			//Verify

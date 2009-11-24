@@ -39,9 +39,9 @@ public class DataFacadeTest extends AndroidTestCase {
 			//Verify
 			assertNull(nullTrip);
 			assertTrue(
-					testTrip1.getStartDate().getTimeInMillis() 
+					testTrip1.getStartDate() 
 					!= 
-					testTrip2.getStartDate().getTimeInMillis());
+					testTrip2.getStartDate());
 		}
 		finally{
 			this.flushDB();

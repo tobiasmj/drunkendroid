@@ -24,8 +24,8 @@ public class DataFacade implements IDataFacade {
 	
 	public DataFacade(Context context){
 		IWebserviceConnection connection = new WebserviceConnectionREST();
-		//remote = new RESTServerFacade(context, connection);
-		remote = new DummyRESTserver();
+		remote = new RESTServerFacade(context, connection);
+		//remote = new DummyRESTserver();
 		local = new LocalDataFacadeForSQLite(context);
 	}
 	
