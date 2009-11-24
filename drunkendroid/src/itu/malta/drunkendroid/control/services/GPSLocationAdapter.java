@@ -36,7 +36,9 @@ public class GPSLocationAdapter implements ILocationAdapter {
     	};
     	
 		provider = manager.getBestProvider(GetCriteria(), true);
-		lastKnownLocation = manager.getLastKnownLocation(provider);
+		lastKnownLocation = new Location(provider);
+
+		//lastKnownLocation = manager.getLastKnownLocation(provider);
 		
 		OutdateLocation();
 		
