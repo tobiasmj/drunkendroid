@@ -32,8 +32,8 @@ public class MoodMapActivity extends MapActivity {
         _mapView.setBuiltInZoomControls(true);
         
         _mapController = _mapView.getController();
-        double lat = 35.908138*1E6;
-        double lng = 14.500975*1E6;
+        double lat = 35.9232054039299*1E6;
+        double lng = 14.489096835067395*1E6;
         
         _gp = new GeoPoint((int)lat,(int)lng);
 
