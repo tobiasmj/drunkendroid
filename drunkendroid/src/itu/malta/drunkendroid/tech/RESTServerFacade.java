@@ -235,7 +235,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
     		//Work out the status codes.
         
         	if(response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300){
-	        	//Everything works build the trip.
+	        	//Everything works build the events.
         		List<ReadingEvent> events = new ArrayList<ReadingEvent>();
         		Long currentTime = Calendar.getInstance().getTimeInMillis();
         		
@@ -256,14 +256,15 @@ public class RESTServerFacade implements IRemoteDataFacade {
         			//Traversing over the specific values
         			for(int j = 0; eventValues.getLength() > j; j++){
         				Node nEventValue = eventValues.item(j);
-        				if(nEventValue.getNodeName() == MOOD_MAP_MOOD){
-        					mood = Integer.parseInt( nEventValue.getNodeValue() );
+        				String nodeName = nEventValue.getNodeName();
+        				if(nEventValue.getNodeName().contentEquals(MOOD_MAP_MOOD)){
+        					mood = Integer.parseInt(nEventValue.getFirstChild().getNodeValue());
         				}
-        				if(nEventValue.getNodeName() == MOOD_MAP_LONG){
-        					longitude = Double.parseDouble( nEventValue.getNodeValue() );
+        				if(nEventValue.getNodeName().contentEquals(MOOD_MAP_LONG)){
+        					longitude = Double.parseDouble(nEventValue.getFirstChild().getNodeValue() );
         				}
-        				if(nEventValue.getNodeName() == MOOD_MAP_LAT){
-        					latitude = Double.parseDouble( nEventValue.getNodeValue() );
+        				if(nEventValue.getNodeName().contentEquals(MOOD_MAP_LAT)){
+        					latitude = Double.parseDouble(nEventValue.getFirstChild().getNodeValue() );
         				}
         			}
         			//Check that all values have been discovered

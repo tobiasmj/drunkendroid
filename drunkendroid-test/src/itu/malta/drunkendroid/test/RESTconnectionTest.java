@@ -9,13 +9,16 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.Calendar;
+import java.util.List;
 
+import itu.malta.drunkendroid.control.IRemoteDataFacade;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
+import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.test.AndroidTestCase;
@@ -255,6 +258,74 @@ public class RESTconnectionTest extends AndroidTestCase {
 		assertEquals(expectedXML, xmlContent.getValue());
 	}
 
+	public void testGetReadingEvents() throws IllegalStateException, IOException{
+		try{
+			//Build up the test
+			final String content1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+									"<MoodMap>" + 
+										"<MoodMapReading>" +
+											"<MoodMapValue>140</MoodMapValue>" +
+											"<MoodMapLongitude>14.487617755003868</MoodMapLongitude>"+
+											"<MoodMapLatitude>35.9232054039299</MoodMapLatitude>"+
+										"</MoodMapReading>"+
+										"<MoodMapReading>"+
+										"<MoodMapValue>130</MoodMapValue>"+
+										"<MoodMapLongitude>14.487617755003868</MoodMapLongitude>"+
+										"<MoodMapLatitude>35.92350484235794</MoodMapLatitude>"+
+										"</MoodMapReading>"+
+										"</MoodMap>";
+			//Build an inputStream from to provide the mock object with.
+			ByteArrayInputStream bstream1 = new ByteArrayInputStream(content1.getBytes());
+			
+			//Build a mock of IWebserviceConnection
+			IWebserviceConnection conn = createMock(IWebserviceConnection.class);
+			HttpResponse response = createMock(HttpResponse.class);
+			StatusLine statusline = createMock(StatusLine.class);
+			HttpEntity entity = createMock(HttpEntity.class);
+			
+			//capture the uri for later processing.
+			Capture<String> uri = new Capture<String>();
+		
+			expect(statusline.getStatusCode()).andStubReturn(new Integer(201));
+			expect(response.getStatusLine()).andStubReturn(statusline);
+			expect(conn.get(capture(uri))).andStubReturn(response);
+			expect(response.getEntity()).andStubReturn(entity);
+			expect(entity.getContent()).andStubReturn(bstream1);
+			
+			replay(statusline);
+			replay(response);
+			replay(conn);
+			replay(entity);
+			
+			IRemoteDataFacade rest = new RESTServerFacade(this.getContext(), conn);
+			
+			//Execute
+			//These values are parameters for the server, since we use a mock, they don't matter.
+			Long starTime = 0L;
+			Long endTime = 0L;
+			Long distance = 0L;
+			Double latitude = 0D;
+			Double longitude = 0D;
+			List<ReadingEvent> result = rest.getReadingEvents(starTime, endTime, latitude, longitude, distance);
+			
+			//verify
+			ReadingEvent r1 = result.get(0);
+			ReadingEvent r2 = result.get(1);
+			//Assert moods
+			assertEquals(r1.mood, 140);
+			assertEquals(r2.mood, 130);
+			//Assert latitudes
+			assertEquals(35.9232054039299D, r1.latitude);
+			assertEquals(35.92350484235794D, r2.latitude);
+			//Assert longitudes
+			assertEquals(14.487617755003868D, r1.longitude);
+			assertEquals(14.487617755003868D, r2.longitude);
+		}
+		finally{
+			//do nothing really.
+		}
+	}
+	
 	private Trip generateTrip() {
 		Trip t = new Trip();
 		// ReadingEvent 1
