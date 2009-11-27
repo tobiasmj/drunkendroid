@@ -44,7 +44,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
 		DefaultHttpClient httpClient = new DefaultHttpClient();
         
         HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
-        // Using POST here
+        // Using GET here
         HttpGet httpGet = new HttpGet(BASE_URI+uri);
         // Make sure the server knows what kind of a response we will accept
         httpGet.addHeader("Accept", "text/xml");
@@ -66,7 +66,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
 		DefaultHttpClient httpClient = new DefaultHttpClient();
         
         HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
-        // Using POST here
+        // Using PUT here
         HttpPut httpPut = new HttpPut(BASE_URI+uri);
         // Make sure the server knows what kind of a response we will accept
         httpPut.addHeader("Accept", "text/xml");
