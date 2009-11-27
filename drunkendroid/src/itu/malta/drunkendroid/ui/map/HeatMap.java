@@ -35,17 +35,38 @@ public class HeatMap{
 		return _instance;
 	}
 	
+	/**
+	 * Adds a MoodMapPoint to ArrayList _moods
+	 * @param mp
+	 */
 	public void addMoodMapPoint(MoodMapPoint mp)
 	{
 		if(!_moods.contains(mp))
 			_moods.add(mp);
 	}
 	
+	/**
+	 * Clears the ArrayList of MoodMapPoints
+	 */
+	public void clearMoodMapPoints()
+	{
+		_moods.clear();
+	}
+	
+	/**
+	 * 
+	 * @return a bitmap containing the heatmap
+	 */
 	public Bitmap getHeatmap()
 	{
 		return _bitmap;
 	}
 	
+	/**
+	 * Creates a heatmap from the MoodMapPoints in _moods
+	 * @param mapView
+	 * @return a bitmap containing the heatmap
+	 */
 	public Bitmap createHeatmap(MapView mapView)
 	{
 		Projection projection = mapView.getProjection();
@@ -55,7 +76,7 @@ public class HeatMap{
 		if(mapView.getZoomLevel() != _zoomLevel)
 			calculateRadius(mapView.getZoomLevel());
 
-		// Drawing moodmappoints
+		// Drawing MoodMapPoints
         for(MoodMapPoint mp : _moods)
         	canvas = drawCircle(canvas, projection, mp);
 
@@ -81,6 +102,10 @@ public class HeatMap{
         return _bitmap;
 	}
 	
+	/**
+	 * Calculate a radius with regards to the zoomLevel
+	 * @param zoomLevel
+	 */
 	private void calculateRadius(int zoomLevel)
 	{
 		_zoomLevel = zoomLevel;
@@ -98,6 +123,13 @@ public class HeatMap{
 		}
 	}
 	
+	/**
+	 * Draw a semi-transparent white circle on the canvas
+	 * @param canvas
+	 * @param projection
+	 * @param mp
+	 * @return a canvas with the circle drawn upon it
+	 */
     private Canvas drawCircle(Canvas canvas, Projection projection, MoodMapPoint mp)
     {
 		Point p = projection.toPixels(mp.getGeoPoint(), null);

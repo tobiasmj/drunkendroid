@@ -85,7 +85,7 @@ public class ViewTripActivity extends MapActivity {
             
 
             GeoPoint gp = new GeoPoint((int)(minLat+(span[0]/2)*1E6),(int)(minLong+(span[1]/2)*1E6));
-            /*            
+            
             _mapController.animateTo(gp, new Runnable() {
     	        public void run()
     	        {
@@ -95,7 +95,7 @@ public class ViewTripActivity extends MapActivity {
     	            overlays.add(overlay);
     	        }
             });
-            */
+            
         }
         else
         	finish();

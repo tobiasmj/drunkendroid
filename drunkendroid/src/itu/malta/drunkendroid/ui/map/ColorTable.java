@@ -17,6 +17,10 @@ public class ColorTable {
 		return _lookupTable;
 	}
 	
+	/**
+	 * Create a gradient image from light blue to green, yellow and red.
+	 * @return A 256x1 gradient bitmap
+	 */
 	private static Bitmap createGradientImage()
 	{
 		Bitmap bmp = Bitmap.createBitmap(256, 1, Config.ARGB_8888);
@@ -35,12 +39,17 @@ public class ColorTable {
 		return bmp;
 	}
 	
-	private static int[] createColorLookupTable(Bitmap bmp)
+	/**
+	 * Create a colorTable to lookup colors according to their alpha value.
+	 * @param bitmap
+	 * @return An int[] containing colors
+	 */
+	private static int[] createColorLookupTable(Bitmap bitmap)
 	{
 		int tableSize = 256;
-		int[] colorTable = new int[tableSize];
+		int[] colorTable = new int[256];
 		for (int i = 0; i < tableSize; ++i)
-			colorTable[i] = bmp.getPixel(i, 0);
+			colorTable[i] = bitmap.getPixel(i, 0);
 
 		return colorTable;
 	}
