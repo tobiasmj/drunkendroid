@@ -49,6 +49,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	public void Connect() {
 		// Request location updates
     	manager.requestLocationUpdates(provider, time, distance, locationListener);
+    	
 	}
 	
 	public void Disconnect() {

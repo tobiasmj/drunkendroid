@@ -47,7 +47,7 @@
         		<category android:name="android.intent.category.DEFAULT"></category>
         	</intent-filter>
         </activity>
-        <activity android:name=".ui.activities.MoodReadActivity" android:theme="@style/Dialog_No_Title">
+        <activity android:launchMode="standard" android:name=".ui.activities.MoodReadActivity" android:label="DrunkDroid Notification" android:theme="@android:style/Theme.Dialog">
         	<intent-filter>
         		<action android:name="MOOD_READING" />
         		<category android:name="android.intent.category.DEFAULT"></category>
