@@ -1,8 +1,7 @@
-package itu.malta.drunkendroidserver;
+package itu.malta.drunkendroidserver.domain;
 
 /**
- * private class to represent a gridCell in the moodMap matrice.
- * @author tobiasmj
+ * class to represent a gridCell in the moodMap array.
  *
  */
 
@@ -12,12 +11,24 @@ public class GridCell{
 	
 	private double longitude, latitude;
 	private int value, count;
-	private boolean unmarshaled = false;
 	
+	// used when xStream unmarshaling
+	private boolean unmarshaled = false;
+
+	/**
+	 * Constructor
+	 * @param longitude value in the center of the GridCell.
+	 * @param latitude value in the center of the GridCell.
+	 */
 	public GridCell(double longitude, double latitude) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}
+	
+	/**
+	 * Method to add a reading value to the GridCell
+	 * @param value
+	 */
 	public void addValue(int value){
 		if (unmarshaled == false) {
 			this.count = this.count +1;
@@ -28,6 +39,11 @@ public class GridCell{
 			unmarshaled = false;
 		}
 	}
+	
+	/**
+	 * get the avarage value of readings within the GridCell.
+	 * @return integer from 0-255.
+	 */
 	public int getAverage() {
 		return (this.value/this.count);
 	}

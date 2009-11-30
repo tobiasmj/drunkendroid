@@ -1,11 +1,18 @@
 package itu.malta.drunkendroidserver;
 
 import itu.malta.drunkendroidserver.control.Repository;
+import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.tech.DatabaseConnection;
 import itu.malta.drunkendroidserver.util.XmlResponse;
+import itu.malta.drunkendroidserver.util.xstreem.converters.TripConverter;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.sql.SQLException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -16,99 +23,54 @@ import org.restlet.representation.Representation;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.ext.xml.NodeSet;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import com.thoughtworks.xstream.XStream;
 
-
+/**
+ * 
+ * Class that handles requests for adding, updating and retrieving Trips.
+ *
+ */
 public class TripResource extends ServerResource {
 	private String imeiNumber;
-	private Long startTime,endTime;
 	private long returnId;
-	private String name;
 	private int tripId;
 	
-	
+	/**
+	 * Method invoked for adding trips 
+	 * @param entity
+	 * @return either the generated trip id in an XML representation for a successful addition of one or more events
+	 *  	   or a XML representation containing the error message. 
+	 * @throws ResourceException
+	 */
 	@Post
 	public Representation storeRepresentation(Representation entity) throws ResourceException {
 		DomRepresentation result = null;
 		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
-		Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
 			
-			//Build the DOMTree
-			DomRepresentation domDocument = new DomRepresentation(entity);
-			
 			//Assuming only one trip per post, get the startTime and endTime
 			try{
-				startTime = Long.parseLong(domDocument.getNode("//trip/startDateTime").getTextContent());
-				Node endDateTime = domDocument.getNode("//trip/endDateTime");
-				if(endDateTime != null) {
-					endTime = Long.parseLong(domDocument.getNode("//trip/endDateTime").getTextContent());
-					
-				}
-				name = domDocument.getNode("//trip/name").getTextContent();
-				Trip trip;
-				if(endTime == null) {
-					trip = new Trip(imeiNumber,startTime,name);
-				} else {
-					trip = new Trip(imeiNumber,startTime,endTime,name);
-				}
-				
-				long eventTime;
-				double longitude,latitude;
-				String eventType;
-				// get the events, there might be multiple
-				NodeSet events = domDocument.getNodes("//trip/events/event");
-				for (int i = 0;i < events.size(); i++) {
-					int mood;
-					System.out.println(events.toString());
-					
-					//Get the readings variables
-	                eventType = events.get(i).getChildNodes().item(0).getTextContent();
-					eventTime = Long.parseLong(events.get(i).getChildNodes().item(1).getTextContent());
-					longitude = Double.parseDouble(events.get(i).getChildNodes().item(2).getTextContent());
-					latitude = Double.parseDouble(events.get(i).getChildNodes().item(3).getTextContent());
-	                
-					
-					if(eventType.equals("reading")) {
-						mood = Integer.parseInt(events.get(i).getChildNodes().item(4).getFirstChild().getTextContent()); 
-						// insert the DBInsertReadingCommand
-						trip.addEvent(new Reading(eventTime,latitude,longitude,mood));
-					}
-					if(eventType == "sms") {
-						//To be implemented
-						//String smsText = domDocument.getNode("//trip/events/event[" + i+1 + "]/data/sms").getTextContent(); 
-					}
-					if(eventType == "call") {
-						// To be implemented
-					}
-					if(eventType == "photo") {
-						// To be implemented
-					}
-					if(eventType == "video") {
-						// To be implemented
-					}
-					
-					
-				}
-				
-				// Commit the Transaction Object to the database
-				
+
+				Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
+				XStream xStream = new XStream();
+				xStream.registerConverter(new TripConverter());
+				xStream.alias("trip", Trip.class);
+				Trip trip = (Trip) xStream.fromXML(entity.getStream());
+				trip.setImeiNumber(imeiNumber);
 				returnId = rep.insertTrip(trip);
-				//tripComm.execute();
-				
 				// set the status and build an response 
 				setStatus(Status.SUCCESS_CREATED);
 		        try {  
 		        	result = new DomRepresentation(MediaType.TEXT_XML);  
-		  
 		            Document d = result.getDocument();  
-		  
+		            // add the tripid element to the representation.
 		            Element eltTripId = d.createElement("tripId");  
 		            eltTripId.appendChild(d.createTextNode(Long.toString(returnId)));
 		            d.appendChild(eltTripId);
@@ -127,42 +89,51 @@ public class TripResource extends ServerResource {
 			} catch (SQLException e) {
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				result = XmlResponse.generateErrorRepresentation("Error inserting data in database.", "4");				
-			}
+			} catch (IOException e) {
+        		setStatus(Status.SERVER_ERROR_INTERNAL);
+        		result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");				
+        	}  
 			
 		} else {
 		// not text/XML format
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			result = XmlResponse.generateErrorRepresentation("Payload not text/XML.", "1");
-
 		}
 		return result;
-		
 	}
 	
+	
+	/**
+	 * Method invoked for updating a trip 
+	 * @param entity
+	 * @return either null for a successful edit or a xml document containing the error message. 
+	 * @throws ResourceException
+	 */
 	@Put
 	public Representation store(Representation entity) throws ResourceException {
 		Representation result = null;
 		
 		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+
+		tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 		
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
 			
-			//Build the DOMTree
-			DomRepresentation domDocument = new DomRepresentation(entity);
-			Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 			
 			//Assuming only one trip per post, get the startTime and endTime
 			try{
-				startTime = Long.parseLong(domDocument.getNode("//trip/startDateTime").getTextContent());
-				endTime = Long.parseLong(domDocument.getNode("//trip/endDateTime").getTextContent());
-				name = domDocument.getNode("//trip/name").getTextContent();
-				tripId = Integer.parseInt(domDocument.getNode("//trip/tripId").getTextContent()); 
-				
-				// Create the updateObejct
-				Trip trip = new Trip(tripId,imeiNumber,startTime,endTime,name);
-				rep.updateTrip(trip);
 
+				Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
+				XStream xStream = new XStream();
+				xStream.registerConverter(new TripConverter());
+				xStream.alias("trip", Trip.class);
+				Trip trip = (Trip) xStream.fromXML(entity.getStream());
+				trip.setTripId(tripId);
+				trip.setImeiNumber(imeiNumber);
+				rep.updateTrip(trip);
+				
+				setStatus(Status.SUCCESS_OK);
 				
 			} catch (DOMException e) {
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -173,7 +144,10 @@ public class TripResource extends ServerResource {
 			} catch (SQLException e) {
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				result = XmlResponse.generateErrorRepresentation("Error inserting data in database.", "4");				
-			}
+			} catch (IOException e) {
+	        	setStatus(Status.SERVER_ERROR_INTERNAL);
+	        	result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");				
+	        } 
 			
 		} else {
 		// not text/XML format
@@ -181,28 +155,54 @@ public class TripResource extends ServerResource {
 			result = XmlResponse.generateErrorRepresentation("Payload not text/XML.", "1");
 
 		}
-		
 		return result;
 	
 	}
 	
-	
+	/**
+	 * Method invoked for getting a specific trip. 
+	 * @return either a trip in XML representation or a XML document containing the error message. 
+	 */
 	@Get  
     public Representation represent() {
-		Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
-    	imeiNumber = (String) getRequest().getAttributes().get("IMEI");
-    	tripId = Integer.getInteger(getRequest().getAttributes().get("TripId").toString());
+		
+		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+		tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 
     	DomRepresentation result = null;
     	try {
-    		result = rep.getTrip(new Trip(tripId));
+
+    		Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
+    		Trip trip =	rep.getTrip(new Trip(tripId));
+    		XStream xStream = new XStream();
+    		xStream.registerConverter(new TripConverter());
+    		xStream.alias("trip", Trip.class);
+            //result = new DomRepresentation(MediaType.TEXT_XML, xStream.toXML(trip));
+
+    		
+    		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    		DocumentBuilder builder = null;
+    		Document document = null;
+			
+    		builder = factory.newDocumentBuilder();
+			document = builder.parse(new InputSource(new StringReader(xStream.toXML(trip))));
+
+	        result = new DomRepresentation(MediaType.TEXT_XML);
+	    	result.setDocument(document);
+			
     	} catch (SQLException se) {
         	setStatus(Status.SERVER_ERROR_INTERNAL);
         	result = XmlResponse.generateErrorRepresentation("Error getting data from database.", "5");
     	} catch (IOException ioe) {
         	setStatus(Status.SERVER_ERROR_INTERNAL);
         	result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");
-    	}
+    	}catch (ParserConfigurationException e) {
+           	setStatus(Status.SERVER_ERROR_INTERNAL);
+        	result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");
+		}catch (SAXException e) {
+	       	setStatus(Status.SERVER_ERROR_INTERNAL);
+        	result = XmlResponse.generateErrorRepresentation("Error creating XML response.", "6");
+		}
     	
     	setStatus(Status.SUCCESS_OK);
     	return result;

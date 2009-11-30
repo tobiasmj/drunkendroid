@@ -1,5 +1,7 @@
 package itu.malta.drunkendroidserver.util;
-
+/**
+ * Class with Helper functions.
+ */
 public class HelperFunctions {
 	/*
 	 import math
@@ -23,11 +25,17 @@ public class HelperFunctions {
     return (miles/r)*radians_to_degrees
 	 */
 	private static double earth_radius = 6378.1370;
-	
+	/**
+	 * Calculates the difference in latitude by a distance in kilometers.
+	 * @param km the amount of kilometers.
+	 * @return double representing the new ... TODO
+	 */
 	public static double change_in_latitude(double km){
 		return Math.toDegrees(km/earth_radius);
 		//return (km/earth_radius)*(180/Math.PI);
 	}
+	
+	
 	public static double change_in_longitude(double latitude, double km) {
 		double r = earth_radius*Math.cos(Math.toRadians(latitude));
 		return Math.toDegrees(km/r);

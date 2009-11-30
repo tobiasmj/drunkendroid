@@ -6,11 +6,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
+/**
+ * Class for getting a Database connection.
+ */
 public class DatabaseConnection implements IDatabaseConnection {
 	private String connURL = null;
 	private DatabaseConnection(){
-			connURL = databaseConfiguration.getString("DatabaseConnection.1"); //$NON-NLS-1$
+			connURL = "jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema";
+			// trying to externalise the connection string. currently dossen't work
+			//databaseConfiguration.getString("DatabaseConnection.1"); //$NON-NLS-1$
 		
 	}
 	
@@ -21,9 +25,7 @@ public class DatabaseConnection implements IDatabaseConnection {
 	public static IDatabaseConnection getInstance(){
 		return DatabaseConnectionSingleton.INSTANCE;
 	}
-	/* (non-Javadoc)
-	 * @see itu.malta.drunkendroidserver.util.IDatabaseConnection#getConn()
-	 */
+
 	public Connection getConn(){
 		Connection conn = null;
 		try{

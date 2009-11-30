@@ -3,7 +3,7 @@ package itu.malta.drunkendroidserver.test;
 import static org.easymock.classextension.EasyMock.*;
 
 import junit.framework.Assert;
-import itu.malta.drunkendroidserver.GridCell;
+import itu.malta.drunkendroidserver.domain.GridCell;
 import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 
 import org.junit.After;
@@ -15,8 +15,7 @@ import org.junit.Test;
 import com.thoughtworks.xstream.XStream;
 
 /**
- * @author tobiasmj
- *
+ * JUnit test class for testing creating a moodMap, using a mock-object database connection.
  */
 public class MoodMapTest {
 
@@ -49,7 +48,7 @@ public class MoodMapTest {
 	}
 
 	/**
-	 * Test method for {@link itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)}.
+	 * Test method for {@link MoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
 	 */
 	@Test
 	public void testMarshal() {
@@ -68,7 +67,7 @@ public class MoodMapTest {
 	}
 
 	/**
-	 * Test method for {@link itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)}.
+	 * Test method for {@link MoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
 	 */
 	@Test
 	public void testUnmarshal() {
@@ -89,7 +88,7 @@ public class MoodMapTest {
 	}
 
 	/**
-	 * Test method for {@link itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter#canConvert(java.lang.Class)}.
+	 * Test method for {@link MoodMapConverter#canConvert(Class)}.
 	 */
 	@Test
 	public void testCanConvert() {
@@ -103,5 +102,5 @@ public class MoodMapTest {
 
 		Assert.assertEquals(true,mmc.canConvert(GridCell.class));
 	}
-
+	
 }

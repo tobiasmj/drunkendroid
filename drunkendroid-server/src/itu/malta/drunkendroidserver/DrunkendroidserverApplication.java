@@ -14,14 +14,13 @@ public class DrunkendroidserverApplication extends Application {
         // new instance of drunkendroid
         Router router = new Router(getContext());  
   
-        // Defines only one route  
-        //router.attach("/drunkendroid", DrunkendroidResource.class);
+
         // upload a trip
         router.attach("/drunkendroid/trip/{IMEI}", TripResource.class);
         
-        //get a trip
+        //get a trip, and update a trip
         router.attach("/drunkendroid/trip/{IMEI}/{TripId}", TripResource.class);
-        
+                
         // add a event to a trip
         router.attach("/drunkendroid/trip/event/{IMEI}/{TripId}", EventResource.class);
         

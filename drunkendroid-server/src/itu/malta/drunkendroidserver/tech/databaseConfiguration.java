@@ -2,7 +2,9 @@ package itu.malta.drunkendroidserver.tech;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
+/**
+ * CLass used for getting the externalised connection string.
+ */
 public class databaseConfiguration {
 	private static final String BUNDLE_NAME = "itu.malta.drunkendroidserver.util.databaseConnection"; //$NON-NLS-1$
 

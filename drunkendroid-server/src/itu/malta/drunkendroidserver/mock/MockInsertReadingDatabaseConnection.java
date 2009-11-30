@@ -14,13 +14,13 @@ import itu.malta.drunkendroidserver.interfaces.IDatabaseConnection;
  * Used for UnitTests, creates a Mock database object instead of a prober database connection.
  */
 
-public class MockInsertTripDatabaseConnection implements IDatabaseConnection {
+public class MockInsertReadingDatabaseConnection implements IDatabaseConnection {
 
-	private MockInsertTripDatabaseConnection(){
+	private MockInsertReadingDatabaseConnection(){
 	}
 
 	private static class MockInsertTripDatabaseConnectionSingleton {
-		private static final IDatabaseConnection INSTANCE = new MockInsertTripDatabaseConnection();
+		private static final IDatabaseConnection INSTANCE = new MockInsertReadingDatabaseConnection();
 	}
 
 	public static IDatabaseConnection getInstance(){
@@ -42,8 +42,8 @@ public class MockInsertTripDatabaseConnection implements IDatabaseConnection {
 			EasyMock.expectLastCall();
 		    replay(rs);
 		    
-		    expect(stmt.executeUpdate("Insert into Trip (IMEINumber,startDateTime,endDateTime,name) values (111111,123456,123456,\"Test trip\")", 1)).andReturn(1);
-		    expect(stmt.getGeneratedKeys()).andReturn(rs);
+		    expect(stmt.executeUpdate("Insert into Reading(trip,dateTime,latitude,longitude,mood) values (1,1,10.0,10.0,100)")).andReturn(1);
+		    //expect(stmt.getGeneratedKeys()).andReturn(rs);
 		    stmt.close();
 		    EasyMock.expectLastCall();
 		    //expect(stmt.close()).andStubReturn(void);
