@@ -143,4 +143,11 @@ public class DataFacade implements IDataFacade {
 			return trips.get(0);
 		}
 	}
+	
+	/**
+	 * @param t must have a localId
+	 */
+	public void deleteTrip() {
+		local.deleteTrip(getActiveTrip());
+	}
 }

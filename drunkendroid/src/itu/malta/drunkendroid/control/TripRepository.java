@@ -52,6 +52,10 @@ public class TripRepository{
 	public Trip getTrip(Long startTime) {
 		return data.getTrip(startTime);
 	}
+	
+	public void deleteTrip(){
+		data.deleteTrip();
+	}
 		
 	public void updateEventsWithoutLocation(Location location) {
 		if(activeTrip == null){

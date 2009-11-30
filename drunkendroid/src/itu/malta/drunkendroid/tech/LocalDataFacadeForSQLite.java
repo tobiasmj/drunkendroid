@@ -327,4 +327,24 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		
 		return result;
 	}
+	public void deleteTrip(Trip t) {
+		SQLiteDatabase db = dbHelper.getDBInstance();
+		
+		try{
+			//Delete the trip
+			final String whereClauseTRIP = "id = ?";
+			final String[] whereArgsTRIP = {String.valueOf(t.getLocalID())};
+			db.beginTransaction();
+			db.delete(DBHelper.TABLE_TRIP, whereClauseTRIP, whereArgsTRIP);
+			
+			//Delete the events
+			final String whereClauseEVENT = "trip = ?";
+			final String[] whereArgsEVENT = {String.valueOf(t.getLocalID())};
+			db.delete(DBHelper.TABLE_EVENT, whereClauseEVENT, whereArgsEVENT);
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
 }

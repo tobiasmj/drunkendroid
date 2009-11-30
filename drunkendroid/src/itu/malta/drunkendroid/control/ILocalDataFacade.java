@@ -24,6 +24,7 @@ public interface ILocalDataFacade {
 	public Trip getTrip(Long startTime);
 	public List<Trip> getActiveTrips();
 	public Trip startTrip();
+	public void deleteTrip(Trip t);
 	public void addRemoteIdToTrip(Trip t);
 	public void closeTrip(Trip t);
 	public void closeFacade();

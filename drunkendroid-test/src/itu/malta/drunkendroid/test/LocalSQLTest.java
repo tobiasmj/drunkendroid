@@ -12,14 +12,14 @@ import itu.malta.drunkendroid.tech.LocalDataFacadeForSQLite;
 import android.test.AndroidTestCase;
 
 public class LocalSQLTest extends AndroidTestCase {
-	ILocalDataFacade dbh;
+	ILocalDataFacade _dbh;
 
 	protected void setUp(){
-		 dbh = new LocalDataFacadeForSQLite(this.getContext());
+		 _dbh = new LocalDataFacadeForSQLite(this.getContext());
 	}
 	
 	protected void tearDown(){
-			dbh.closeFacade();
+			_dbh.closeFacade();
 	}
 	
 	private void flushDB(){
@@ -28,23 +28,23 @@ public class LocalSQLTest extends AndroidTestCase {
 	}
 	
 	private void insertTestData(){
-		Trip t = dbh.startTrip();
+		Trip t = _dbh.startTrip();
 		// ReadingEvent 1
 		ReadingEvent r1 = new ReadingEvent(new Long(1255816133), (Double)35.908422, (Double)14.502362, 110);
 		// ReadingEvent 2
 		ReadingEvent r2 = new ReadingEvent(new Long(1255816433), (Double)35.909141, (Double)14.503580, 95);
 		// ReadingEvent 3	
 		ReadingEvent r3 = new ReadingEvent(new Long(1255816733), (Double)35.909275, (Double)14.502825, 62);
-		dbh.addEvent(t, r1);
-		dbh.addEvent(t, r2);
-		dbh.addEvent(t, r3);
+		_dbh.addEvent(t, r1);
+		_dbh.addEvent(t, r2);
+		_dbh.addEvent(t, r3);
 		//dbh.closeTrip(t);
 		
 		// ReadingEvent 1
-		Trip t2 = dbh.startTrip();
+		Trip t2 = _dbh.startTrip();
 		t2.setDateInMilliSec(1255816733);
 		ReadingEvent r2_1 = new ReadingEvent(new Long(1255816733), (Double)35.908422, (Double)14.502362, 270);
-		dbh.addEvent(t2, r2_1);
+		_dbh.addEvent(t2, r2_1);
 	}
 	
 	public void testInsertTrip(){
@@ -53,10 +53,26 @@ public class LocalSQLTest extends AndroidTestCase {
 		this.flushDB();
 	}
 	
+	public void testDeleteTrip(){
+		try{
+			this.insertTestData();
+			Trip t = _dbh.getAllTrips().get(0);
+			
+			int count_before = _dbh.getAllTrips().size();
+			_dbh.deleteTrip(t);
+			int count_after = _dbh.getAllTrips().size();
+			
+			assertTrue(( count_before - 1) == ( count_after ));
+		}
+		finally{
+			this.flushDB();
+		}
+	}
+	
 	public void testGetAllLocalTrips(){
 		this.insertTestData();
 		
-		List<Trip> trips = dbh.getAllTrips();
+		List<Trip> trips = _dbh.getAllTrips();
 		assertEquals(2, trips.size());
 		
 		this.flushDB();
@@ -68,12 +84,12 @@ public class LocalSQLTest extends AndroidTestCase {
 		try{
 			this.insertTestData();
 			
-			List<Trip> returnedTrips = dbh.getAllTrips();
+			List<Trip> returnedTrips = _dbh.getAllTrips();
 			assertTrue(returnedTrips.size() > 0);
 			Trip someTrip = returnedTrips.get(1);
 			Long someTripStartDate = someTrip.getStartDate();
 			
-			Trip returnedTrip = dbh.getTrip(someTripStartDate);
+			Trip returnedTrip = _dbh.getTrip(someTripStartDate);
 			assertEquals(someTripStartDate, returnedTrip.getStartDate());
 		}
 		finally{
@@ -85,15 +101,15 @@ public class LocalSQLTest extends AndroidTestCase {
 	public void testUpdateForeignId(){
 		try{
 			this.insertTestData();
-			List<Trip> trips = dbh.getAllTrips();
+			List<Trip> trips = _dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
 			Long foreignId = new Long(123456789);
 			Long testTripStartDate = testTrip.getStartDate();
 			
 			//Build
 			testTrip.setRemoteID(foreignId);
-			dbh.addRemoteIdToTrip(testTrip);
-			testTrip = dbh.getTrip(testTripStartDate);
+			_dbh.addRemoteIdToTrip(testTrip);
+			testTrip = _dbh.getTrip(testTripStartDate);
 			
 			//verify
 			assertEquals(foreignId, testTrip.getRemoteID());
@@ -106,12 +122,12 @@ public class LocalSQLTest extends AndroidTestCase {
 	public void testGetCountFromTrip(){
 		try{
 			this.insertTestData();
-			List<Trip> trips = dbh.getAllTrips();
+			List<Trip> trips = _dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
 			
-			Trip controlTrip = dbh.getTrip(testTrip.getStartDate());
+			Trip controlTrip = _dbh.getTrip(testTrip.getStartDate());
 			int eventCount = controlTrip.getTripEvents().size();
-			int testCount = dbh.getEventCount(testTrip);
+			int testCount = _dbh.getEventCount(testTrip);
 			
 			assertTrue(eventCount > 0);
 			assertEquals(eventCount, testCount);
@@ -155,19 +171,19 @@ public class LocalSQLTest extends AndroidTestCase {
 			//Build
 			this.insertTestData();
 			//Execute
-			List<Trip> trips = dbh.getActiveTrips();
+			List<Trip> trips = _dbh.getActiveTrips();
 			//Verify
 			assertEquals(2, trips.size()); //from insertTestData
 			
 			//Execute
-			dbh.closeTrip(trips.get(0));
-			trips = dbh.getActiveTrips();
+			_dbh.closeTrip(trips.get(0));
+			trips = _dbh.getActiveTrips();
 			//Verify
 			assertEquals(1, trips.size());
 			
 			//Execute
-			dbh.closeTrip(trips.get(0));
-			trips = dbh.getActiveTrips();
+			_dbh.closeTrip(trips.get(0));
+			trips = _dbh.getActiveTrips();
 			//Verify
 			assertEquals(0, trips.size());
 		}
@@ -179,9 +195,9 @@ public class LocalSQLTest extends AndroidTestCase {
 	public void testWithoutLocation(){
 		try{
 			this.insertTestData();
-			List<Trip> trips = dbh.getAllTrips();
+			List<Trip> trips = _dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
-			int testTripStartCount = dbh.getEventCount(testTrip);
+			int testTripStartCount = _dbh.getEventCount(testTrip);
 			//Create a few events without locations
 			Long currentTime1 = Calendar.getInstance().getTimeInMillis();
 			Long currentTime2 = currentTime1 + 10;
@@ -195,20 +211,20 @@ public class LocalSQLTest extends AndroidTestCase {
 					null,
 					null);
 			//Add them
-			dbh.addEvent(testTrip, e1);
-			dbh.addEvent(testTrip, e2);
+			_dbh.addEvent(testTrip, e1);
+			_dbh.addEvent(testTrip, e2);
 			//Now update them.	
 			Double latitude = 36.008165;
 			Double longitude = 14.703580;
-			List<Event> updatedEvents = dbh.updateEventsWithoutLocation(testTrip, latitude, longitude);
+			List<Event> updatedEvents = _dbh.updateEventsWithoutLocation(testTrip, latitude, longitude);
 			
 			//Build verifications objects.
-			testTrip = dbh.getTrip(testTrip.getStartDate());
+			testTrip = _dbh.getTrip(testTrip.getStartDate());
 			List<Event> testEvents = testTrip.getTripEvents();
 			
 			//Verify
 			assertEquals(2, updatedEvents.size());
-			assertEquals(testTripStartCount + 2, dbh.getEventCount(testTrip));
+			assertEquals(testTripStartCount + 2, _dbh.getEventCount(testTrip));
 			for(Event e : testEvents){
 				if(e.dateTime == currentTime1 || e.dateTime == currentTime2){
 					assertEquals(latitude, e.latitude);

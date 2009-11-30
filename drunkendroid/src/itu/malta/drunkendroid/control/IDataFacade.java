@@ -11,6 +11,7 @@ public interface IDataFacade {
 	public List<Trip> getAllTrips();
 	public Trip getTrip(Long startTime);
 	public Trip startTrip();
+	public void deleteTrip();
 	public Trip getActiveTrip();
 	public void closeTrip(Trip t);
 	
