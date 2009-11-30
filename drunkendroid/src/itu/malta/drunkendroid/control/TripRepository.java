@@ -53,8 +53,8 @@ public class TripRepository{
 		return data.getTrip(startTime);
 	}
 	
-	public void deleteTrip(){
-		data.deleteTrip();
+	public void deleteTrip(Long startTime){
+		data.deleteTrip(startTime);
 	}
 		
 	public void updateEventsWithoutLocation(Location location) {

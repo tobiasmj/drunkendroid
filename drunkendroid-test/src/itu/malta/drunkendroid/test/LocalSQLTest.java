@@ -59,7 +59,7 @@ public class LocalSQLTest extends AndroidTestCase {
 			Trip t = _dbh.getAllTrips().get(0);
 			
 			int count_before = _dbh.getAllTrips().size();
-			_dbh.deleteTrip(t);
+			_dbh.deleteTrip(t.getStartDate());
 			int count_after = _dbh.getAllTrips().size();
 			
 			assertTrue(( count_before - 1) == ( count_after ));

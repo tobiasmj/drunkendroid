@@ -147,7 +147,7 @@ public class DataFacade implements IDataFacade {
 	/**
 	 * @param t must have a localId
 	 */
-	public void deleteTrip() {
-		local.deleteTrip(getActiveTrip());
+	public void deleteTrip(Long startTime) {
+		local.deleteTrip(startTime);
 	}
 }
