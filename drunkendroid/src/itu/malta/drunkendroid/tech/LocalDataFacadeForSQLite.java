@@ -2,7 +2,6 @@ package itu.malta.drunkendroid.tech;
 
 import itu.malta.drunkendroid.control.ILocalDataFacade;
 import itu.malta.drunkendroid.domain.*;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,10 +34,16 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			readingValues.put("latitude", e.latitude);
 			
 			//Handle other type of Events here
-			if(ReadingEvent.class.isInstance(e)){
-				ReadingEvent r = (ReadingEvent)e;
-				readingValues.put("mood", r.mood);
-			}
+			if(ReadingEvent.class.isInstance(e))
+				readingValues.put("mood", ((ReadingEvent)e).mood);
+			else if(IncomingCallEvent.class.isInstance(e))
+				readingValues.put("sender", ((CallEvent)e).getPhonenumber());
+			else if(OutgoingCallEvent.class.isInstance(e))
+				readingValues.put("receiver", ((CallEvent)e).getPhonenumber());
+			else if(IncomingSMSEvent.class.isInstance(e))
+				readingValues.put("sender", ((SMSEvent)e).getPhonenumber());
+			else if(OutgoingSMSEvent.class.isInstance(e))
+				readingValues.put("receiver", ((SMSEvent)e).getPhonenumber());
 			
 			long success = db.insertOrThrow(DBHelper.TABLE_EVENT, null, readingValues);
 			if(success == -1)
@@ -184,7 +189,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		loadedTrip.setRemoteID(selectionCursor.getLong(1));
 		selectionCursor.close();
 		//Build the trip
-		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood"};
+		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood", "sender", "receiver", "message"};
 		String[] whereTripEQ = {String.valueOf(tripId)};
 		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
@@ -193,16 +198,43 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			Double longitude = selectionOfReadings.getDouble(1);
 			Double latitude = selectionOfReadings.getDouble(2);
 			if(selectionOfReadings.isNull(3)){
-				//This is just a Location event
-				loadedTrip.AddEvent(new LocationEvent(date, latitude, longitude));
+				if(selectionOfReadings.isNull(6)) {
+					//This is either a call or a LocationEvent since there is no mood or message
+					if(selectionOfReadings.isNull(5)) {
+						if(selectionOfReadings.isNull(4)) {
+							//This is just a Location event, since there is no sender, receiver or message.
+							loadedTrip.AddEvent(new LocationEvent(date, latitude, longitude));
+						} else {
+						//This is an incoming call, since there is a sender
+						IncomingCallEvent e = new IncomingCallEvent(date, latitude, longitude, selectionOfReadings.getString(4));
+						loadedTrip.AddEvent(e);
+						}
+					} 
+					else {
+						//This is and outgoing call, since there is a receiver
+						OutgoingCallEvent e = new OutgoingCallEvent(date, latitude, longitude, selectionOfReadings.getString(5));
+						loadedTrip.AddEvent(e);
+					}
+				}
+				else {
+					//This is an SMS, since there is a message
+					if(selectionOfReadings.isNull(5)) {
+						//This is an incoming sms, since there is no receiver
+						IncomingSMSEvent e = new IncomingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
+						loadedTrip.AddEvent(e);
+					} else {
+						//This is and outgoing sms, since there is a receiver
+						OutgoingSMSEvent e = new OutgoingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
+						loadedTrip.AddEvent(e);
+					}
+				}
 			}
-			else{
-				//This is a reading event
+			else {
+				//This is a reading event, since there is a mood
 				ReadingEvent r = new ReadingEvent(date, 
 						latitude, 
 						longitude, 
 						selectionOfReadings.getInt(3)); //Add mood
-				//Add to the trip
 				loadedTrip.AddEvent(r);
 			}
 		}
@@ -215,7 +247,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
 		//Find the events which will be updated.
-		final String[] columns = {"dateTime", "mood"}; //the location is not known silly.
+		final String[] columns = {"dateTime", "mood", "sender", "receiver", "message"}; //the location is not known silly.
 		final String selection = " longitude IS NULL AND latitude IS NULL";
 		List<Event> events = new ArrayList<Event>();
 		
@@ -224,20 +256,21 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		try{
 			if(cursor.moveToFirst()){
 				do {
-					//So there is another event.
-					Long date = cursor.getLong(0);
-					
-					//does the event has a mood?
-					if(cursor.isNull(1)){
-						//No
-						//This is an ordinary event
-						events.add(new LocationEvent(date, latitude, longitude));
-					}
-					else{
-						//Yes
-						//This is a ReadingEvent
-						int mood = cursor.getInt(1);
-						events.add(new ReadingEvent(date, latitude, longitude, mood));
+					if(cursor.isNull(3) && cursor.isNull(4) && cursor.isNull(5)) {
+						//This is either a location- or readingEvent.
+						Long date = cursor.getLong(0);
+						//does the event have a mood?
+						if(cursor.isNull(1)){
+							//No
+							//This is a locationEvent
+							events.add(new LocationEvent(date, latitude, longitude));
+						}
+						else {
+							//Yes
+							//This is a ReadingEvent
+							int mood = cursor.getInt(1);
+							events.add(new ReadingEvent(date, latitude, longitude, mood));
+						}
 					}
 					
 				} while (cursor.moveToNext());

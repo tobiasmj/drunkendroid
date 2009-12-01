@@ -24,8 +24,8 @@ public class DataFacade implements IDataFacade {
 	
 	public DataFacade(Context context){
 		IWebserviceConnection connection = new WebserviceConnectionREST();
-		remote = new RESTServerFacade(context, connection);
-		//remote = new DummyRESTserver();
+		//remote = new RESTServerFacade(context, connection);
+		remote = new DummyRESTserver();
 		local = new LocalDataFacadeForSQLite(context);
 	}
 	
@@ -105,7 +105,7 @@ public class DataFacade implements IDataFacade {
 		List<Event> updatedEvents = local.updateEventsWithoutLocation(t, latitude, longitude);
 		//now update the trip on the server.
 		for(Event e : updatedEvents){
-			//This ought to be done in a different thread.
+			//TODO This ought to be done in a different thread.
 			remote.updateTrip(t, e);
 		}
 	}

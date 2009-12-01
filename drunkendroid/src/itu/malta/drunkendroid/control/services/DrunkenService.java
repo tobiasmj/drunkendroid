@@ -3,7 +3,7 @@ package itu.malta.drunkendroid.control.services;
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.LocationEvent;
-import itu.malta.drunkendroid.handlers.EventHandler;
+import itu.malta.drunkendroid.handlers.EventReceiver;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -23,7 +23,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 
 	private static DrunkenService _service = null;
 	private Handler _moodHandler = new Handler();
-	private EventHandler _eventHandler = new EventHandler();
+	private EventReceiver _eventHandler = new EventReceiver();
 	private SMSObserver _smsObserver = new SMSObserver(new Handler());
 	private PhoneStateListener _callHandler = new CallListener();
 	private TelephonyManager _phoneManager;
