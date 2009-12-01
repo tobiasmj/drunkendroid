@@ -2,8 +2,11 @@ package itu.malta.drunkendroidserver.test;
 
 import static org.easymock.classextension.EasyMock.*;
 
+import java.util.LinkedList;
+
 import junit.framework.Assert;
 import itu.malta.drunkendroidserver.domain.GridCell;
+import itu.malta.drunkendroidserver.util.xstreem.converters.MinimizedMoodMapConverter;
 import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 
 import org.junit.After;
@@ -66,6 +69,47 @@ public class MoodMapTest {
 
 	}
 
+	/**
+	 * Test method for {@link MinimizedMoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
+	 */
+	@Test
+	public void testMinimizedMarshal() {
+		XStream xStream = new XStream();
+		xStream.registerConverter(new MinimizedMoodMapConverter());
+		xStream.alias("p",GridCell.class);
+	
+		LinkedList<?> gc = (LinkedList<?>)xStream.fromXML("<p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\" />");
+		GridCell tgc = new GridCell(14.4889622588559, 35.9237275622272);
+		tgc.addValue(120);
+		for(int i = 0;i < gc.size();i++) {
+			GridCell cgc = (GridCell)gc.get(i); 
+			Assert.assertEquals(cgc.getAverage(), tgc.getAverage());
+			Assert.assertEquals(cgc.getLatitude(), tgc.getLatitude(), 0.0);
+			Assert.assertEquals(cgc.getLongitude(), tgc.getLongitude(), 0.0);
+		}
+	}
+	/**
+	 * Test method for {@link MinimizedMoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
+	 */
+	@Test
+	public void testMinimizedUnmarshal() {
+		GridCell cc = createMock(GridCell.class);
+		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
+		expect(cc.getLongitude()).andStubReturn(14.4889622588559);
+		expect(cc.getAverage()).andStubReturn(120);
+		replay(cc);
+
+		XStream xStream = new XStream();
+		xStream.registerConverter(new MinimizedMoodMapConverter());
+		xStream.alias("points", cc.getClass());
+
+		String xmlOutput = xStream.toXML(cc);
+		//xmlOutput = xmlOutput.replaceAll("\n", "").replaceAll(" ", "");
+		Assert.assertEquals("<points>\n  <p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\"/>\n</points>",xmlOutput);
+		
+	}
+	
+	
 	/**
 	 * Test method for {@link MoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
 	 */
