@@ -159,23 +159,22 @@ public class PreviousTripsActivity extends ListActivity {
 		}
 	}
 	
-	private void DeleteTrip(int id) {
+	private void DeleteTrip(final int id) {
 		Log.i(this.getString(R.string.log_tag), "Deleting trip with id: " + id);
+		_progressDialog = ProgressDialog.show(PreviousTripsActivity.this,
+				"Please wait...", "Deleting trip...", true);
 		Runnable job = new Runnable() {
 			
 			public void run() {
-				//_repo.deleteTrip();
 				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
+					_repo.deleteTrip(_trips.get(id).getStartDate());
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				getPreviousTrips();
 			}
 		};
 		Thread thread = new Thread(null, job, "DeleteTripThread");
-		thread.start();
-		_progressDialog = ProgressDialog.show(PreviousTripsActivity.this,
-				"Please wait...", "Deleting trip...", true);	
+		thread.start();	
 	}
 }

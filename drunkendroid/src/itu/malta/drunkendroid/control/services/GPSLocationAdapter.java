@@ -2,7 +2,6 @@ package itu.malta.drunkendroid.control.services;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
