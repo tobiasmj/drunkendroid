@@ -1,19 +1,18 @@
 package itu.malta.drunkendroidserver.util;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
 import java.awt.image.BufferedImage;
 
-public class HeatMap {
+public class Heatmap {
 
 	private BufferedImage _image;
 	private int _zoomLevel;
 	private int _width;
 	private int _height;
 	
-	private void Heatmap(int width, int height, int zoomLevel) {
+	public Heatmap(int width, int height, int zoomLevel) {
 		_width = width;
 		_height = height;
 		_zoomLevel = zoomLevel;
@@ -42,7 +41,7 @@ public class HeatMap {
 	 * @param mp
 	 * @return a canvas with the circle drawn upon it
 	 */
-    public BufferedImage drawCircle(int mood, int x, int y)
+    public void drawCircle(int mood, int x, int y)
     {
 		int radius = getRadius(mood);
 		if(radius < 1) radius = 1;
@@ -59,7 +58,10 @@ public class HeatMap {
 		
 		g.drawImage(_image, null, x - radius, y - radius);
 		g.dispose();
-
-		return _image;
+    }
+    
+    public BufferedImage getHeatmap()
+    {
+    	return _image;
     }
 }
