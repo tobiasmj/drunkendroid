@@ -11,12 +11,8 @@ public class Heatmap {
 
 	private BufferedImage _image;
 	private int _zoomLevel;
-	private int _width;
-	private int _height;
 	
 	public Heatmap(int width, int height, int zoomLevel) {
-		_width = width;
-		_height = height;
 		_zoomLevel = zoomLevel;
 		_image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
@@ -37,11 +33,10 @@ public class Heatmap {
 	}
 	
 	/**
-	 * Draw a semi-transparent white circle on the canvas
-	 * @param canvas
-	 * @param projection
-	 * @param mp
-	 * @return a canvas with the circle drawn upon it
+	 * Draw a semi-transparent white circle on the image
+	 * @param mood
+	 * @param x
+	 * @param y
 	 */
     public void drawCircle(int mood, int x, int y)
     {
@@ -52,10 +47,10 @@ public class Heatmap {
 		
 		RadialGradientPaint gradient = new RadialGradientPaint( radius, radius, radius, 
 				new float[] { 0f, 1f }, 
-				new Color[] { Color.BLACK, new Color(0,0,0,0)});
+				new Color[] { Color.WHITE, new Color(0,0,0,0)});
 		
 		g.setPaint(gradient);
-		g.setComposite(BlendComposite.Multiply.derive(1));
+		g.setComposite(BlendComposite.Multiply.derive(1)); //TODO: Check up on alpha = 1
 		g.drawImage(_image, null, x - radius, y - radius);
 		g.dispose();
     }
