@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
 import java.awt.image.BufferedImage;
 
+import org.jdesktop.swingx.graphics.BlendComposite;
+
 public class Heatmap {
 
 	private BufferedImage _image;
@@ -53,9 +55,7 @@ public class Heatmap {
 				new Color[] { Color.BLACK, new Color(0,0,0,0)});
 		
 		g.setPaint(gradient);
-		//g.setComposite(BlendComposite.Multiply.derive(alpha));
-		g.fillRect(0, 0, _width, _height);
-		
+		g.setComposite(BlendComposite.Multiply.derive(1));
 		g.drawImage(_image, null, x - radius, y - radius);
 		g.dispose();
     }
