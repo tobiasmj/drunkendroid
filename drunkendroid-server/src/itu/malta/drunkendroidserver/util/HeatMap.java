@@ -52,7 +52,7 @@ public class HeatMap {
 	 * @param mp
 	 * @return a canvas with the circle drawn upon it
 	 */
-    private BufferedImage drawCircle(int mood, int x, int y)
+    public BufferedImage drawCircle(int mood, int x, int y)
     {
 		int radius = getRadius(mood);
 		if(radius < 1) radius = 1;
