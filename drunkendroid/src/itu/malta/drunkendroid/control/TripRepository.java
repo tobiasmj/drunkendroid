@@ -44,9 +44,9 @@ public class TripRepository{
 		return data.getAllTrips();
 	}
 
-	public List<ReadingEvent> getEvents(Long starTime, Long endTime, Double latitude,
-			Double longitude, Long distance) {
-		return data.getReadingEvents(starTime, endTime, latitude, longitude, distance);
+	public List<ReadingEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
+			Double lrLatitude, Double lrLongitude) {
+		return data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 
 	public Trip getTrip(Long startTime) {

@@ -14,7 +14,8 @@ public interface IRemoteDataFacade {
 	 * @param distance
 	 * @return A synthesized Trip which contains events returned by the query.
 	 */
-	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double latitude, Double longitude, Long distance);
+	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+			Double lrLatitude, Double lrLongitude);
 	
 	/**
 	 * Upload a trip to the server

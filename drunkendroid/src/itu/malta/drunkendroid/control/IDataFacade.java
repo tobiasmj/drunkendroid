@@ -15,7 +15,8 @@ public interface IDataFacade {
 	public Trip getActiveTrip();
 	public void closeTrip(Trip t);
 	
-	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double latitude, Double longitude, Long distance);
+	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+			Double lrLatitude, Double lrLongitude);
 	
 	public void closeFacade();
 }

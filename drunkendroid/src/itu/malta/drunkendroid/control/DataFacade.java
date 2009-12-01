@@ -24,8 +24,8 @@ public class DataFacade implements IDataFacade {
 	
 	public DataFacade(Context context){
 		IWebserviceConnection connection = new WebserviceConnectionREST();
-		//remote = new RESTServerFacade(context, connection);
-		remote = new DummyRESTserver();
+		remote = new RESTServerFacade(context, connection);
+		//remote = new DummyRESTserver();
 		local = new LocalDataFacadeForSQLite(context);
 	}
 	
@@ -78,9 +78,9 @@ public class DataFacade implements IDataFacade {
 	 * @param latiude latitude of the center of the area of interest.
 	 * @param longitude longitude of the center of the area of interest.
 	 */
-	public List<ReadingEvent> getReadingEvents(Long startTime, Long endTime, Double latitude,
-			Double longitude, Long distance) {
-		return remote.getReadingEvents(startTime, endTime, latitude, longitude, distance);
+	public List<ReadingEvent> getReadingEvents(Long startTime, Long endTime, Double ulLatitude,
+			Double ulLongitude, Double lrLatitude, Double lrLongitude) {
+		return remote.getReadingEvents(startTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 
 

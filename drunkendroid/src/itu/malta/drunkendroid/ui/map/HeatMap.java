@@ -69,23 +69,37 @@ public class HeatMap{
 	 */
 	public Bitmap createHeatmap(MapView mapView)
 	{
+		System.out.println("Create heatmap");
 		Projection projection = mapView.getProjection();
 		Bitmap bitmap = Bitmap.createBitmap(mapView.getWidth(), mapView.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		
 		if(mapView.getZoomLevel() != _zoomLevel)
+		{
+			System.out.println("Calculating radius");
 			calculateRadius(mapView.getZoomLevel());
+		}
 
+		System.out.println("Draw points (" + _moods.size() + ")");
 		// Drawing MoodMapPoints
         for(MoodMapPoint mp : _moods)
         	canvas = drawCircle(canvas, projection, mp);
+		System.out.println("Points drawn");
 
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         
         int[] pixels = new int[width*height];
         
+        System.out.println("Color bitmap");
         bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        String test = new String();
+        for(int i = 0; i < 10; i++)
+        {
+        	test = test + pixels[i] + ",";
+        }
+        System.out.println("Size: " + pixels.length + "(" + test + ")");
         
         // Change alpha value to the appropriate color from the color table
         for(int i = 0; i < pixels.length; i++)
@@ -96,9 +110,11 @@ public class HeatMap{
         }
         
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        System.out.println("Bitmap colored");
         
         _bitmap = bitmap;
-        
+
+		System.out.println("Heatmap created");
         return _bitmap;
 	}
 	
@@ -112,14 +128,7 @@ public class HeatMap{
 		
 		switch(zoomLevel)
 		{
-			case 19: _radius = 200; break;
-			case 18: _radius = 100; break;
-			case 17: _radius = 50; break;
-			case 16: _radius = 25; break;
-			case 15: _radius = 12; break;
-			case 14: _radius = 6; break;
-			case 13: _radius = 3; break;
-			default: _radius = 1; break;
+			default: _radius = 20; break;
 		}
 	}
 	
@@ -133,7 +142,9 @@ public class HeatMap{
     private Canvas drawCircle(Canvas canvas, Projection projection, MoodMapPoint mp)
     {
 		Point p = projection.toPixels(mp.getGeoPoint(), null);
-		int radius = (_radius * mp.getMood()) / 255;
+		
+		int radius = (_radius * mp.getMood()) / 256;
+		if(radius < 1) radius = 1;
 		
 		// Create gradient circle
 		int[] gradientColors = new int[]{Color.argb(mp.getMood(), 255, 255, 255), Color.TRANSPARENT};

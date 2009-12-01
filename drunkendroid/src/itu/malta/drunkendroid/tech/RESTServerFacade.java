@@ -15,7 +15,9 @@ import android.telephony.TelephonyManager;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
 import org.apache.http.HttpResponse;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -32,6 +34,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	private static final String LOGTAG = "RESTServerHelper";
 	private static final String MESSAGE = "message";
 	private static final String MOODMAP = "moodmap";
+	private static final String MINI_MOOMAP = "minimizedMoodmap";
 	private String IMEI = "";
 	IWebserviceConnection conn = null;
 	
@@ -40,26 +43,27 @@ public class RESTServerFacade implements IRemoteDataFacade {
 		IMEI = mgr.getDeviceId();
 		this.conn = conn;
 	}
-	
+
 	/**
 	 * @return currently only returns events with moods. Used to generate a moodmap.
 	 */
-	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double latitude, Double longitude, Long distance) {
+	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+			Double lrLatitude, Double lrLongitude) {
 		List<ReadingEvent> resultingTrip = null;
 		
 		//Call the server
-		HttpResponse response = conn.get(MOODMAP +"/"+
+		HttpResponse response = conn.get(MINI_MOOMAP +"/"+
 				 String.valueOf(starTime) +"/"+ 
 				 String.valueOf(endTime) +"/"+ 
-				 String.valueOf(latitude) +"/"+ 
-				 String.valueOf(longitude) +"/"+ 
-				 String.valueOf(distance) +"/"+ 
-				 String.valueOf(distance)); 
+				 String.valueOf(ulLatitude) +"/"+ 
+				 String.valueOf(ulLongitude) +"/"+ 
+				 String.valueOf(lrLatitude) +"/"+ 
+				 String.valueOf(lrLongitude)); 
 		//TODO Handle errors.
 		
 		try {
 			//This might be null and should be handled.
-			resultingTrip = consumeXmlFromMoodMap(response);
+			resultingTrip = consumeXmlFromMinimizedMoodMap(response);
 			if(resultingTrip == null)
 				throw new AndroidRuntimeException(LOGTAG + ": Unhandled condition. MoodMap from server is null");
 		} catch (IllegalStateException e) {
@@ -270,6 +274,88 @@ public class RESTServerFacade implements IRemoteDataFacade {
         			//Check that all values have been discovered
         			if(mood == null || latitude == null || longitude == null){
         				Log.e(LOGTAG, "Expected atleast a mood, longitude and latitude. But not all values where found");
+        				throw new IllegalStateException(LOGTAG + ": Expected values(mood, lat, long) weren't found in the xml");
+        			}
+        			//adding the result.
+        			//insert the current time, since no time is supplied by the map from the server.
+        			events.add(new ReadingEvent(currentTime, latitude, longitude, mood));
+        		}
+        		
+        		return events;
+        	}
+	        else{
+	        	//There was a problem.
+	        	//If it's a status 400 this is all there will be done.
+	        	//a code 500 will result in additional tries in the upload method.
+	        	NodeList nodes = xmlDoc.getElementsByTagName(MESSAGE);
+        		Node messageContent = nodes.item(0).getFirstChild();
+        		if(messageContent.getNodeType() == Node.TEXT_NODE){
+        			Log.e(LOGTAG, messageContent.getNodeValue());
+        		}
+	        	return null;
+	        }
+    	}
+    	catch(SAXException e){
+    		//The server has send some content which is not xml
+    		// This often happens if an error is caught by the RESTServer framework
+    		// which is not handled by our server implementation.
+    		//Log problem
+    		Log.e(LOGTAG, e.getMessage());
+    		return null;
+    	}
+    	catch(ParserConfigurationException e){
+    		//Log problem
+    		Log.e(LOGTAG, e.getMessage());
+    		return null;
+    	}	
+	}
+	
+	/**
+	 * 
+	 * @param response from a get moodmap call to the server
+	 * @return a Trip build up from the provided xml
+	 * @throws IOException If the provided response has no content.
+	 * @throws IllegalStateException  If the provided response is in an illegal state(it might have been read before)
+	 */
+	private List<ReadingEvent> consumeXmlFromMinimizedMoodMap(HttpResponse response) throws IllegalStateException, IOException {
+		final String POINT = "p";
+		final String MOOD = "value";
+		final String LONGITUDE = "long";
+		final String LATITUDE = "lat";
+		try{
+        	//Getting ready to proceed
+	        DocumentBuilderFactory docFact = DocumentBuilderFactory.newInstance();
+        	DocumentBuilder docBuilder = docFact.newDocumentBuilder();
+        	Document xmlDoc = docBuilder.parse(response.getEntity().getContent());
+    		//Work out the status codes.
+        
+        	if(response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300){
+	        	//Everything works build the events.
+        		List<ReadingEvent> events = new ArrayList<ReadingEvent>();
+        		Long currentTime = Calendar.getInstance().getTimeInMillis();
+        		
+        		NodeList nodes = xmlDoc.getElementsByTagName(POINT);
+        		//Traversing over MoodMapReading elements in the map. It'll contain 
+        		for(int i = 0; nodes.getLength() > i; i++){
+        			Node n = nodes.item(i);
+        			Integer mood = null;
+        			Double latitude = null;
+        			Double longitude = null;
+    				NamedNodeMap attributes = n.getAttributes();
+    				
+    				for(int j = 0 ; j < attributes.getLength() ; j++) {
+    			        Attr attribute = (Attr)attributes.item(j);
+    			        
+    			        if(attribute.getName().contentEquals(MOOD))
+        					mood = Integer.parseInt(attribute.getValue());
+    			        else if(attribute.getName().contentEquals(LONGITUDE))
+        					longitude = Double.parseDouble(attribute.getValue());
+        				else if(attribute.getName().contentEquals(LATITUDE))
+        					latitude = Double.parseDouble(attribute.getValue());
+    			    }
+        			//Check that all values have been discovered
+        			if(mood == null || latitude == null || longitude == null){
+        				Log.e(LOGTAG, "Expected at least a mood, longitude and latitude. But not all values where found");
         				throw new IllegalStateException(LOGTAG + ": Expected values(mood, lat, long) weren't found in the xml");
         			}
         			//adding the result.

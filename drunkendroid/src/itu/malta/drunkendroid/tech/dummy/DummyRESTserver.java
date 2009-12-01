@@ -15,7 +15,7 @@ import itu.malta.drunkendroid.domain.Trip;
 public class DummyRESTserver implements IRemoteDataFacade {
 
 	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime,
-			Double latitude, Double longitude, Long distance) {
+			Double latitude, Double longitude, Double lrLatitude, Double lrLongitude) {
 		// TODO Auto-generated method stub
 		return null;
 	}

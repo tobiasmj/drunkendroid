@@ -11,8 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.util.AndroidRuntimeException;
 
 public class WebserviceConnectionREST implements IWebserviceConnection{
-	private static final String BASE_URI = "http://192.168.0.13:8182/drunkendroid/";
-	private static final String targetDomain = "192.168.0.13";
+	private static final String BASE_URI = "http://192.168.0.12:8182/drunkendroid/";
+	private static final String targetDomain = "192.168.0.12";
 	
 	public HttpResponse post(String uri, String xmlContent){
 		DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -54,7 +54,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
         try 
         {
             return httpClient.execute(targetHost, httpGet);
-       }
+        }
         catch (Exception ex)
         {
                 ex.printStackTrace();

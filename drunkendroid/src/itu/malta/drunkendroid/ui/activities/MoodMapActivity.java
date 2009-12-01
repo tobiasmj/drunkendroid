@@ -14,6 +14,7 @@ import com.google.android.maps.Projection;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.view.MotionEvent;
 
 public class MoodMapActivity extends MapActivity {
 	MapView _mapView;
@@ -37,7 +38,7 @@ public class MoodMapActivity extends MapActivity {
         
         _gp = new GeoPoint((int)lat,(int)lng);
 
-        _mapController.setZoom(17);
+        _mapController.setZoom(15);
         _mapController.animateTo(_gp, new Runnable() {
 	        public void run()
 	        {
@@ -47,6 +48,21 @@ public class MoodMapActivity extends MapActivity {
 	            overlays.add(_moodOverlay);
 	        }
         });
+    }
+    
+    public boolean onTouchEvent(MotionEvent event) {
+    	
+    	if(event.getAction() == MotionEvent.ACTION_DOWN)
+    	{
+    		System.out.println("DOWN");
+    	}
+    	else if(event.getAction() == MotionEvent.ACTION_UP)
+    	{
+    		System.out.println("UP");
+    		
+    	}
+    	
+    	return true;
     }
  
     @Override
