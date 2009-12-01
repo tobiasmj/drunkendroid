@@ -3,8 +3,10 @@ package itu.malta.drunkendroidserver.util.xstreem.converters;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.Location;
 import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -17,6 +19,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Class for converting an Event object to and from XML, for use with the XStream framework 
  */
 public class EventConverter implements Converter{
+
+
+
 
 /**
  * method for marshaling an Event object into XML
@@ -49,11 +54,46 @@ public class EventConverter implements Converter{
 					writer.setValue(Integer.toString(readingEvent.getMood()));
 					writer.endNode();
 					writer.endNode();	
+				} else if(event.getType().equals("call")) {
+					Call callEvent = (Call) event;
+					writer.startNode("data");
+					if(!callEvent.getCaller().equals("0")) {
+						writer.startNode("caller");
+						writer.setValue(callEvent.getCaller());
+						writer.endNode();
+					}
+					if(!callEvent.getReciever().equals("0")) {
+						writer.startNode("reciever");
+						writer.setValue(callEvent.getReciever());
+						writer.endNode();
+					}
+					writer.startNode("endTime");
+					writer.setValue(Long.toString(callEvent.getEndTime()));
+					writer.endNode();
+					writer.endNode();
+				} else if(event.getType().equals("SMS")) {
+					Sms smsEvent = (Sms) event;
+					writer.startNode("data");
+					if(!smsEvent.getSender().equals("0")) {	
+						writer.startNode("caller");
+						writer.setValue(smsEvent.getSender());
+						writer.endNode();
+					}
+					if(!smsEvent.getReciever().equals("0")) {
+						writer.startNode("reciever");
+						writer.setValue(smsEvent.getReciever());
+						writer.endNode();
+					}
+					writer.startNode("message");
+					writer.setValue(smsEvent.getMessage());
+					writer.endNode();
+					writer.endNode();
 				}
+				
 				writer.endNode();
 			}
 
-		} else if (Reading.class.isInstance(value) || Location.class.isInstance(value)) {
+		} else if (Reading.class.isInstance(value) || Location.class.isInstance(value) || Call.class.isInstance(value) || Sms.class.isInstance(value) ) {
 			IEvent event = (IEvent)value;
 			writer.startNode("eventType");
 			writer.setValue(event.getType());
@@ -74,11 +114,44 @@ public class EventConverter implements Converter{
 				writer.setValue(Integer.toString(readingEvent.getMood()));
 				writer.endNode();
 				writer.endNode();	
+			}  else if(event.getType().equals("call")) {
+				Call callEvent = (Call) event;
+				writer.startNode("data");
+				if(!callEvent.getCaller().equals("0")) {
+					writer.startNode("caller");
+					writer.setValue(callEvent.getCaller());
+					writer.endNode();
+				}
+				if(!callEvent.getReciever().equals("0")) {
+					writer.startNode("reciever");
+					writer.setValue(callEvent.getReciever());
+					writer.endNode();
+				}
+				writer.startNode("endTime");
+				writer.setValue(Long.toString(callEvent.getEndTime()));
+				writer.endNode();
+				writer.endNode();
+			} else if(event.getType().equals("SMS")) {
+				Sms smsEvent = (Sms) event;
+				writer.startNode("data");
+				if(!smsEvent.getSender().equals("0")) {	
+					writer.startNode("sender");
+					writer.setValue(smsEvent.getSender());
+					writer.endNode();
+				}
+				if(!smsEvent.getReciever().equals("0")) {
+					writer.startNode("reciever");
+					writer.setValue(smsEvent.getReciever());
+					writer.endNode();
+				}
+				writer.startNode("message");
+				writer.setValue(smsEvent.getMessage());
+				writer.endNode();
+				writer.endNode();
 			}
 		}
 
 	}
-	// parse and combine events as xml string
 
 
 	/**
@@ -93,6 +166,12 @@ public class EventConverter implements Converter{
 		Double longitude = -1D;
 		Double latitude = -1D;
 		int mood = -1;
+		String caller = "0";
+		String reciever = "0";
+		long endTime = -1;
+		String message = "";
+		String sender ="0";
+		
 		LinkedList<IEvent> events = new LinkedList<IEvent>();
 
 		String eventType = "";
@@ -121,13 +200,32 @@ public class EventConverter implements Converter{
 							} else if("latitude".equals(reader.getNodeName())) {
 								latitude = Double.valueOf(reader.getValue());
 							} else if("data".equals(reader.getNodeName())) {
-								reader.moveDown();
-								if(eventType.equals("reading")) {
-									if("mood".equals(reader.getNodeName())) {
-										mood = Integer.valueOf(reader.getValue());
+								while(reader.hasMoreChildren()) {
+									reader.moveDown();
+									if(eventType.equals("reading")) {
+										if("mood".equals(reader.getNodeName())) {
+											mood = Integer.valueOf(reader.getValue());
+										}
+									}else if(eventType.equals("call")) {
+										if("caller".equals(reader.getNodeName())) {
+											caller = String.valueOf(reader.getValue());
+										} else if ("reciever".equals(reader.getNodeName())) {
+											reciever = String.valueOf(reader.getValue());
+										}else if ("endTime".equals(reader.getNodeName())) {
+											endTime = Long.valueOf(reader.getValue());
+										}
+									}else if(eventType.equals("SMS")) {
+										if("sender".equals(reader.getNodeName())) {
+											sender = String.valueOf(reader.getValue());
+										} else if ("reciever".equals(reader.getNodeName())) {
+											reciever = String.valueOf(reader.getValue());
+										}else if ("message".equals(reader.getNodeName())) {
+											message = String.valueOf(reader.getValue());
+										}
 									}
+
+									reader.moveUp();
 								}
-								reader.moveUp();
 							}
 							reader.moveUp();
 						}
@@ -137,6 +235,10 @@ public class EventConverter implements Converter{
 						events.add(new Reading(timeStamp,latitude,longitude,mood));	
 					} else if(eventType.equals("location")) {
 						events.add(new Location(timeStamp, longitude, latitude));
+					} else if (eventType.equals("call")) {
+						events.add(new Call(timeStamp,latitude,longitude,caller,reciever,endTime));
+					} else if (eventType.equals("SMS")) {
+						events.add(new Sms(timeStamp,latitude,longitude,sender,reciever,message));
 					}
 					reader.moveUp();
 				}
@@ -154,6 +256,10 @@ public class EventConverter implements Converter{
 		if(clazz.equals(Reading.class)) {
 			return true;
 		} else if (clazz.equals(Location.class)) {
+			return true;
+		} else if (clazz.equals(Call.class)) {
+			return true;
+		} else if (clazz.equals(Sms.class)) {
 			return true;
 		}
 		return false;

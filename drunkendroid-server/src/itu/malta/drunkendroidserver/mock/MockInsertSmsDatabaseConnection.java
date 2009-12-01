@@ -14,17 +14,17 @@ import itu.malta.drunkendroidserver.interfaces.IDatabaseConnection;
  * Used for UnitTests, creates a Mock database object instead of a prober database connection.
  */
 
-public class MockInsertLocationDatabaseConnection implements IDatabaseConnection {
+public class MockInsertSmsDatabaseConnection implements IDatabaseConnection {
 
-	private MockInsertLocationDatabaseConnection(){
+	private MockInsertSmsDatabaseConnection(){
 	}
 
-	private static class MockInsertLocationDatabaseConnectionSingleton {
-		private static final IDatabaseConnection INSTANCE = new MockInsertLocationDatabaseConnection();
+	private static class MockInsertSmsDatabaseConnectionSingleton {
+		private static final IDatabaseConnection INSTANCE = new MockInsertSmsDatabaseConnection();
 	}
 
 	public static IDatabaseConnection getInstance(){
-		return MockInsertLocationDatabaseConnectionSingleton.INSTANCE;
+		return MockInsertSmsDatabaseConnectionSingleton.INSTANCE;
 	}
 	
 	@Override
@@ -36,13 +36,12 @@ public class MockInsertLocationDatabaseConnection implements IDatabaseConnection
 		Connection mockConnection = createMock(java.sql.Connection.class);
 
 		try {
-			expect(rs.getInt(1)).andReturn(42).times(1);
 			expect(rs.next()).andReturn(true).times(1);
 			rs.close();
 			EasyMock.expectLastCall();
 		    replay(rs);
 		    
-		    expect(stmt.executeUpdate("Insert into Location(trip,dateTime,latitude,longitude) values (1,1,10.0,10.0)")).andReturn(1);
+		    expect(stmt.executeUpdate("Insert into SMS(trip,dateTime,latitude,longitude,sender,reciever,endTime) values (1,1,10.0,10.0,004551883250,004551883250,test message)")).andReturn(1);
 		    //expect(stmt.getGeneratedKeys()).andReturn(rs);
 		    stmt.close();
 		    EasyMock.expectLastCall();

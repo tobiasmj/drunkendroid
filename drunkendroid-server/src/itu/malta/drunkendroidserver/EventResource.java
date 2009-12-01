@@ -2,8 +2,10 @@ package itu.malta.drunkendroidserver;
 
 
 import itu.malta.drunkendroidserver.control.Repository;
+import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.Location;
 import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
 import itu.malta.drunkendroidserver.tech.DatabaseConnection;
 import itu.malta.drunkendroidserver.util.XmlResponse;
@@ -60,6 +62,8 @@ public class EventResource extends ServerResource {
 				xStream.registerConverter(new EventConverter());
 				xStream.alias("events", Reading.class);
 				xStream.alias("events", Location.class);
+				xStream.alias("events", Call.class);
+				xStream.alias("events", Sms.class);
 				
 				// parse the xml
 				Object uncastedEvents = xStream.fromXML(entity.getStream());
@@ -77,6 +81,12 @@ public class EventResource extends ServerResource {
 					} else if (Location.class.isInstance(event)) {
 						Location lEvent = (Location)event;
 						rep.insertLocation(lEvent);
+					} else if (Call.class.isInstance(event)) {
+						Call cEvent = (Call)event;
+						rep.insertCall(cEvent);
+					} else if (Sms.class.isInstance(event)) {
+						Sms sEvent = (Sms)event;
+						rep.insertSms(sEvent);
 					}
 				}
 				

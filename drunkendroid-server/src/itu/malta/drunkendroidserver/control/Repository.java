@@ -1,9 +1,11 @@
 package itu.malta.drunkendroidserver.control;
 
+import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.GridCell;
 import itu.malta.drunkendroidserver.domain.Location;
 import itu.malta.drunkendroidserver.domain.MoodMap;
 import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
 
@@ -30,7 +32,74 @@ public class Repository {
 	public Repository(java.sql.Connection connection) {
 		this.conn = connection;
 	}
+	/**
+	 * Method for inserting a call
+	 * @param call, the call object to be inserted
+	 * @throws SQLException, thrown when an SQL error occurs.
+	 */
+	public void insertCall(Call call) throws SQLException {
+		// make sure that the location has a tripid associated.
+		if (call.getTripId() != 0) {
+			ResultSet rs = null;
+			try {
+				stmt = conn.createStatement();
+				stmt.executeUpdate("Insert into Call(trip,dateTime,latitude,longitude,caller,reciever,endTime) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
+			} finally {
+				// cleanup
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						// ignore 
+					}
+				}
 
+				if (stmt != null) {
+					try {
+						stmt.close();
+					} catch (SQLException ex) {
+						// ignore
+					}
+				}
+			}
+		} else {
+			throw new SQLException("TripId not initialized before committing to database");
+		}
+	}
+	/**
+	 * Method for inserting an sms
+	 * @param call, the call object to be inserted
+	 * @throws SQLException, thrown when an SQL error occurs.
+	 */
+	public void insertSms(Sms sms) throws SQLException {
+		// make sure that the location has a tripid associated.
+		if (sms.getTripId() != 0) {
+			ResultSet rs = null;
+			try {
+				stmt = conn.createStatement();
+				stmt.executeUpdate("Insert into SMS(trip,dateTime,latitude,longitude,sender,reciever,endTime) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getReciever() + "," + sms.getMessage() + ")");
+			} finally {
+				// cleanup
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						// ignore 
+					}
+				}
+
+				if (stmt != null) {
+					try {
+						stmt.close();
+					} catch (SQLException ex) {
+						// ignore
+					}
+				}
+			}
+		} else {
+			throw new SQLException("TripId not initialized before committing to database");
+		}
+	}
 	/**
 	 * Method for inserting a location
 	 * @param location, the location object to be inserted
@@ -119,7 +188,7 @@ public class Repository {
 				tripID = rs.getInt(1);
 
 				if (tripID != -1) {
-					// if the trip holds any events, insert the into the datbase.
+					// if the trip holds any events, insert the into the database.
 					while(trip.moreEvents()) {
 
 						IEvent event = trip.getNextEvent();
@@ -210,6 +279,22 @@ public class Repository {
 
 			while (rs.next()) {
 				events.add(new Location(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude")));
+			}
+			
+			// get all call events for a given tripId
+			stmt.executeQuery("Select dateTime, longitude,latitude,caller,reciever,endTime from Call where trip = " + trip.getTripId());
+			rs= stmt.getResultSet();
+
+			while (rs.next()) {
+				events.add(new Call(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTime")));
+			}
+			
+			// get all sms events for a given tripId
+			stmt.executeQuery("Select dateTime, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
+			rs= stmt.getResultSet();
+
+			while (rs.next()) {
+				events.add(new Sms(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
 			}
 
 			// create trip object 
