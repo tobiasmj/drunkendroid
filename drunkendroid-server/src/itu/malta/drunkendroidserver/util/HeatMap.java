@@ -8,26 +8,16 @@ import java.awt.image.BufferedImage;
 
 public class HeatMap {
 
-	private static HeatMap _instance = null;
 	private BufferedImage _image;
 	private int _zoomLevel;
 	private int _width;
 	private int _height;
 	
-	public static HeatMap getInstance()
-	{
-		if(_instance == null) _instance = new HeatMap();
-		return _instance;
-	}
-	
-	public void setWidth(int width) {
+	private void Heatmap(int width, int height, int zoomLevel) {
 		_width = width;
-	}
-	public void setHeight(int height) {
 		_height = height;
-	}
-	public void setZoomLevel(int zoomLevel) {
 		_zoomLevel = zoomLevel;
+		_image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	private int getRadius(int mood)
@@ -61,7 +51,7 @@ public class HeatMap {
 		
 		RadialGradientPaint gradient = new RadialGradientPaint( radius, radius, radius, 
 				new float[] { 0f, 1f }, 
-				new Color[] { Color.BLACK, new Color(0xffffffff, true) });
+				new Color[] { Color.BLACK, new Color(0,0,0,0)});
 		
 		g.setPaint(gradient);
 		//g.setComposite(BlendComposite.Multiply.derive(alpha));
