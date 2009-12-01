@@ -131,11 +131,10 @@ public class Repository {
 						}
 					}
 				} else {
-					// Throw exception about failed trip insert
+					throw new SQLException("Error inserting the trip into the database");
 				}
 			} else {
-
-				// throw an exception from here
+				throw new SQLException("Error inserting the trip into the database");	
 			}
 
 			rs.close();
@@ -262,12 +261,25 @@ public class Repository {
 		double gridHeight = height/gridY;
 
 		GridCell[][] moodMapGrid = new GridCell[gridX][gridY];
+		
+		// tryng to fix moodmap skrew
+		double snapLongMin = Math.round(mm.getLongMin() / gridWidth) * gridWidth;
+		double snapLatMin = Math.round(mm.getLatMin()/gridHeight) * gridHeight;
+		double snapLongMax = Math.round(mm.getLongMax() / gridWidth) * gridWidth;
+		double snapLatMax = Math.round(mm.getLatMax()/gridHeight) * gridHeight; 
+		
+		
+		
+		
 		ResultSet rs = null;
 		try { 
 			stmt = conn.createStatement();
 			// get all mood readings within the given parameters.
+			//String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
+			//" and longitude between " + mm.getLongMin() + " and " + mm.getLongMax() + " and latitude between " + mm.getLatMin() + " and " + mm.getLatMax();
 			String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
-			" and longitude between " + mm.getLongMin() + " and " + mm.getLongMax() + " and latitude between " + mm.getLatMin() + " and " + mm.getLatMax();
+			" and longitude between " + snapLongMin + " and " +snapLongMax + " and latitude between " + snapLatMin + " and " + snapLatMax;
+			
 			stmt.executeQuery(query);
 			rs = stmt.getResultSet();
 			int xCoord, yCoord;
@@ -275,17 +287,21 @@ public class Repository {
 			while(rs.next()) {
 				readingLong = rs.getDouble("longitude");
 				readingLat = rs.getDouble("latitude");
-				xCoord = (int)((readingLong - mm.getLongMin())/gridWidth);
+				//xCoord = (int)((readingLong - mm.getLongMin())/gridWidth);
+				xCoord = (int)((readingLong - snapLongMin)/gridWidth);
+
 				if(xCoord > 0) {
 					xCoord = xCoord -1;
 				}
-				yCoord = (int)((readingLat - mm.getLatMin())/gridHeight);
+				//yCoord = (int)((readingLat - mm.getLatMin())/gridHeight);
+				yCoord = (int)((readingLat - snapLatMin)/gridHeight);
 				if(yCoord > 0) {
 					yCoord = yCoord -1;
 				}
 				// insert the mood reading in the appropriate GridCell, if no GridCell exists in that array index we create a new one.
 				if(moodMapGrid[xCoord][yCoord] == null) {
-					moodMapGrid[xCoord][yCoord] = new GridCell((xCoord + 0.5)*gridWidth+mm.getULlongitude(),(yCoord + 0.5)*gridHeight+mm.getULlatitude());
+					//moodMapGrid[xCoord][yCoord] = new GridCell((xCoord + 0.5)*gridWidth+mm.getULlongitude(),(yCoord + 0.5)*gridHeight+mm.getULlatitude());
+					moodMapGrid[xCoord][yCoord] = new GridCell((xCoord + 0.5)*gridWidth+snapLongMin,(yCoord + 0.5)*gridHeight+snapLatMin);
 					moodMapGrid[xCoord][yCoord].addValue(rs.getInt("mood"));
 				} else {
 					moodMapGrid[xCoord][yCoord].addValue(rs.getInt("mood"));

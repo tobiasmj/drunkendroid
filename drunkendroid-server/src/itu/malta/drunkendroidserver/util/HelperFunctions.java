@@ -24,7 +24,7 @@ public class HelperFunctions {
     r = earth_radius*math.cos(latitude*degrees_to_radians)
     return (miles/r)*radians_to_degrees
 	 */
-	private static double earth_radius = 6378.1370;
+	private static double earth_radius = 6378.137000001;
 	/**
 	 * Calculates the difference in latitude by a distance in kilometers.
 	 * @param km the amount of kilometers.

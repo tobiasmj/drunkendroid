@@ -31,11 +31,11 @@ import com.thoughtworks.xstream.XStream;
 /**
  * Class that handles requests for retrieving MoodMaps.
  */
-public class MoodMapResource extends ServerResource {
+public class MoodMapResourceOld extends ServerResource {
 	long startTimeStamp, endTimeStamp;
 	double latitude, longitude, ULlatitude, ULlongitude, LRlatitude, LRlongitude;
 	int height, width;
-	int gridX = 20 , gridY = 20;
+	int gridX = 60 , gridY = 60;
 	GridCell[][] moodMapGrid;
 	
 	/**
@@ -53,21 +53,18 @@ public class MoodMapResource extends ServerResource {
 		startTimeStamp = Long.parseLong(getRequest().getAttributes().get("StartTimeStamp").toString());
 		endTimeStamp = Long.parseLong(getRequest().getAttributes().get("EndTimeStamp").toString());
 		
-		ULlatitude = Double.parseDouble(getRequest().getAttributes().get("ULLatitude").toString());
-		ULlongitude = Double.parseDouble(getRequest().getAttributes().get("ULLongitude").toString());
+		latitude = Double.parseDouble(getRequest().getAttributes().get("Latitude").toString());
+		longitude = Double.parseDouble(getRequest().getAttributes().get("Longitude").toString());
 		
-		LRlatitude = Double.parseDouble(getRequest().getAttributes().get("LRLatitude").toString());
-		LRlongitude = Double.parseDouble(getRequest().getAttributes().get("LRLongitude").toString());
-		
-		//height = Integer.parseInt(getRequest().getAttributes().get("Height").toString());
-		//width = Integer.parseInt(getRequest().getAttributes().get("Width").toString());
+		height = Integer.parseInt(getRequest().getAttributes().get("Height").toString());
+		width = Integer.parseInt(getRequest().getAttributes().get("Width").toString());
 		
 		//Calculate corners of the moodmap
-		//ULlatitude = latitude + HelperFunctions.change_in_latitude(-width/1000);
-		//ULlongitude = longitude + HelperFunctions.change_in_longitude(ULlatitude, -height/1000);
+		ULlatitude = latitude + HelperFunctions.change_in_latitude(-width/1000);
+		ULlongitude = longitude + HelperFunctions.change_in_longitude(ULlatitude, -height/1000);
 		
-		//LRlatitude = latitude + HelperFunctions.change_in_latitude(width/1000);
-		//LRlongitude = longitude + HelperFunctions.change_in_longitude(LRlatitude, height/1000);
+		LRlatitude = latitude + HelperFunctions.change_in_latitude(width/1000);
+		LRlongitude = longitude + HelperFunctions.change_in_longitude(LRlatitude, height/1000);
 		} catch (NumberFormatException e) {
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			
@@ -79,16 +76,12 @@ public class MoodMapResource extends ServerResource {
 			// set up the repository
 			Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 			//calculate the MoodMap
-			System.out.println(System.currentTimeMillis()/1000 +" Start calculate moodmap");
 			moodMapGrid = rep.calculateMoodMap(moodMap);
-			System.out.println(System.currentTimeMillis()/1000 +" End calculate moodmap");
 			// get the MoodMap as an XML representation.
-			System.out.println(System.currentTimeMillis()/1000 + " get moodmap xml");
 			result = getMoodMapXML();
-			System.out.println(System.currentTimeMillis()/1000 +  " end get moodmap xml");
 		} catch (SQLException se) {
 			setStatus(Status.SERVER_ERROR_INTERNAL);
-			result = XmlResponse.generateErrorRepresentation(" Error getting data from database", "5");
+			result = XmlResponse.generateErrorRepresentation("Error getting data from database", "5");
 		} catch (IOException ioe) {
 			setStatus(Status.SERVER_ERROR_INTERNAL);
 			result = XmlResponse.generateErrorRepresentation("Error creating XML response", "6");			

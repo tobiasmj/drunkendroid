@@ -9,7 +9,6 @@ import itu.malta.drunkendroidserver.domain.Reading;
 import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
 import itu.malta.drunkendroidserver.util.xstreem.converters.EventConverter;
-import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 import itu.malta.drunkendroidserver.util.xstreem.converters.TripConverter;
 import org.junit.After;
 import org.junit.AfterClass;

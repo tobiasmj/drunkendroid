@@ -29,7 +29,7 @@ import com.thoughtworks.xstream.XStream;
  *
  */
 public class EventResource extends ServerResource {
-	private String imeiNumber;
+	//private String imeiNumber;
 	private long tripId;
 
 	
@@ -44,7 +44,7 @@ public class EventResource extends ServerResource {
 	public Representation storeRepresentation(Representation entity) throws ResourceException {
 		DomRepresentation result = null;
 		//not being used atm.
-		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+		//imeiNumber = (String) getRequest().getAttributes().get("IMEI");
 		//get the tripID
 		tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 

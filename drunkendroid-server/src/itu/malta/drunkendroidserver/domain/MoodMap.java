@@ -13,6 +13,7 @@ public class MoodMap {
 	double latMax, latMin;
 	double longMax, longMin;
 	
+	double worldGridSize;
 	
 	public double getULlatitude() {
 		return ULlatitude;
@@ -67,6 +68,8 @@ public class MoodMap {
 			longMax = LRlongitude;
 			longMin = ULlongitude;
 		}
+		
+		
 	}
 }
 
