@@ -128,7 +128,6 @@ public class MainActivity extends Activity {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			System.out.println("Sending Mood Reading!");
 			Intent i = new Intent("NEW_MOOD_READING");
-			i.addCategory("itu.malta.drunkendroid.control.services");
 			i.putExtra("mood", (short) seekBar.getProgress());
 			sendBroadcast(i);
 			MainActivity.this.slider.animateClose();

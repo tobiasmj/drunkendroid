@@ -2,7 +2,6 @@ package itu.malta.drunkendroid.control.services;
 
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
-import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.handlers.EventReceiver;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Handler;
@@ -104,19 +102,28 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * SharePreferences.
 	 */
 	public void RegisterReceivers() {
-		IntentFilter smsFilter = new IntentFilter(
-				"android.provider.Telephony.SMS_RECEIVED");
-		this.registerReceiver(_eventHandler, smsFilter);
 
 		IntentFilter moodReadingFilter = new IntentFilter("NEW_MOOD_READING");
-		moodReadingFilter
-				.addCategory("itu.malta.drunkendroid.control.services");
 		this.registerReceiver(_eventHandler, moodReadingFilter);
 
-		IntentFilter callFilter = new IntentFilter(
-				"android.intent.action.NEW_OUTGOING_CALL");
-		this.registerReceiver(_eventHandler, callFilter);
+		IntentFilter locationChangeFilter = new IntentFilter(
+				"NEW_LOCATION_CHANGE");
+		this.registerReceiver(_eventHandler, locationChangeFilter);
 
+		IntentFilter outgoingCallFilter = new IntentFilter(
+				"android.intent.action.NEW_OUTGOING_CALL");
+		this.registerReceiver(_eventHandler, outgoingCallFilter);
+
+		IntentFilter incomingCallFilter = new IntentFilter("NEW_INCOMING_CALL");
+		this.registerReceiver(_eventHandler, incomingCallFilter);
+
+		IntentFilter outgoingSMSFilter = new IntentFilter("NEW_OUTGOING_SMS");
+		this.registerReceiver(_eventHandler, outgoingSMSFilter);
+
+		IntentFilter incomingSMSFilter = new IntentFilter(
+				"android.provider.Telephony.SMS_RECEIVED");
+		this.registerReceiver(_eventHandler, incomingSMSFilter);
+		
 		SharedPreferences prefs = getSharedPreferences("prefs_config",
 				MODE_PRIVATE);
 		prefs
@@ -145,6 +152,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	public void UnregisterReceivers() {
 		this.unregisterReceiver(this._eventHandler);
 		_phoneManager.listen(_callHandler, PhoneStateListener.LISTEN_NONE);
+		getContentResolver().unregisterContentObserver(_smsObserver);
 	}
 
 	/**
@@ -172,14 +180,13 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 
 	private class SMSObserver extends ContentObserver {
 
-		public SMSObserver(Handler handler) {
-			super(handler);
-		}
+		public SMSObserver(Handler handler) { super(handler); }
 
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			_eventHandler.handleOutgoingSMS(DrunkenService.this);
+			Intent i = new Intent("NEW_OUTGOING_SMS");
+			sendBroadcast(i);
 		}
 	}
 
@@ -190,13 +197,17 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			super.onCallStateChanged(state, incomingNumber);
 
 			if (state == android.telephony.TelephonyManager.CALL_STATE_RINGING) {
-				_eventHandler.handleIncomingCall(incomingNumber);
+				Intent i = new Intent("NEW_INCOMING_CALL");
+				i.putExtra("phoneNumber", incomingNumber);
+				sendBroadcast(i);
 			}
 		}
 	}
 
 	public void OnLocationChange(Location location) {
 		// The location of the device has changed.
-		_eventHandler.handleLocationChange(location);
+		Intent i = new Intent("NEW_LOCATION_CHANGE");
+		i.putExtra("location", location);
+		sendBroadcast(i);
 	}
 }

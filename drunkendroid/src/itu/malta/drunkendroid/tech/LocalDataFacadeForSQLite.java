@@ -40,10 +40,14 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				readingValues.put("sender", ((CallEvent)e).getPhonenumber());
 			else if(OutgoingCallEvent.class.isInstance(e))
 				readingValues.put("receiver", ((CallEvent)e).getPhonenumber());
-			else if(IncomingSMSEvent.class.isInstance(e))
+			else if(IncomingSMSEvent.class.isInstance(e)) {
 				readingValues.put("sender", ((SMSEvent)e).getPhonenumber());
-			else if(OutgoingSMSEvent.class.isInstance(e))
+				readingValues.put("message", ((SMSEvent)e).getTextMessage());
+			} 
+			else if(OutgoingSMSEvent.class.isInstance(e)) {
 				readingValues.put("receiver", ((SMSEvent)e).getPhonenumber());
+				readingValues.put("message", ((SMSEvent)e).getTextMessage());
+			}
 			
 			long success = db.insertOrThrow(DBHelper.TABLE_EVENT, null, readingValues);
 			if(success == -1)

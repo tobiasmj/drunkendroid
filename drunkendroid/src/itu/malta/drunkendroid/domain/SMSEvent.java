@@ -3,30 +3,35 @@ package itu.malta.drunkendroid.domain;
 import android.location.Location;
 
 public class SMSEvent extends Event {
-	private String phonenumber;
-	private String textMessage;
+	private String _phoneNumber;
+	private String _textMessage;
 	
-	public SMSEvent(Location location, String phonenumber, String textMessage) {
+	public SMSEvent(Location location, String phoneNumber, String textMessage) {
 		super(location);
+		_phoneNumber = phoneNumber;
+		_textMessage = textMessage;
+		
 	}
 	
-	public SMSEvent(Long dateTime, Double latitude, Double longitude, String phonenumber, String textMessage) {
+	public SMSEvent(Long dateTime, Double latitude, Double longitude, String phoneNumber, String textMessage) {
 		super(dateTime, latitude, longitude);
+		_phoneNumber = phoneNumber;
+		_textMessage = textMessage;
 	}
 	
 	public String getPhonenumber() {
-		return phonenumber;
+		return _phoneNumber;
 	}
 	
-	public void setPhonenumber(String phonenumber) {
-		this.phonenumber = phonenumber;
+	public void setPhonenumber(String phoneNumber) {
+		_phoneNumber = phoneNumber;
 	}
 	
 	public String getTextMessage() {
-		return textMessage;
+		return _textMessage;
 	}
 	
 	public void setTextMessage(String textMessage) {
-		this.textMessage = textMessage;
+		_textMessage = textMessage;
 	}
 }
