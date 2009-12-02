@@ -338,7 +338,8 @@ public class Repository {
 	 * @throws SQLException thrown when an SQL error occurs 
 	 */
 	public GridCell[][] calculateMoodMap(MoodMap mm) throws SQLException {
-		int gridX = 60 , gridY = 60;
+		int gridX = mm.getGridX();
+		int gridY = mm.getGridY();
 		double readingLong, readingLat;
 		double width = mm.getLongMax() - mm.getLongMin();
 		double height = mm.getLatMax() - mm.getLatMin();
@@ -359,9 +360,6 @@ public class Repository {
 		ResultSet rs = null;
 		try { 
 			_stmt = _conn.createStatement();
-			// get all mood readings within the given parameters.
-			//String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
-			//" and longitude between " + mm.getLongMin() + " and " + mm.getLongMax() + " and latitude between " + mm.getLatMin() + " and " + mm.getLatMax();
 			String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
 			" and longitude between " + snapLongMin + " and " +snapLongMax + " and latitude between " + snapLatMin + " and " + snapLatMax;
 			
@@ -372,20 +370,17 @@ public class Repository {
 			while(rs.next()) {
 				readingLong = rs.getDouble("longitude");
 				readingLat = rs.getDouble("latitude");
-				//xCoord = (int)((readingLong - mm.getLongMin())/gridWidth);
 				xCoord = (int)((readingLong - snapLongMin)/gridWidth);
 
 				if(xCoord > 0) {
 					xCoord = xCoord -1;
 				}
-				//yCoord = (int)((readingLat - mm.getLatMin())/gridHeight);
 				yCoord = (int)((readingLat - snapLatMin)/gridHeight);
 				if(yCoord > 0) {
 					yCoord = yCoord -1;
 				}
 				// insert the mood reading in the appropriate GridCell, if no GridCell exists in that array index we create a new one.
 				if(moodMapGrid[xCoord][yCoord] == null) {
-					//moodMapGrid[xCoord][yCoord] = new GridCell((xCoord + 0.5)*gridWidth+mm.getULlongitude(),(yCoord + 0.5)*gridHeight+mm.getULlatitude());
 					moodMapGrid[xCoord][yCoord] = new GridCell((xCoord + 0.5)*gridWidth+snapLongMin,(yCoord + 0.5)*gridHeight+snapLatMin);
 					moodMapGrid[xCoord][yCoord].addValue(rs.getInt("mood"));
 				} else {

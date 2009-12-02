@@ -6,14 +6,30 @@ package itu.malta.drunkendroidserver.domain;
  */
 public class MoodMap {
 
-	long _startReadingTime, _endReadingTime;
+	private long _startReadingTime, _endReadingTime;
 
-	double _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
+	private double _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
 
-	double _latMax, _latMin;
-	double _longMax, _longMin;
+	private double _latMax, _latMin;
+	private double _longMax, _longMin;
 	
-	double _worldGridSize;
+	private int _gridX;
+	private int _gridY;
+	
+	public int getGridX() {
+		return _gridX;
+	}
+	
+	public int getGridY() {
+		return _gridY;
+	}
+
+	public double getLRLongitude(){
+		return _LRlongitude;
+	}
+	public double getLRlatitude() {
+		return _LRlatitude;
+	}
 	
 	public double getULlatitude() {
 		return _ULlatitude;
@@ -47,13 +63,15 @@ public class MoodMap {
 	 * @param LRlatitude LowerRightCorner latitude of the MoodMap
 	 * @param LRlongitude LowerRightCorner longitude of the MoodMap
 	 */
-	public MoodMap (long startReadingTime,long endReadingTime, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude  ) {
-		this._startReadingTime = startReadingTime;
-		this._endReadingTime = endReadingTime;
-		this._ULlatitude = ULlatitude;
-		this._ULlongitude = ULlongitude;
-		this._LRlatitude = LRlatitude;
-		this._LRlongitude = LRlongitude;
+	public MoodMap (long startReadingTime,long endReadingTime, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude, int gridX, int gridY) {
+		_startReadingTime = startReadingTime;
+		_endReadingTime = endReadingTime;
+		_ULlatitude = ULlatitude;
+		_ULlongitude = ULlongitude;
+		_LRlatitude = LRlatitude;
+		_LRlongitude = LRlongitude;
+		_gridX = gridX;
+		_gridY = gridY;
 		if(ULlatitude > LRlatitude) {
 			_latMax = ULlatitude;
 			_latMin = LRlatitude;
@@ -71,6 +89,7 @@ public class MoodMap {
 		
 		
 	}
+	
 }
 
 

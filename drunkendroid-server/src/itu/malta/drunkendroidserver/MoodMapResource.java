@@ -73,7 +73,7 @@ public class MoodMapResource extends ServerResource {
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			
 		}
 		// create the MoodMap object
-		MoodMap moodMap = new MoodMap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude);
+		MoodMap moodMap = new MoodMap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude, gridX, gridY);
 		
 		try {
 			// set up the repository

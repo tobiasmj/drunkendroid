@@ -108,7 +108,7 @@ public class RepositoryTest {
 	@Test
 	public void testGetMoodMap() throws SQLException {
 		Repository rep = new Repository(MockCalculateMoodMapDatabaseConnection.getInstance().getConn());
-		MoodMap mm = new MoodMap(1L,10L,5.0D,5.0D,10.0D,10.0D);
+		MoodMap mm = new MoodMap(1L,10L,5.0D,5.0D,10.0D,10.0D,60,60);
 		GridCell[][] gc = rep.calculateMoodMap(mm);
 		
 		Assert.assertTrue(GridCell.class.isInstance(gc[0][0]));
