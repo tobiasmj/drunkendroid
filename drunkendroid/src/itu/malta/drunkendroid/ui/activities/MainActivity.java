@@ -171,6 +171,7 @@ public class MainActivity extends Activity {
 					i.putExtra("command", DrunkenService.SERVICE_COMMAND_END_TRIP);
 					startService(i);
 					stopServiceBtn.setVisibility(View.GONE);
+					moodReading.setVisibility(RelativeLayout.GONE);
 					startServiceBtn.setVisibility(View.VISIBLE);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
