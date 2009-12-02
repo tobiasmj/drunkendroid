@@ -19,7 +19,7 @@ import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
-import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.test.AndroidTestCase;
@@ -263,7 +263,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		assertEquals(expectedXML, xmlContent.getValue());
 	}
 
-	public void testGetReadingEvents() throws IllegalStateException, IOException{
+	public void testGetReadingEvents() throws IllegalStateException, IOException, RESTFacadeException{
 		try{
 			//Build up the test
 			final String content1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +

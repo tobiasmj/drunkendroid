@@ -63,18 +63,22 @@ public class RESTServerFacade implements IRemoteDataFacade {
 		try {
 			//This might be null and should be handled.
 			 resultingTrip = consumeXmlFromMoodMap(response);
-			if(resultingTrip == null)
-				throw new RESTFacadeException(LOGTAG, "Unhandled condition. MoodMap from server is null");
+			if(resultingTrip == null){
+				Log.i(LOGTAG, "The response could not be consumed correctly");
+				throw new RESTFacadeException(LOGTAG, "The server did not send a map back.");
+				
+			}
 		} catch (IllegalStateException e) {
 			//Wrong content has been supplied by the server.
 			//Tell the user we cannot show the map.
 			Log.i(LOGTAG, "IllegalStateException, " + e.getMessage() );
-			throw new RESTFacadeException(LOGTAG, "The server has send a map from which I cannot understand. Please update the application");
+			throw new RESTFacadeException(LOGTAG, "The server has send a map which I cannot understand. Please update the application");
 		} catch (IOException e) {
 			//An xml DOM object could not be build from the content in the HttpResponse.
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.i(LOGTAG, "IOException, " + e.getMessage());
+			throw new RESTFacadeException(LOGTAG, "The server did not send a correct map.");
 		}
 		
 		return resultingTrip;
