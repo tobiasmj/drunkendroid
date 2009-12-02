@@ -22,7 +22,7 @@ import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 public class RESTCache implements IRESTCache {
 	private final int UPDATECALL = 1;
 	private final int UPLOADCALL = 2;
-	private Set<Class<?>> uploadTripFilter = null;
+	private Set<String> uploadTripFilter = null;
 	
 	DBHelper _dbHelper;
 	LocalDataFacadeForSQLite _localSqlFacade;
