@@ -8,8 +8,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.util.AndroidRuntimeException;
-
 public class WebserviceConnectionREST implements IWebserviceConnection{
 	private static final String BASE_URI = "http://192.168.0.12:8182/drunkendroid/";
 	private static final String targetDomain = "192.168.0.12";

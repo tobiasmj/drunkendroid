@@ -3,6 +3,7 @@ package itu.malta.drunkendroid.tech;
 import itu.malta.drunkendroid.domain.*;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -24,19 +25,21 @@ public final class XMLBuilder {
 	private static final String RECEIVER = "receiver";
 	private static final String MESSAGE = "message";
 
-	protected static String buildXmlFromStandAloneEvent(Event e)
-			throws IOException {
+	protected static String buildXmlFromEvents(List<Event> eventList) throws IOException{
 		XmlSerializer serializer = Xml.newSerializer();
 		final StringWriter writer = new StringWriter();
 
 		serializer.setOutput(writer);
-		serializer.startDocument("UTF-8", true);
-		serializer.startTag("", EVENTS);
-		XMLBuilder.addEventXml(serializer, e);
-		serializer.endTag("", EVENTS);
-		serializer.endDocument();
 
-		return writer.toString();
+        serializer.startDocument("UTF-8", true);
+        serializer.startTag("", EVENTS);
+        for(Event e : eventList){
+        	XMLBuilder.addEventXml(serializer, e);
+        }
+        serializer.endTag("", EVENTS);
+        serializer.endDocument();
+       
+        return writer.toString();
 	}
 
 	protected static void addReadingXml(XmlSerializer serializer, ReadingEvent r)

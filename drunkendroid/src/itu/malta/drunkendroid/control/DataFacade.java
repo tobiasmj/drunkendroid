@@ -9,14 +9,15 @@ import itu.malta.drunkendroid.tech.RESTServerFacade;
 import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
 import itu.malta.drunkendroid.tech.dummy.DummyRESTserver;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
 import android.util.Log;
 
 public class DataFacade implements IDataFacade {
-	private static final String LOGTAG = "Drunkendroid DataFacade";
-	private IRemoteDataFacade remote;
-	private ILocalDataFacade local;
+	private static final String _LOGTAG = "Drunkendroid DataFacade";
+	private IRemoteDataFacade _remote;
+	private ILocalDataFacade _local;
 	
 	//Don't call the default constructor!
 	@SuppressWarnings("unused")
@@ -24,26 +25,28 @@ public class DataFacade implements IDataFacade {
 	
 	public DataFacade(Context context){
 		IWebserviceConnection connection = new WebserviceConnectionREST();
-		remote = new RESTServerFacade(context, connection);
+		_remote = new RESTServerFacade(context, connection);
 		//remote = new DummyRESTserver();
-		local = new LocalDataFacadeForSQLite(context);
+		_local = new LocalDataFacadeForSQLite(context);
 	}
 	
 	/**
 	 * Add an event to the local and foreign database.
 	 */
 	public void addEvent(Trip t, Event e) {
-		local.addEvent(t, e);
-
+		//The event is persisted.
+		_local.addEvent(t, e);
+		
+		//The server is being updated
 		if(e.latitude != null && e.longitude != null){
 			//also upload to the server, if the location is known.
 			if(t.getRemoteID() == null){
-				remote.uploadTrip(t);
-				//persist the change
-				local.addRemoteIdToTrip(t);
+				_remote.uploadTrip(t);
 			}
 			else{
-				remote.updateTrip(t, e);
+				ArrayList<Event> eventList = new ArrayList<Event>();
+				eventList.add(e);
+				_remote.updateTrip(t, eventList);
 			}	
 		}	
 	}
@@ -53,14 +56,14 @@ public class DataFacade implements IDataFacade {
 	 * @return a Trip with no events, but a unique localId.
 	 */
 	public Trip startTrip(){
-		return local.startTrip();
+		return _local.startTrip();
 	}
 	
 	/**
 	 * Close the trip in the database.
 	 */
 	public void closeTrip(Trip t) {
-		local.closeTrip(t);
+		_local.closeTrip(t);
 		//We could also consider closing all active trips.
 	}
 
@@ -68,7 +71,7 @@ public class DataFacade implements IDataFacade {
 	 * @return All trips belonging to the user.
 	 */
 	public List<Trip> getAllTrips() {
-		return local.getAllTrips();
+		return _local.getAllTrips();
 	}
 
 	/**
@@ -80,19 +83,19 @@ public class DataFacade implements IDataFacade {
 	 */
 	public List<ReadingEvent> getReadingEvents(Long startTime, Long endTime, Double ulLatitude,
 			Double ulLongitude, Double lrLatitude, Double lrLongitude) {
-		return remote.getReadingEvents(startTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
+		return _remote.getReadingEvents(startTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 
 
 	public int getEventCount(Trip t){
-		return local.getEventCount(t);
+		return _local.getEventCount(t);
 	}
 	/**
 	 * @return The trip belonging to the user, which started on the unique moment.
 	 * @param startTime the unique start.
 	 */
 	public Trip getTrip(Long startTime) {
-		return local.getTrip(startTime);
+		return _local.getTrip(startTime);
 	}
 
 	/**
@@ -101,12 +104,14 @@ public class DataFacade implements IDataFacade {
 	 */
 	public void updateEventsWithoutLocation(Trip t, Double latitude,
 			Double longitude) {
-		Log.i(LOGTAG, "Trying to update events witouth location in the trip with id " + t.getLocalID());
-		List<Event> updatedEvents = local.updateEventsWithoutLocation(t, latitude, longitude);
+		Log.i(_LOGTAG, "Trying to update events witouth location in the trip with id " + t.getLocalID());
+		List<Event> updatedEvents = _local.updateEventsWithoutLocation(t, latitude, longitude);
 		//now update the trip on the server.
 		for(Event e : updatedEvents){
 			//TODO This ought to be done in a different thread.
-			remote.updateTrip(t, e);
+			ArrayList<Event> eventList = new ArrayList<Event>();
+			eventList.add(e);
+			_remote.updateTrip(t, eventList);
 		}
 	}
 
@@ -114,10 +119,10 @@ public class DataFacade implements IDataFacade {
 	 * Close down this facade and all the connections initiated by the facade.
 	 */
 	public void closeFacade() {
-		local.closeFacade();
+		_local.closeFacade();
 		//remote doesn't need to get closed.
-		local = null;
-		remote = null;
+		_local = null;
+		_remote = null;
 	}
 
 	/**
@@ -126,7 +131,7 @@ public class DataFacade implements IDataFacade {
 	 * @return will return null if no active trips are available.
 	 */
 	public Trip getActiveTrip() {
-		List<Trip> trips = local.getActiveTrips();
+		List<Trip> trips = _local.getActiveTrips();
 		/**
 		 * More than one Trip could in theory be active, if a Trip has not been ended correctly.
 		 * Sometimes the UI layer will expect a single trip to be active, for instance when
@@ -144,10 +149,7 @@ public class DataFacade implements IDataFacade {
 		}
 	}
 	
-	/**
-	 * @param t must have a localId
-	 */
 	public void deleteTrip(Long startTime) {
-		local.deleteTrip(startTime);
+		_local.deleteTrip(startTime);
 	}
 }

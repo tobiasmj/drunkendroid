@@ -21,7 +21,9 @@ public interface IRemoteDataFacade {
 	 * Upload a trip to the server
 	 * @param t
 	 * @return the remoteID of the newly uploaded trip.
+	 * 
+	 * If an error occurs the trip is not updated
 	 */
 	public void uploadTrip(Trip t);
-	public void updateTrip(Trip t, Event e);
+	public void updateTrip(Trip t, List<Event> eventList);
 }

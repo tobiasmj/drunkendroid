@@ -20,14 +20,16 @@ public class DummyRESTserver implements IRemoteDataFacade {
 		return null;
 	}
 
-	public void updateTrip(Trip t, Event e) {
-		// TODO Auto-generated method stub
-
-	}
 
 	public void uploadTrip(Trip t) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	public void updateTrip(Trip t, List<Event> eventList) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
