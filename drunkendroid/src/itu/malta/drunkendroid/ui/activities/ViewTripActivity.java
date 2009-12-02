@@ -5,13 +5,19 @@ import java.util.List;
 
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
+import itu.malta.drunkendroid.domain.CallEvent;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.ReadingEvent;
+import itu.malta.drunkendroid.domain.SMSEvent;
 import itu.malta.drunkendroid.domain.Trip;
+import itu.malta.drunkendroid.ui.map.LocationEventsOverlay;
+import itu.malta.drunkendroid.ui.map.MoodEventsOverlay;
 import itu.malta.drunkendroid.ui.map.MoodOverlay;
-import itu.malta.drunkendroid.ui.map.TripOverlay;
+import itu.malta.drunkendroid.ui.map.CallEventsOverlay;
+import itu.malta.drunkendroid.ui.map.SMSEventsOverlay;
 
+import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -26,6 +32,10 @@ public class ViewTripActivity extends MapActivity {
 	MapController _mapController;
 	MoodOverlay _moodOverlay;
 	GeoPoint _gp;
+    ArrayList<LocationEvent> _locationEvents = new ArrayList<LocationEvent>();
+    ArrayList<ReadingEvent> _moodEvents = new ArrayList<ReadingEvent>();
+    ArrayList<CallEvent> _callEvents = new ArrayList<CallEvent>();
+    ArrayList<SMSEvent> _smsEvents = new ArrayList<SMSEvent>();
 	ArrayList<Event> _otherEvents = new ArrayList<Event>();
 	
     /** Called when the activity is first created. */
@@ -46,56 +56,75 @@ public class ViewTripActivity extends MapActivity {
             TripRepository tripRep = new TripRepository(this);
             Trip trip = tripRep.getTrip(startTime);
             tripRep.closeRepository();
+
+            // The latitude is clamped between -180 degrees and +180 degrees
+            int minLat = (int)(+81 * 1E6);
+            int maxLat = (int)(-81 * 1E6);
             
-        	Double minLat = Double.POSITIVE_INFINITY;
-        	Double maxLat = Double.NEGATIVE_INFINITY;
-        	Double minLong = Double.POSITIVE_INFINITY;
-        	Double maxLong = Double.NEGATIVE_INFINITY;
-        	ArrayList<LocationEvent> locationEvents = new ArrayList<LocationEvent>();
+            // The longitude is clamped between -180 degrees and +180 degrees
+            int minLong = (int)(+181 * 1E6);
+            int maxLong = (int)(-181 * 1E6);
             
         	ArrayList<Event> events = trip.getTripEvents();
         	
-            for(Event e : trip.getTripEvents())
+            for(Event e : events)
             {
             	// Set the min and max latitude and longitude
             	if(e.latitude != null && e.longitude != null)
             	{
-            		if(minLat > e.latitude)
-            			minLat = e.latitude;
-            		else if(maxLat < e.latitude)
-            			maxLat = e.latitude;
+            		int latitude = (int)(e.latitude * 1E6);
+                    int longitude = (int)(e.longitude * 1E6); 
             		
-            		if(minLong > e.longitude)
-            			minLong = e.longitude;
-            		else if(maxLong < e.longitude)
-            			maxLong = e.longitude;
+            		if(minLat > latitude) minLat = latitude;
+            		else if(maxLat < latitude) maxLat = latitude;
             		
+            		if(minLong > longitude) minLong = longitude;
+            		else if(maxLong < longitude) maxLong = longitude;
             	}
             	
+            	// Add events to appropriate arraylist
             	if(LocationEvent.class.isInstance(e))
-            		locationEvents.add((LocationEvent)e);
-            	else
+            		_locationEvents.add((LocationEvent)e);
+            	else if(ReadingEvent.class.isInstance(e))
+            		_moodEvents.add((ReadingEvent)e);
+            	else if(CallEvent.class.isInstance(e))
+            		_callEvents.add((CallEvent)e);
+            	else if(SMSEvent.class.isInstance(e))
+            		_smsEvents.add((SMSEvent)e);
+                else 
             		_otherEvents.add(e);
             }
             
-            float[] span = new float[2];
-            Location.distanceBetween(minLat, minLong, maxLat, maxLong, span);
-
-            _mapController.zoomToSpan((int)(span[0]*1E6), (int)(span[1]*1E6));
+            // Zoom to span from the list of points
+            _mapController.zoomToSpan(
+                      (maxLat - minLat),
+                      (maxLong - minLong));
             
-
-            GeoPoint gp = new GeoPoint((int)(minLat+(span[0]/2)*1E6),(int)(minLong+(span[1]/2)*1E6));
+            // Animate to the center cluster of points
+            GeoPoint gp = new GeoPoint((maxLat + minLat)/2,(maxLong + minLong)/2);
             
             _mapController.animateTo(gp, new Runnable() {
     	        public void run()
     	        {
-    	            // Add overlay
-    	            TripOverlay overlay = new TripOverlay(_otherEvents);
     	            List<Overlay> overlays = _mapView.getOverlays();
-    	            overlays.add(overlay);
+
+    	            // Add overlay for callEvents
+    	            CallEventsOverlay callOverlay = new CallEventsOverlay(_callEvents);
+    	            overlays.add(callOverlay);
+
+    	            // Add overlay for locationEvents
+    	            LocationEventsOverlay locationOverlay = new LocationEventsOverlay(_locationEvents);
+    	            overlays.add(locationOverlay);
+
+    	            // Add overlay for moodEvents
+    	            MoodEventsOverlay moodOverlay = new MoodEventsOverlay(_moodEvents);
+    	            overlays.add(moodOverlay);
+
+    	            // Add overlay for smsEvents
+    	            SMSEventsOverlay smsOverlay = new SMSEventsOverlay(_smsEvents);
+    	            overlays.add(smsOverlay);
     	        }
             });
-            
         }
         else
         	finish();

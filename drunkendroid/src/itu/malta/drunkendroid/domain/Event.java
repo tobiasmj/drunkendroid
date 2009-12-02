@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import android.location.Location;
 
-public abstract class Event {
+public abstract class Event implements Comparable<Event> {
 	public Long dateTime;
 	public Double latitude;
 	public Double longitude;
@@ -25,5 +25,15 @@ public abstract class Event {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
+	
+	public int compareTo(Event event) {
+		if(this.dateTime < event.dateTime)
+			return -1;
+		else if(this.dateTime > event.dateTime)
+			return 1;
+		else
+			return 0;
+	}
+
 
 }
