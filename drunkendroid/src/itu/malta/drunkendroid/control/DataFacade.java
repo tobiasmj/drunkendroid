@@ -3,12 +3,13 @@ package itu.malta.drunkendroid.control;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
+import itu.malta.drunkendroid.tech.IRESTCache;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.LocalDataFacadeForSQLite;
 import itu.malta.drunkendroid.tech.RESTCache;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
 import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
-import itu.malta.drunkendroid.tech.dummy.DummyRESTserver;
+import itu.malta.drunkendroid.tech.dummy.DummyRESTfacade;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import android.util.Log;
 
 public class DataFacade implements IDataFacade {
 	private static final String _LOGTAG = "Drunkendroid DataFacade";
-	private IRemoteDataFacade _remote;
+	private IRESTCache _remote;
 	private ILocalDataFacade _local;
 	
 	//Don't call the default constructor!
@@ -26,10 +27,8 @@ public class DataFacade implements IDataFacade {
 	private DataFacade(){};
 	
 	public DataFacade(Context context){
-		IWebserviceConnection connection = new WebserviceConnectionREST();
-		//Set the cache
 		_remote = new RESTCache(context);
-		//remote = new DummyRESTserver();
+		//_remote = new DummyRESTserver();
 		_local = new LocalDataFacadeForSQLite(context);
 	}
 	

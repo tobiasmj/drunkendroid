@@ -21,7 +21,7 @@ import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
-public class RESTCache implements IRemoteDataFacade {
+public class RESTCache implements IRESTCache {
 	private final int UPDATECALL = 1;
 	private final int UPLOADCALL = 2;
 	private Set<Class<?>> uploadTripFilter = null;
