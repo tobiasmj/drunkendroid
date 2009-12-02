@@ -19,6 +19,7 @@ import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.LocationEvent;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
 public class RESTCache implements IRemoteDataFacade {
 	private final int UPDATECALL = 1;
@@ -47,10 +48,11 @@ public class RESTCache implements IRemoteDataFacade {
 
 	/**
 	 * Blocking call
+	 * @throws RESTFacadeException which needs to be shown to the user
 	 */
 	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime,
 			Double ulLatitude, Double ulLongitude, Double lrLatitude,
-			Double lrLongitude) {
+			Double lrLongitude) throws RESTFacadeException {
 		return _server.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 	

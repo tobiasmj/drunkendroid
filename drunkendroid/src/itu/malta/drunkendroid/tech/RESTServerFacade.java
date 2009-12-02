@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import itu.malta.drunkendroid.control.IRemoteDataFacade;
 import itu.malta.drunkendroid.domain.*;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.AndroidRuntimeException;
@@ -48,11 +49,10 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @return currently only returns events with moods. Used to generate a moodmap.
 	 */
 	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
-			Double lrLatitude, Double lrLongitude) {
-		List<ReadingEvent> resultingTrip = null;
+			Double lrLatitude, Double lrLongitude) throws RESTFacadeException{
 		
+		List<ReadingEvent> resultingTrip = null;
 		//Call the server
-
 		HttpResponse response = conn.get(MOODMAP +"/"+
 				 String.valueOf(starTime) +"/"+ 
 				 String.valueOf(endTime) +"/"+ 
@@ -60,25 +60,21 @@ public class RESTServerFacade implements IRemoteDataFacade {
 				 String.valueOf(ulLongitude) +"/"+ 
 				 String.valueOf(lrLatitude) +"/"+ 
 				 String.valueOf(lrLongitude)); 
-		//TODO Handle errors.
-		
 		try {
 			//This might be null and should be handled.
-			resultingTrip = consumeXmlFromMoodMap(response);
+			 resultingTrip = consumeXmlFromMoodMap(response);
 			if(resultingTrip == null)
-				throw new AndroidRuntimeException(LOGTAG + ": Unhandled condition. MoodMap from server is null");
+				throw new RESTFacadeException(LOGTAG, "Unhandled condition. MoodMap from server is null");
 		} catch (IllegalStateException e) {
 			//Wrong content has been supplied by the server.
 			//Tell the user we cannot show the map.
-			Log.i(LOGTAG, "Showing an empty moodmap, " + e.getMessage() );
-			resultingTrip = new ArrayList<ReadingEvent>();
-			
+			Log.i(LOGTAG, "IllegalStateException, " + e.getMessage() );
+			throw new RESTFacadeException(LOGTAG, "The server has send a map from which I cannot understand. Please update the application");
 		} catch (IOException e) {
 			//An xml DOM object could not be build from the content in the HttpResponse.
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Log.i(LOGTAG, "IOException: " + e.getMessage());
-			resultingTrip = new ArrayList<ReadingEvent>();
+			Log.i(LOGTAG, "IOException, " + e.getMessage());
 		}
 		
 		return resultingTrip;

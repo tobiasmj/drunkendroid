@@ -9,6 +9,7 @@ import itu.malta.drunkendroid.tech.RESTCache;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
 import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
 import itu.malta.drunkendroid.tech.dummy.DummyRESTserver;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,9 +83,10 @@ public class DataFacade implements IDataFacade {
 	 * @param endTime the ending of the aggregation
 	 * @param latiude latitude of the center of the area of interest.
 	 * @param longitude longitude of the center of the area of interest.
+	 * @throws RESTFacadeException with a message for the user.
 	 */
 	public List<ReadingEvent> getReadingEvents(Long startTime, Long endTime, Double ulLatitude,
-			Double ulLongitude, Double lrLatitude, Double lrLongitude) {
+			Double ulLongitude, Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
 		return _remote.getReadingEvents(startTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 

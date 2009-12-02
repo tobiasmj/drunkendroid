@@ -1,6 +1,7 @@
 package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.domain.*;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
 import java.util.List;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class TripRepository{
 	}
 
 	public List<ReadingEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
-			Double lrLatitude, Double lrLongitude) {
+			Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
 		return data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 

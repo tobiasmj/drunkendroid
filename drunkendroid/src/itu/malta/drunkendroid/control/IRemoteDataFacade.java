@@ -3,6 +3,7 @@ package itu.malta.drunkendroid.control;
 import java.util.List;
 
 import itu.malta.drunkendroid.domain.*;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
 public interface IRemoteDataFacade {
 	/**
@@ -13,9 +14,10 @@ public interface IRemoteDataFacade {
 	 * @param longitude
 	 * @param distance
 	 * @return A synthesized Trip which contains events returned by the query.
+	 * @throws RESTFacadeException which needs to be shown to the user.
 	 */
 	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
-			Double lrLatitude, Double lrLongitude);
+			Double lrLatitude, Double lrLongitude) throws RESTFacadeException;
 	
 	/**
 	 * Upload a trip to the server
