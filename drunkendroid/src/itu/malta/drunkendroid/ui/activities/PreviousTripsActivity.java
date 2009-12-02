@@ -233,14 +233,14 @@ public class PreviousTripsActivity extends ListActivity {
 
 	class MultiChoiceListener implements OnMultiChoiceClickListener {
 
-		public List<Class<?>> _possibleChoices = new ArrayList<Class<?>>();
-		public Set<Class<?>> _choices = new HashSet<Class<?>>();
+		public List<String> _possibleChoices = new ArrayList<String>();
+		public Set<String> _choices = new HashSet<String>();
 
 		public MultiChoiceListener() {
-			_possibleChoices.add(IncomingCallEvent.class);
-			_possibleChoices.add(OutgoingCallEvent.class);
-			_possibleChoices.add(IncomingSMSEvent.class);
-			_possibleChoices.add(OutgoingSMSEvent.class);
+			_possibleChoices.add(IncomingCallEvent.class.getName());
+			_possibleChoices.add(OutgoingCallEvent.class.getName());
+			_possibleChoices.add(IncomingSMSEvent.class.getName());
+			_possibleChoices.add(OutgoingSMSEvent.class.getName());
 
 			_choices.addAll(_possibleChoices);
 		}

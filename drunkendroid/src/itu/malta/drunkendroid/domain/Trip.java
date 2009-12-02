@@ -10,11 +10,11 @@ public class Trip {
 	
 	//TODO Make a comment in the report concerning optimization by excluding getter/setter!
 	
-	public static List<Event> filterEvents(List<Event> events, Set<Class<?>> filter) {
+	public static List<Event> filterEvents(List<Event> events, Set<String> filter) {
 		List<Event> filteredEvents = new ArrayList<Event>();
 		
 		for(Event e : events) {
-			if(filter.contains(e.getClass())) {
+			if(filter.contains(e.getClass().getName())) {
 				filteredEvents.add(e);
 			}
 		}

@@ -81,7 +81,7 @@ public class TripRepository {
 		}
 	}
 
-	public void uploadTrip(Long startTime, Set<Class<?>> uploadTypes) {
+	public void uploadTrip(Long startTime, Set<String> uploadTypes) {
 		Trip t = data.getTrip(startTime);
 		t.events = Trip.filterEvents(t.events, uploadTypes);
 		data.uploadTrip(t);
