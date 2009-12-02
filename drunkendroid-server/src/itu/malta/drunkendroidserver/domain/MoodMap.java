@@ -6,38 +6,38 @@ package itu.malta.drunkendroidserver.domain;
  */
 public class MoodMap {
 
-	long startReadingTime, endReadingTime;
+	long _startReadingTime, _endReadingTime;
 
-	double ULlatitude, ULlongitude, LRlatitude, LRlongitude;
+	double _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
 
-	double latMax, latMin;
-	double longMax, longMin;
+	double _latMax, _latMin;
+	double _longMax, _longMin;
 	
-	double worldGridSize;
+	double _worldGridSize;
 	
 	public double getULlatitude() {
-		return ULlatitude;
+		return _ULlatitude;
 	}
 	public double getULlongitude() {
-		return ULlongitude;
+		return _ULlongitude;
 	}
 	public long getStartReadingTime() {
-		return startReadingTime;
+		return _startReadingTime;
 	}
 	public long getEndReadingTime() {
-		return endReadingTime;
+		return _endReadingTime;
 	}
 	public double getLatMax() {
-		return latMax;
+		return _latMax;
 	}
 	public double getLatMin() {
-		return latMin;
+		return _latMin;
 	}
 	public double getLongMax() {
-		return longMax;
+		return _longMax;
 	}
 	public double getLongMin() {
-		return longMin;
+		return _longMin;
 	}
 	/***
 	 * Constructor.
@@ -48,25 +48,25 @@ public class MoodMap {
 	 * @param LRlongitude LowerRightCorner longitude of the MoodMap
 	 */
 	public MoodMap (long startReadingTime,long endReadingTime, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude  ) {
-		this.startReadingTime = startReadingTime;
-		this.endReadingTime = endReadingTime;
-		this.ULlatitude = ULlatitude;
-		this.ULlongitude = ULlongitude;
-		this.LRlatitude = LRlatitude;
-		this.LRlongitude = LRlongitude;
+		this._startReadingTime = startReadingTime;
+		this._endReadingTime = endReadingTime;
+		this._ULlatitude = ULlatitude;
+		this._ULlongitude = ULlongitude;
+		this._LRlatitude = LRlatitude;
+		this._LRlongitude = LRlongitude;
 		if(ULlatitude > LRlatitude) {
-			latMax = ULlatitude;
-			latMin = LRlatitude;
+			_latMax = ULlatitude;
+			_latMin = LRlatitude;
 		} else {
-			latMax = LRlatitude;
-			latMin = ULlatitude;
+			_latMax = LRlatitude;
+			_latMin = ULlatitude;
 		}
 		if(ULlongitude > LRlongitude) {
-			longMax = ULlongitude;
-			longMin = LRlongitude;
+			_longMax = ULlongitude;
+			_longMin = LRlongitude;
 		} else {
-			longMax = LRlongitude;
-			longMin = ULlongitude;
+			_longMax = LRlongitude;
+			_longMin = ULlongitude;
 		}
 		
 		

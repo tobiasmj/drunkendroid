@@ -7,10 +7,10 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  */
 public class Location implements IEvent {
 
-	private final String type = "location";
-	private double longitude, latitude;
-	private Long timeStamp;
-	private long tripId = 0;
+	private final String _type = "location";
+	private double _longitude, _latitude;
+	private long _timeStamp;
+	private long _tripId = 0;
 
 	/**
 	 * Constructor for the Location event.
@@ -20,37 +20,37 @@ public class Location implements IEvent {
 	 */
 	public Location(long timeStamp, double longitude, double latitude) {
 		super();
-		this.timeStamp = timeStamp;
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this._timeStamp = timeStamp;
+		this._longitude = longitude;
+		this._latitude = latitude;
 	}
 	
 	public String getType() {
-		return type;
+		return _type;
 	}
 	public double getLongitude() {
-		return longitude;
+		return _longitude;
 	}
 	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+		this._longitude = longitude;
 	}
 	public double getLatitude() {
-		return latitude;
+		return _latitude;
 	}
 	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+		this._latitude = latitude;
 	}
 	public void setTimeStamp(long timeStamp) {
-		this.timeStamp = timeStamp;
+		this._timeStamp = timeStamp;
 	}
 	public long getTimeStamp() {
-		return timeStamp;
+		return _timeStamp;
 	}
 	public void setTripId(long tripId) {
-		this.tripId = tripId;
+		this._tripId = tripId;
 	}
 	public long getTripId() {
-		return tripId;
+		return _tripId;
 	}
 	
 }

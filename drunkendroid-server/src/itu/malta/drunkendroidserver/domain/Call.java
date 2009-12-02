@@ -23,19 +23,19 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  */
 public class Call implements IEvent{
 
-	long readingTime;
-	double latitude, longitude;
-	private long tripId = 0;
-	private String caller;
-	private String reciever;
-	private long endTime;
+	long _readingTime;
+	double _latitude, _longitude;
+	private long _tripId = 0;
+	private String _caller;
+	private String _reciever;
+	private long _endTime;
 	
 	public long getTripId() {
-		return tripId;
+		return _tripId;
 	}
 	@Override
 	public void setTripId(long tripId) {
-		this.tripId = tripId;
+		this._tripId = tripId;
 	}
 	/**
 	 * Constructor
@@ -44,12 +44,12 @@ public class Call implements IEvent{
 	 * @param longitude the longitude of the reading
 	 */
 	public Call (long readingTime, double latitude, double longitude, String caller, String reciever, long endTime) {
-		this.readingTime = readingTime;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.caller = caller;
-		this.reciever = reciever;
-		this.endTime = endTime;
+		this._readingTime = readingTime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+		this._caller = caller;
+		this._reciever = reciever;
+		this._endTime = endTime;
 	}
 	/**
 	 * Constructor 
@@ -59,29 +59,29 @@ public class Call implements IEvent{
 	 * @param longitude the longitude of the reading
 	 */
 	public Call (long tripId, long readingTime, double latitude, double longitude, String caller, String reciever, long endTime) {
-		this.tripId = tripId;
-		this.readingTime = readingTime;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.caller = caller;
-		this.reciever = reciever;
-		this.endTime = endTime;
+		this._tripId = tripId;
+		this._readingTime = readingTime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+		this._caller = caller;
+		this._reciever = reciever;
+		this._endTime = endTime;
 	}
 	public String getEventType() {
 		return "call";
 	}
 
 	public double getLatitude() {
-		return latitude;
+		return _latitude;
 	}
 
 	public double getLongitude() {
-		return longitude;
+		return _longitude;
 	}
 
 	@Override
 	public long getTimeStamp() {
-		return readingTime;
+		return _readingTime;
 	}
 
 	@Override
@@ -91,27 +91,27 @@ public class Call implements IEvent{
 
 	@Override
 	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+		this._latitude = latitude;
 	}
 
 	@Override
 	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+		this._longitude = longitude;
 		
 	}
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
-		readingTime = timeStamp;
+		_readingTime = timeStamp;
 		
 	}
 	public String getCaller() {
-		return caller;
+		return _caller;
 	}
 	public String getReciever() {
-		return reciever;
+		return _reciever;
 	}
 	public long getEndTime() {
-		return endTime;
+		return _endTime;
 	}
 }

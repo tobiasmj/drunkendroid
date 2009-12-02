@@ -11,10 +11,10 @@ import java.util.LinkedList;
  */
 public class Trip {
 
-	long tripId = -1;
-	String imeiNumber, name;
-	long startTime; 
-	long endTime = -1 ;
+	private long _tripId = -1;
+	private String _imeiNumber, _name;
+	private long _startTime; 
+	private long _endTime = -1 ;
 
 	LinkedList<IEvent> events = new LinkedList<IEvent>();
 	/**
@@ -22,7 +22,7 @@ public class Trip {
 	 * @param tripId
 	 */
 	public Trip(int tripId) {
-		this.tripId = tripId;
+		this._tripId = tripId;
 	}
 	
 	/**
@@ -34,11 +34,11 @@ public class Trip {
 	 * @param name, the name of the trip.
 	 */
 	public Trip(int tripId, String imeiNumber, Long startTime, Long endTime, String name) {
-		this.tripId = tripId;
-		this.imeiNumber = imeiNumber;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.name = name;
+		this._tripId = tripId;
+		this._imeiNumber = imeiNumber;
+		this._startTime = startTime;
+		this._endTime = endTime;
+		this._name = name;
 	}
 	/**
 	 * Constructor, for use when the trip is not closed.
@@ -47,9 +47,9 @@ public class Trip {
 	 * @param name, the name of the trip.
 	 */
 	public Trip(String imeiNumber, Long startTime, String name) {
-		this.imeiNumber = imeiNumber;
-		this.startTime = startTime;
-		this.name = name;
+		this._imeiNumber = imeiNumber;
+		this._startTime = startTime;
+		this._name = name;
 	}
 	/**
 	 * Constructor, for use when adding a new closed event to the database
@@ -59,10 +59,10 @@ public class Trip {
 	 * @param name
 	 */
 	public Trip(String imeiNumber, Long startTime, Long endTime, String name) {
-		this.imeiNumber = imeiNumber;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.name = name;
+		this._imeiNumber = imeiNumber;
+		this._startTime = startTime;
+		this._endTime = endTime;
+		this._name = name;
 	}
 	
 	/**
@@ -72,33 +72,33 @@ public class Trip {
 	 * @param name
 	 */
 	public Trip(Long startTime,Long endTime, String name) {
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.name = name;
+		this._startTime = startTime;
+		this._endTime = endTime;
+		this._name = name;
 	}
 
 	public long getTripId() {
-		return tripId;
+		return _tripId;
 	}
 
 	public void setTripId(long tripId) {
-		this.tripId = tripId;
+		this._tripId = tripId;
 	}
 	
 	public String getImeiNumber() {
-		return imeiNumber;
+		return _imeiNumber;
 	}
 
 	public String getName() {
-		return name;
+		return _name;
 	}
 
 	public long getStartTime() {
-		return startTime;
+		return _startTime;
 	}
 
 	public long getEndTime() {
-		return endTime;
+		return _endTime;
 	}
 	/**
 	 * method for adding a single event to the trip.
@@ -130,6 +130,6 @@ public class Trip {
 		return !events.isEmpty();
 	}
 	public void setImeiNumber(String imeiNumber) {
-		this.imeiNumber = imeiNumber;
+		this._imeiNumber = imeiNumber;
 	}
 }

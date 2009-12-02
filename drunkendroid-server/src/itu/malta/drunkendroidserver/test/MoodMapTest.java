@@ -53,25 +53,6 @@ public class MoodMapTest {
 	/**
 	 * Test method for {@link MoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
 	 */
-	/*@Test
-	public void testMarshal() {
-	XStream xStream = new XStream();
-	xStream.registerConverter(new MoodMapConverter());
-	xStream.alias("MoodMapReading",GridCell.class);
-	
-	GridCell gc = (GridCell)xStream.fromXML("<MoodMapReading><MoodMapValue>120</MoodMapValue><MoodMapLongitude>14.4889622588559</MoodMapLongitude><MoodMapLatitude>35.9237275622272</MoodMapLatitude></MoodMapReading>");
-	GridCell tgc = new GridCell(14.4889622588559, 35.9237275622272);
-	tgc.addValue(120);
-	
-	Assert.assertEquals(gc.getAverage(), tgc.getAverage());
-	Assert.assertEquals(gc.getLatitude(), tgc.getLatitude(), 0.0);
-	Assert.assertEquals(gc.getLongitude(), tgc.getLongitude(), 0.0);
-
-	}
-*/
-	/**
-	 * Test method for {@link MoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
-	 */
 	@Test
 	public void testMarshal() {
 		XStream xStream = new XStream();
@@ -108,28 +89,7 @@ public class MoodMapTest {
 		Assert.assertEquals("<p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\"/>",xmlOutput);
 		
 	}
-	
-	
-	/**
-	 * Test method for {@link MoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
-	 */
-	/*@Test
-	public void testUnmarshal() {
-		GridCell cc = createMock(GridCell.class);
-		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
-		expect(cc.getLongitude()).andStubReturn(14.4889622588559);
-		expect(cc.getAverage()).andStubReturn(120);
-		replay(cc);
 
-		XStream xStream = new XStream();
-		xStream.registerConverter(new MoodMapConverter());
-		xStream.alias("MoodMapReading", cc.getClass());
-
-		String xmlOutput = xStream.toXML(cc);
-		xmlOutput = xmlOutput.replaceAll("\n", "").replaceAll(" ", "");
-		Assert.assertEquals("<MoodMapReading><MoodMapValue>120</MoodMapValue><MoodMapLongitude>14.4889622588559</MoodMapLongitude><MoodMapLatitude>35.9237275622272</MoodMapLatitude></MoodMapReading>",xmlOutput);
-		
-	}*/
 
 	/**
 	 * Test method for {@link MoodMapConverter#canConvert(Class)}.

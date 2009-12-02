@@ -43,31 +43,4 @@ public class XmlResponse {
   
         return result;  
     } 
-    /** 
-     * Generate an XML representation of an response. 
-     *  
-     * @param message 
-     *            the message. 
-	 */
-    public static DomRepresentation generateSuccessRepresentation(String message) {  
-        DomRepresentation result = null;  
-        // This is an sucess
-        // Generate the output representation  
-        try {  
-            result = new DomRepresentation(MediaType.TEXT_XML);  
-  
-            Document d = result.getDocument();  
-  
-            Element eltSuccess = d.createElement("Success");  
-            d.appendChild(eltSuccess);
-            
-            Element eltMessage = d.createElement("message");  
-            eltMessage.appendChild(d.createTextNode(message));  
-            eltSuccess.appendChild(eltMessage);  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
-  
-        return result;  
-    }  
 }

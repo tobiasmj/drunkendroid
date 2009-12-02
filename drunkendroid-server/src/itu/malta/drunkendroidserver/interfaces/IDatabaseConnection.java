@@ -7,6 +7,6 @@ import java.sql.SQLException;
  */
 public interface IDatabaseConnection {
 
-	public abstract Connection getConn() throws SQLException;
+	public Connection getConn() throws SQLException;
 
 }

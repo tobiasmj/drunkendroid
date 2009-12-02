@@ -10,17 +10,17 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  */
 public class Reading implements IEvent{
 
-	long readingTime;
-	double latitude, longitude;
-	int mood = -1;
-	private long tripId = 0;
+	private long _readingTime;
+	private double _latitude, _longitude;
+	private int _mood = -1;
+	private long _tripId = 0;
 	
 	public long getTripId() {
-		return tripId;
+		return _tripId;
 	}
 	@Override
 	public void setTripId(long tripId) {
-		this.tripId = tripId;
+		this._tripId = tripId;
 	}
 	/**
 	 * Constructor
@@ -30,10 +30,10 @@ public class Reading implements IEvent{
 	 * @param mood the mood valued 0-255
 	 */
 	public Reading (long readingTime, double latitude, double longitude, int mood ) {
-		this.readingTime = readingTime;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.mood = mood;
+		this._readingTime = readingTime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+		this._mood = mood;
 	}
 	/**
 	 * Constructor 
@@ -44,30 +44,30 @@ public class Reading implements IEvent{
 	 * @param mood the mood valued 0-255
 	 */
 	public Reading (long tripId, long readingTime, double latitude, double longitude, int mood ) {
-		this.tripId = tripId;
-		this.readingTime = readingTime;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.mood = mood;
+		this._tripId = tripId;
+		this._readingTime = readingTime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+		this._mood = mood;
 	}
 	public String getEventType() {
 		return "reading";
 	}
 
 	public double getLatitude() {
-		return latitude;
+		return _latitude;
 	}
 
 	public double getLongitude() {
-		return longitude;
+		return _longitude;
 	}
 	public int getMood() {
-		return mood;
+		return _mood;
 	}
 
 	@Override
 	public long getTimeStamp() {
-		return readingTime;
+		return _readingTime;
 	}
 
 	@Override
@@ -77,18 +77,18 @@ public class Reading implements IEvent{
 
 	@Override
 	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+		this._latitude = latitude;
 	}
 
 	@Override
 	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+		this._longitude = longitude;
 		
 	}
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
-		readingTime = timeStamp;
+		_readingTime = timeStamp;
 		
 	}
 }

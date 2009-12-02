@@ -7,7 +7,6 @@ import itu.malta.drunkendroidserver.domain.MoodMap;
 import itu.malta.drunkendroidserver.tech.DatabaseConnection;
 import itu.malta.drunkendroidserver.util.*;
 import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
-import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,11 +32,11 @@ import com.thoughtworks.xstream.XStream;
  * Class that handles requests for retrieving MoodMaps.
  */
 public class MoodMapResource extends ServerResource {
-	long startTimeStamp, endTimeStamp;
-	double latitude, longitude, ULlatitude, ULlongitude, LRlatitude, LRlongitude;
-	int height, width;
+	long _startTimeStamp, _endTimeStamp;
+	double _latitude, _longitude, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
+	int _height, _width;
 	int gridX = 20 , gridY = 20;
-	GridCell[][] moodMapGrid;
+	GridCell[][] _moodMapGrid;
 	
 	/**
 	 * Handles get requests for MoodMaps, based on the provided URL arguments.
@@ -51,14 +50,14 @@ public class MoodMapResource extends ServerResource {
 		Representation result = null;
 		try {
 		// get the values posted to the server
-		startTimeStamp = Long.parseLong(getRequest().getAttributes().get("StartTimeStamp").toString());
-		endTimeStamp = Long.parseLong(getRequest().getAttributes().get("EndTimeStamp").toString());
+		_startTimeStamp = Long.parseLong(getRequest().getAttributes().get("StartTimeStamp").toString());
+		_endTimeStamp = Long.parseLong(getRequest().getAttributes().get("EndTimeStamp").toString());
 		
-		ULlatitude = Double.parseDouble(getRequest().getAttributes().get("ULLatitude").toString());
-		ULlongitude = Double.parseDouble(getRequest().getAttributes().get("ULLongitude").toString());
+		_ULlatitude = Double.parseDouble(getRequest().getAttributes().get("ULLatitude").toString());
+		_ULlongitude = Double.parseDouble(getRequest().getAttributes().get("ULLongitude").toString());
 		
-		LRlatitude = Double.parseDouble(getRequest().getAttributes().get("LRLatitude").toString());
-		LRlongitude = Double.parseDouble(getRequest().getAttributes().get("LRLongitude").toString());
+		_LRlatitude = Double.parseDouble(getRequest().getAttributes().get("LRLatitude").toString());
+		_LRlongitude = Double.parseDouble(getRequest().getAttributes().get("LRLongitude").toString());
 		
 		//height = Integer.parseInt(getRequest().getAttributes().get("Height").toString());
 		//width = Integer.parseInt(getRequest().getAttributes().get("Width").toString());
@@ -74,14 +73,14 @@ public class MoodMapResource extends ServerResource {
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			
 		}
 		// create the MoodMap object
-		MoodMap moodMap = new MoodMap(startTimeStamp, endTimeStamp, ULlatitude, ULlongitude, LRlatitude, LRlongitude);
+		MoodMap moodMap = new MoodMap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude);
 		
 		try {
 			// set up the repository
 			Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 			//calculate the MoodMap
 			System.out.println(System.currentTimeMillis()/1000 +" Start calculate moodmap");
-			moodMapGrid = rep.calculateMoodMap(moodMap);
+			_moodMapGrid = rep.calculateMoodMap(moodMap);
 			System.out.println(System.currentTimeMillis()/1000 +" End calculate moodmap");
 			// get the MoodMap as an XML representation.
 			System.out.println(System.currentTimeMillis()/1000 + " get moodmap xml");
@@ -115,7 +114,7 @@ public class MoodMapResource extends ServerResource {
 			DomRepresentation result = null;
 			
 
-			if(moodMapGrid != null) {
+			if(_moodMapGrid != null) {
 			XStream xStream = new XStream();
 			xStream.registerConverter(new MoodMapConverter());
 			xStream.alias("p", GridCell.class);
@@ -131,8 +130,8 @@ public class MoodMapResource extends ServerResource {
 	            // MoodMapReadings.  
 	            for(int i = 0; i < gridY; i++){
 	            	for(int j = 0; j < gridX; j++){
-	            		if (moodMapGrid[i][j] != null){
-	            			xmlOutput = xmlOutput + xStream.toXML(moodMapGrid[i][j]);
+	            		if (_moodMapGrid[i][j] != null){
+	            			xmlOutput = xmlOutput + xStream.toXML(_moodMapGrid[i][j]);
 	             		}
 	            	}
 	            }

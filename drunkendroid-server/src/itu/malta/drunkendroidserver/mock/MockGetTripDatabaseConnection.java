@@ -8,7 +8,6 @@ import java.sql.Statement;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 
-import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.interfaces.IDatabaseConnection;
 
 /**
@@ -96,15 +95,6 @@ public class MockGetTripDatabaseConnection implements IDatabaseConnection {
 			expect(rs.getLong("startDateTime")).andReturn(1L);
 			expect(rs.getLong("endDateTime")).andReturn(2L);
 			expect(rs.getString("name")).andReturn("testTrip");
-			
-			
-			/*
-			 * 			stmt.executeQuery("Select dateTime, longitude,latitude,caller,reciever,endTime from Call where trip = " + trip.getTripId());
-			rs= stmt.getResultSet();
-
-			while (rs.next()) {
-				events.add(new Call(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTime")));
-			 */
 			
 			
 			rs.close();

@@ -23,19 +23,19 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  */
 public class Sms implements IEvent{
 
-	long readingTime;
-	double latitude, longitude;
-	private long tripId = 0;
-	private String reciever;
-	private String sender;
-	private String message;
+	private long _readingTime;
+	private double _latitude, _longitude;
+	private long _tripId = 0;
+	private String _reciever;
+	private String _sender;
+	private String _message;
 	
 	public long getTripId() {
-		return tripId;
+		return _tripId;
 	}
 	@Override
 	public void setTripId(long tripId) {
-		this.tripId = tripId;
+		this._tripId = tripId;
 	}
 	/**
 	 * Constructor
@@ -44,12 +44,12 @@ public class Sms implements IEvent{
 	 * @param longitude the longitude of the reading
 	 */
 	public Sms (long readingTime, double latitude, double longitude, String sender, String reciever, String message) {
-		this.readingTime = readingTime;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.reciever = reciever;
-		this.sender = sender;
-		this.message = message;
+		this._readingTime = readingTime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+		this._reciever = reciever;
+		this._sender = sender;
+		this._message = message;
 	}
 	/**
 	 * Constructor 
@@ -59,29 +59,29 @@ public class Sms implements IEvent{
 	 * @param longitude the longitude of the reading
 	 */
 	public Sms (long tripId, long readingTime, double latitude, double longitude, String sender, String reciever, String message) {
-		this.tripId = tripId;
-		this.readingTime = readingTime;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.reciever = reciever;
-		this.sender = sender;
-		this.message = message;
+		this._tripId = tripId;
+		this._readingTime = readingTime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+		this._reciever = reciever;
+		this._sender = sender;
+		this._message = message;
 	}
 	public String getEventType() {
 		return "call";
 	}
 
 	public double getLatitude() {
-		return latitude;
+		return _latitude;
 	}
 
 	public double getLongitude() {
-		return longitude;
+		return _longitude;
 	}
 
 	@Override
 	public long getTimeStamp() {
-		return readingTime;
+		return _readingTime;
 	}
 
 	@Override
@@ -91,27 +91,27 @@ public class Sms implements IEvent{
 
 	@Override
 	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+		this._latitude = latitude;
 	}
 
 	@Override
 	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+		this._longitude = longitude;
 		
 	}
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
-		readingTime = timeStamp;
+		_readingTime = timeStamp;
 		
 	}
 	public String getSender() {
-		return sender;
+		return _sender;
 	}
 	public String getReciever() {
-		return reciever;
+		return _reciever;
 	}
 	public String getMessage() {
-		return message;
+		return _message;
 	}
 }

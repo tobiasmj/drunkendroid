@@ -21,8 +21,8 @@ import java.util.LinkedList;
  * Class responsible for handling persistence of objects to the database
  */
 public class Repository {
-	private Connection conn = null;
-	private Statement stmt = null;
+	private Connection _conn = null;
+	private Statement _stmt = null;
 
 
 	/**
@@ -30,7 +30,7 @@ public class Repository {
 	 * @param connection the Connection to be used with the repository.
 	 */
 	public Repository(java.sql.Connection connection) {
-		this.conn = connection;
+		this._conn = connection;
 	}
 	/**
 	 * Method for inserting a call
@@ -42,8 +42,8 @@ public class Repository {
 		if (call.getTripId() != 0) {
 			ResultSet rs = null;
 			try {
-				stmt = conn.createStatement();
-				stmt.executeUpdate("Insert into Call(trip,dateTime,latitude,longitude,caller,reciever,endTime) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
+				_stmt = _conn.createStatement();
+				_stmt.executeUpdate("Insert into Call(trip,dateTime,latitude,longitude,caller,reciever,endTime) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -54,9 +54,9 @@ public class Repository {
 					}
 				}
 
-				if (stmt != null) {
+				if (_stmt != null) {
 					try {
-						stmt.close();
+						_stmt.close();
 					} catch (SQLException ex) {
 						// ignore
 					}
@@ -76,8 +76,8 @@ public class Repository {
 		if (sms.getTripId() != 0) {
 			ResultSet rs = null;
 			try {
-				stmt = conn.createStatement();
-				stmt.executeUpdate("Insert into SMS(trip,dateTime,latitude,longitude,sender,reciever,endTime) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getReciever() + "," + sms.getMessage() + ")");
+				_stmt = _conn.createStatement();
+				_stmt.executeUpdate("Insert into SMS(trip,dateTime,latitude,longitude,sender,reciever,endTime) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getReciever() + "," + sms.getMessage() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -88,9 +88,9 @@ public class Repository {
 					}
 				}
 
-				if (stmt != null) {
+				if (_stmt != null) {
 					try {
-						stmt.close();
+						_stmt.close();
 					} catch (SQLException ex) {
 						// ignore
 					}
@@ -110,8 +110,8 @@ public class Repository {
 		if (location.getTripId() != 0) {
 			ResultSet rs = null;
 			try {
-				stmt = conn.createStatement();
-				stmt.executeUpdate("Insert into Location(trip,dateTime,latitude,longitude) values (" + location.getTripId() + "," + location.getTimeStamp() + "," + location.getLatitude() + "," + location.getLongitude() + ")");
+				_stmt = _conn.createStatement();
+				_stmt.executeUpdate("Insert into Location(trip,dateTime,latitude,longitude) values (" + location.getTripId() + "," + location.getTimeStamp() + "," + location.getLatitude() + "," + location.getLongitude() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -122,9 +122,9 @@ public class Repository {
 					}
 				}
 
-				if (stmt != null) {
+				if (_stmt != null) {
 					try {
-						stmt.close();
+						_stmt.close();
 					} catch (SQLException ex) {
 						// ignore
 					}
@@ -144,8 +144,8 @@ public class Repository {
 		if (reading.getTripId() != 0) {
 			ResultSet rs = null;
 			try {
-				stmt = conn.createStatement();
-				stmt.executeUpdate("Insert into Reading(trip,dateTime,latitude,longitude,mood) values (" + reading.getTripId() + "," + reading.getTimeStamp() + "," + reading.getLatitude() + "," + reading.getLongitude() + "," + reading.getMood() +")");
+				_stmt = _conn.createStatement();
+				_stmt.executeUpdate("Insert into Reading(trip,dateTime,latitude,longitude,mood) values (" + reading.getTripId() + "," + reading.getTimeStamp() + "," + reading.getLatitude() + "," + reading.getLongitude() + "," + reading.getMood() +")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -156,9 +156,9 @@ public class Repository {
 					}
 				}
 
-				if (stmt != null) {
+				if (_stmt != null) {
 					try {
-						stmt.close();
+						_stmt.close();
 					} catch (SQLException ex) {
 						// ignore
 					}
@@ -180,9 +180,9 @@ public class Repository {
 		ResultSet rs = null;
 		try {
 			//insert the trip in the database
-			stmt = conn.createStatement();
-			stmt.executeUpdate("Insert into Trip (IMEINumber,startDateTime,endDateTime,name) values (" + trip.getImeiNumber() + "," + trip.getStartTime() + "," + trip.getEndTime() + "," + "\"" + trip.getName() + "\"" + ")", Statement.RETURN_GENERATED_KEYS);
-			rs = stmt.getGeneratedKeys();
+			_stmt = _conn.createStatement();
+			_stmt.executeUpdate("Insert into Trip (IMEINumber,startDateTime,endDateTime,name) values (" + trip.getImeiNumber() + "," + trip.getStartTime() + "," + trip.getEndTime() + "," + "\"" + trip.getName() + "\"" + ")", Statement.RETURN_GENERATED_KEYS);
+			rs = _stmt.getGeneratedKeys();
 
 			if (rs.next()) {
 				tripID = rs.getInt(1);
@@ -219,9 +219,9 @@ public class Repository {
 				}
 			}
 
-			if (stmt != null) {
+			if (_stmt != null) {
 				try {
-					stmt.close();
+					_stmt.close();
 				} catch (SQLException ex) {
 					// ignore
 				}
@@ -237,14 +237,14 @@ public class Repository {
 	public void updateTrip(Trip trip) throws SQLException {
 
 		try {
-			stmt = conn.createStatement();
+			_stmt = _conn.createStatement();
 			// update the trip.
-			stmt.executeUpdate("Update trip set name = \'" + trip.getName() + "\' , startDateTime = " + trip.getStartTime() + ", endDateTime = "+ trip.getEndTime() + " where id = " + trip.getTripId());
+			_stmt.executeUpdate("Update trip set name = \'" + trip.getName() + "\' , startDateTime = " + trip.getStartTime() + ", endDateTime = "+ trip.getEndTime() + " where id = " + trip.getTripId());
 		} finally {
 
-			if (stmt != null) {
+			if (_stmt != null) {
 				try {
-					stmt.close();
+					_stmt.close();
 				} catch (SQLException ex) {
 					// ignore
 				}
@@ -262,45 +262,45 @@ public class Repository {
 	public Trip getTrip(Trip trip) throws SQLException, IOException {
 		ResultSet rs = null;
 		try {
-			stmt = conn.createStatement();
+			_stmt = _conn.createStatement();
 			LinkedList<IEvent> events = new LinkedList<IEvent>(); 
 
 			// get all reading events for a given tripId
-			stmt.executeQuery("Select dateTime,longitude,latitude,mood from reading where trip = " + trip.getTripId());
-			rs = stmt.getResultSet();
+			_stmt.executeQuery("Select dateTime,longitude,latitude,mood from reading where trip = " + trip.getTripId());
+			rs = _stmt.getResultSet();
 
 			while (rs.next()) {
 				events.add(new Reading(rs.getLong("dateTime"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
 			}
 
 			// get all location events for a given tripId
-			stmt.executeQuery("Select dateTime, longitude,latitude from Location where trip = " + trip.getTripId());
-			rs= stmt.getResultSet();
+			_stmt.executeQuery("Select dateTime, longitude,latitude from Location where trip = " + trip.getTripId());
+			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
 				events.add(new Location(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude")));
 			}
 			
 			// get all call events for a given tripId
-			stmt.executeQuery("Select dateTime, longitude,latitude,caller,reciever,endTime from Call where trip = " + trip.getTripId());
-			rs= stmt.getResultSet();
+			_stmt.executeQuery("Select dateTime, longitude,latitude,caller,reciever,endTime from Call where trip = " + trip.getTripId());
+			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
 				events.add(new Call(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTime")));
 			}
 			
 			// get all sms events for a given tripId
-			stmt.executeQuery("Select dateTime, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
-			rs= stmt.getResultSet();
+			_stmt.executeQuery("Select dateTime, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
+			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
 				events.add(new Sms(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
 			}
 
 			// create trip object 
-			stmt.executeQuery("Select name,startDateTime,endDateTime from trip where id = " + trip.getTripId());
+			_stmt.executeQuery("Select name,startDateTime,endDateTime from trip where id = " + trip.getTripId());
 
-			rs = stmt.getResultSet();
+			rs = _stmt.getResultSet();
 			Trip newTrip = null;
 			if (rs.first()) {
 				newTrip = new Trip(rs.getLong("startDateTime"), rs.getLong("endDateTime"), rs.getString("name"));
@@ -321,9 +321,9 @@ public class Repository {
 				}
 			}
 
-			if (stmt != null) {
+			if (_stmt != null) {
 				try {
-					stmt.close();
+					_stmt.close();
 				} catch (SQLException ex) {
 					// ignore
 				}
@@ -358,15 +358,15 @@ public class Repository {
 		
 		ResultSet rs = null;
 		try { 
-			stmt = conn.createStatement();
+			_stmt = _conn.createStatement();
 			// get all mood readings within the given parameters.
 			//String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
 			//" and longitude between " + mm.getLongMin() + " and " + mm.getLongMax() + " and latitude between " + mm.getLatMin() + " and " + mm.getLatMax();
 			String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
 			" and longitude between " + snapLongMin + " and " +snapLongMax + " and latitude between " + snapLatMin + " and " + snapLatMax;
 			
-			stmt.executeQuery(query);
-			rs = stmt.getResultSet();
+			_stmt.executeQuery(query);
+			rs = _stmt.getResultSet();
 			int xCoord, yCoord;
 			// iterate all the mood readings and calculate their place in the grid
 			while(rs.next()) {
@@ -404,9 +404,9 @@ public class Repository {
 				}
 			}
 
-			if (stmt != null) {
+			if (_stmt != null) {
 				try {
-					stmt.close();
+					_stmt.close();
 				} catch (SQLException ex) {
 					// ignore
 				}

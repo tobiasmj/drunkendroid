@@ -9,11 +9,11 @@ public class GridCell{
 
 
 	
-	private double longitude, latitude;
-	private int value, count;
+	private double _longitude, _latitude;
+	private int _value, _count;
 	
 	// used when xStream unmarshaling
-	private boolean unmarshaled = false;
+	private boolean _unmarshaled = false;
 
 	/**
 	 * Constructor
@@ -21,8 +21,8 @@ public class GridCell{
 	 * @param latitude value in the center of the GridCell.
 	 */
 	public GridCell(double longitude, double latitude) {
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this._longitude = longitude;
+		this._latitude = latitude;
 	}
 	
 	/**
@@ -30,13 +30,13 @@ public class GridCell{
 	 * @param value
 	 */
 	public void addValue(int value){
-		if (unmarshaled == false) {
-			this.count = this.count +1;
-			this.value = this.value + value;
+		if (_unmarshaled == false) {
+			this._count = this._count +1;
+			this._value = this._value + value;
 		} else {
-			count = 1;
-			this.value = value;
-			unmarshaled = false;
+			_count = 1;
+			this._value = value;
+			_unmarshaled = false;
 		}
 	}
 	
@@ -45,13 +45,13 @@ public class GridCell{
 	 * @return integer from 0-255.
 	 */
 	public int getAverage() {
-		return (this.value/this.count);
+		return (this._value/this._count);
 	}
 	public double getLongitude(){
-		return this.longitude;
+		return this._longitude;
 	}
 	public double getLatitude(){
-		return this.latitude;
+		return this._latitude;
 	}
 	
 	/**
@@ -59,8 +59,8 @@ public class GridCell{
 	 * @param val the value set in the gridCell
 	 */
 	public void setValue(int val) {
-		unmarshaled = true;
-		this.count = 1;
-		this.value = val;
+		_unmarshaled = true;
+		this._count = 1;
+		this._value = val;
 	}
 }

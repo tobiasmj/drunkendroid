@@ -32,7 +32,7 @@ import com.thoughtworks.xstream.XStream;
  */
 public class EventResource extends ServerResource {
 	//private String imeiNumber;
-	private long tripId;
+	private long _tripId;
 
 	
 	
@@ -48,7 +48,7 @@ public class EventResource extends ServerResource {
 		//not being used atm.
 		//imeiNumber = (String) getRequest().getAttributes().get("IMEI");
 		//get the tripID
-		tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
+		_tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 
 		
 		// Testing if the HTTP content-type is XML.
@@ -74,7 +74,7 @@ public class EventResource extends ServerResource {
 				// iterate the events and create the prober class instances. 
 				for (int i = 0; i < events.size(); i++ ) {
 					event = (IEvent) events.get(i);
-					event.setTripId(tripId);
+					event.setTripId(_tripId);
 					if(Reading.class.isInstance(event)) {
 						Reading rEvent = (Reading)event;
 						rep.insertReading(rEvent);

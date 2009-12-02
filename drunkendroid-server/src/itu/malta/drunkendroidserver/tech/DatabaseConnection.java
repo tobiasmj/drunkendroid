@@ -10,9 +10,9 @@ import java.sql.SQLException;
  * Class for getting a Database connection.
  */
 public class DatabaseConnection implements IDatabaseConnection {
-	private String connURL = null;
+	private String _connURL = null;
 	private DatabaseConnection(){
-			connURL = "jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema";
+			_connURL = "jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema";
 			// trying to externalise the connection string. currently dossen't work
 			//databaseConfiguration.getString("DatabaseConnection.1"); //$NON-NLS-1$
 		
@@ -29,7 +29,7 @@ public class DatabaseConnection implements IDatabaseConnection {
 	public Connection getConn(){
 		Connection conn = null;
 		try{
-			conn  = DriverManager.getConnection(connURL);
+			conn  = DriverManager.getConnection(_connURL);
 		} catch (SQLException se){
 			// ignore for new since we can't do much about it?
 		}

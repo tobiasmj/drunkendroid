@@ -26,14 +26,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * JUnit tests for testing the XStream converters.
  */
 public class ConverterTest {
-	XStream xStream;
-	String TripXML, eventsXML;
-	Trip trip;
-	Reading reading;
-	Location loc;
-	Call call1, call2;
-	Sms sms1, sms2;
-	LinkedList<IEvent> events;
+	private XStream _xStream;
+	private String _tripXML, _eventsXML;
+	private Trip _trip;
+	private Reading _reading;
+	private Location _loc;
+	private Call _call1, _call2;
+	private Sms _sms1, _sms2;
+	private LinkedList<IEvent> _events;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -44,30 +44,30 @@ public class ConverterTest {
 
 	@Before
 	public void setUp() throws Exception {
-		trip = new Trip(1255816133L, 1255816133L, "ginsaturday");
-		events = new LinkedList<IEvent>();
-		reading = new Reading(1255816133L,35.908422D,14.502362D, 124);
-		loc = new Location(1255816133L,14.502362D,35.908422D);
-		call1 = new Call(1255816133L,35.908422D,14.502362D,"004551883250","0",12558161155L);
-		call2 = new Call(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
-		sms1 = new Sms(1255816133L,35.908422D,14.502362D,"004551883250","0","test message");
-		sms2 = new Sms(1255816133L,35.908422D,14.502362D,"0","004551883250","test message");
+		_trip = new Trip(1255816133L, 1255816133L, "ginsaturday");
+		_events = new LinkedList<IEvent>();
+		_reading = new Reading(1255816133L,35.908422D,14.502362D, 124);
+		_loc = new Location(1255816133L,14.502362D,35.908422D);
+		_call1 = new Call(1255816133L,35.908422D,14.502362D,"004551883250","0",12558161155L);
+		_call2 = new Call(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
+		_sms1 = new Sms(1255816133L,35.908422D,14.502362D,"004551883250","0","test message");
+		_sms2 = new Sms(1255816133L,35.908422D,14.502362D,"0","004551883250","test message");
 		
-		events.add(reading);
-		events.add(loc);
-		events.add(call1);
-		events.add(call2);
-		events.add(sms1);
-		events.add(sms2);
+		_events.add(_reading);
+		_events.add(_loc);
+		_events.add(_call1);
+		_events.add(_call2);
+		_events.add(_sms1);
+		_events.add(_sms2);
 		
-		trip.addEvent(reading);
-		trip.addEvent(loc);
-		trip.addEvent(call1);
-		trip.addEvent(call2);
-		trip.addEvent(sms1);
-		trip.addEvent(sms2);
+		_trip.addEvent(_reading);
+		_trip.addEvent(_loc);
+		_trip.addEvent(_call1);
+		_trip.addEvent(_call2);
+		_trip.addEvent(_sms1);
+		_trip.addEvent(_sms2);
 		
-		TripXML = 
+		_tripXML = 
 			"<trip>\n" +
 	  		"  <events>\n" +
 	    	"    <event>\n" +
@@ -130,7 +130,7 @@ public class ConverterTest {
 	  		"  <endDateTime>1255816133</endDateTime>\n" +
 	  		"  <name>ginsaturday</name>\n" +
 			"</trip>";
-		eventsXML = 
+		_eventsXML = 
 			"<events>\n" +
 			"  <event>\n" +
 	     	"    <eventType>reading</eventType>\n" +
@@ -201,11 +201,11 @@ public class ConverterTest {
 	 * */
 	@Test
 	public void testTripMarshal() {
-		xStream = new XStream();
-		xStream.registerConverter(new TripConverter());
-		xStream.alias("trip", Trip.class);
-		String XMLOutput = xStream.toXML(trip);
-		Assert.assertEquals(TripXML, XMLOutput);
+		_xStream = new XStream();
+		_xStream.registerConverter(new TripConverter());
+		_xStream.alias("trip", Trip.class);
+		String XMLOutput = _xStream.toXML(_trip);
+		Assert.assertEquals(_tripXML, XMLOutput);
 	}
 	/**
 	 * Test method for {@link TripConverter#unmarshal(HierarchicalStreamReader reader,UnmarshallingContext context)}
@@ -213,59 +213,59 @@ public class ConverterTest {
 	 * */
 	@Test 
 	public void testTripUnMarshal() {
-		xStream = new XStream();
-		xStream.registerConverter(new TripConverter());
-		xStream.alias("trip", Trip.class);
+		_xStream = new XStream();
+		_xStream.registerConverter(new TripConverter());
+		_xStream.alias("trip", Trip.class);
 		
-		Trip testTrip = (Trip)xStream.fromXML(TripXML);
-		Assert.assertEquals(trip.getName(), testTrip.getName());
-		Assert.assertEquals(trip.getEndTime(), testTrip.getEndTime());
-		Assert.assertEquals(trip.getStartTime(), testTrip.getStartTime());
+		Trip testTrip = (Trip)_xStream.fromXML(_tripXML);
+		Assert.assertEquals(_trip.getName(), testTrip.getName());
+		Assert.assertEquals(_trip.getEndTime(), testTrip.getEndTime());
+		Assert.assertEquals(_trip.getStartTime(), testTrip.getStartTime());
 		
-		while (trip.moreEvents()) {
-			IEvent testEvent = trip.getNextEvent();
+		while (_trip.moreEvents()) {
+			IEvent testEvent = _trip.getNextEvent();
 			if (testEvent.getClass().equals(Reading.class)) {
 				Reading readingTestEvent = (Reading) testEvent;
-				Assert.assertEquals(reading.getTimeStamp(), readingTestEvent.getTimeStamp());
-				Assert.assertEquals(reading.getType(), readingTestEvent.getType());
-				Assert.assertEquals(reading.getLatitude(), readingTestEvent.getLatitude());
-				Assert.assertEquals(reading.getLongitude(), readingTestEvent.getLongitude());	
-				Assert.assertEquals(reading.getMood(), readingTestEvent.getMood());
+				Assert.assertEquals(_reading.getTimeStamp(), readingTestEvent.getTimeStamp());
+				Assert.assertEquals(_reading.getType(), readingTestEvent.getType());
+				Assert.assertEquals(_reading.getLatitude(), readingTestEvent.getLatitude());
+				Assert.assertEquals(_reading.getLongitude(), readingTestEvent.getLongitude());	
+				Assert.assertEquals(_reading.getMood(), readingTestEvent.getMood());
 			} else if (testEvent.getClass().equals(Location.class)) {
 
 				Location locationTestEvent = (Location) testEvent;
-				Assert.assertEquals(loc.getTimeStamp(), locationTestEvent.getTimeStamp());
-				Assert.assertEquals(loc.getType(), locationTestEvent.getType());
-				Assert.assertEquals(loc.getLatitude(), locationTestEvent.getLatitude());
-				Assert.assertEquals(loc.getLongitude(), locationTestEvent.getLongitude());
+				Assert.assertEquals(_loc.getTimeStamp(), locationTestEvent.getTimeStamp());
+				Assert.assertEquals(_loc.getType(), locationTestEvent.getType());
+				Assert.assertEquals(_loc.getLatitude(), locationTestEvent.getLatitude());
+				Assert.assertEquals(_loc.getLongitude(), locationTestEvent.getLongitude());
 			} else if (testEvent.getClass().equals(Call.class)) {
 				
 				Call callEvent = (Call) testEvent;
-				Assert.assertEquals(call1.getTimeStamp(), callEvent.getTimeStamp());
-				Assert.assertEquals(call1.getType(), callEvent.getType());
-				Assert.assertEquals(call1.getLatitude(), callEvent.getLatitude());
-				Assert.assertEquals(call1.getLongitude(), callEvent.getLongitude());
+				Assert.assertEquals(_call1.getTimeStamp(), callEvent.getTimeStamp());
+				Assert.assertEquals(_call1.getType(), callEvent.getType());
+				Assert.assertEquals(_call1.getLatitude(), callEvent.getLatitude());
+				Assert.assertEquals(_call1.getLongitude(), callEvent.getLongitude());
 				if(callEvent.getCaller().equals("0")) {
-					Assert.assertEquals(call2.getReciever(),callEvent.getReciever());
+					Assert.assertEquals(_call2.getReciever(),callEvent.getReciever());
 					
 				} else if (callEvent.getReciever().equals("0")) {
-					Assert.assertEquals(call1.getCaller(),callEvent.getCaller());
+					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
-				Assert.assertEquals(call1.getEndTime(),callEvent.getEndTime());
+				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
 			} else if (testEvent.getClass().equals(Sms.class)) {
 				
 				Sms smsEvent = (Sms) testEvent;
-				Assert.assertEquals(sms1.getTimeStamp(), smsEvent.getTimeStamp());
-				Assert.assertEquals(sms1.getType(), smsEvent.getType());
-				Assert.assertEquals(sms1.getLatitude(), smsEvent.getLatitude());
-				Assert.assertEquals(sms1.getLongitude(), smsEvent.getLongitude());
+				Assert.assertEquals(_sms1.getTimeStamp(), smsEvent.getTimeStamp());
+				Assert.assertEquals(_sms1.getType(), smsEvent.getType());
+				Assert.assertEquals(_sms1.getLatitude(), smsEvent.getLatitude());
+				Assert.assertEquals(_sms1.getLongitude(), smsEvent.getLongitude());
 				if(smsEvent.getSender().equals("0")) {
-					Assert.assertEquals(sms2.getReciever(),smsEvent.getReciever());
+					Assert.assertEquals(_sms2.getReciever(),smsEvent.getReciever());
 					
 				} else if (smsEvent.getReciever().equals("0")) {
-					Assert.assertEquals(sms1.getSender(),smsEvent.getSender());
+					Assert.assertEquals(_sms1.getSender(),smsEvent.getSender());
 				}
-				Assert.assertEquals(sms1.getMessage(),smsEvent.getMessage());
+				Assert.assertEquals(_sms1.getMessage(),smsEvent.getMessage());
 			}
 		}
 		
@@ -283,8 +283,8 @@ public class ConverterTest {
 		xStream.alias("event", Sms.class);
 		xStream.alias("events", LinkedList.class);
 		
-		String XmlOutput = xStream.toXML(events);
-		Assert.assertEquals(eventsXML, XmlOutput);
+		String XmlOutput = xStream.toXML(_events);
+		Assert.assertEquals(_eventsXML, XmlOutput);
 	}
 	
 	/**
@@ -301,7 +301,7 @@ public class ConverterTest {
 		xStream.alias("events", Sms.class);
 
 		
-		Object uncastedEvents = xStream.fromXML(eventsXML);
+		Object uncastedEvents = xStream.fromXML(_eventsXML);
 
 		LinkedList<?> events = (LinkedList<?>)uncastedEvents; 
 		
@@ -312,45 +312,45 @@ public class ConverterTest {
 			
 			if(Reading.class.isInstance(event)) {
 				Reading rEvent = (Reading)event;
-				Assert.assertEquals(reading.getTimeStamp(), rEvent.getTimeStamp());
-				Assert.assertEquals(reading.getType(), rEvent.getType());
-				Assert.assertEquals(reading.getLatitude(), rEvent.getLatitude());
-				Assert.assertEquals(reading.getLongitude(), rEvent.getLongitude());
-				Assert.assertEquals(reading.getMood(), rEvent.getMood());
+				Assert.assertEquals(_reading.getTimeStamp(), rEvent.getTimeStamp());
+				Assert.assertEquals(_reading.getType(), rEvent.getType());
+				Assert.assertEquals(_reading.getLatitude(), rEvent.getLatitude());
+				Assert.assertEquals(_reading.getLongitude(), rEvent.getLongitude());
+				Assert.assertEquals(_reading.getMood(), rEvent.getMood());
 			} else if (Location.class.isInstance(event)) {
 				Location lEvent = (Location)event;
-				Assert.assertEquals(loc.getTimeStamp(), lEvent.getTimeStamp());
-				Assert.assertEquals(loc.getType(), lEvent.getType());
-				Assert.assertEquals(loc.getLatitude(), lEvent.getLatitude());
-				Assert.assertEquals(loc.getLongitude(), lEvent.getLongitude());
+				Assert.assertEquals(_loc.getTimeStamp(), lEvent.getTimeStamp());
+				Assert.assertEquals(_loc.getType(), lEvent.getType());
+				Assert.assertEquals(_loc.getLatitude(), lEvent.getLatitude());
+				Assert.assertEquals(_loc.getLongitude(), lEvent.getLongitude());
 			}else if (Call.class.isInstance(event)) {
 				
 				Call callEvent = (Call) event;
-				Assert.assertEquals(call1.getTimeStamp(), callEvent.getTimeStamp());
-				Assert.assertEquals(call1.getType(), callEvent.getType());
-				Assert.assertEquals(call1.getLatitude(), callEvent.getLatitude());
-				Assert.assertEquals(call1.getLongitude(), callEvent.getLongitude());
+				Assert.assertEquals(_call1.getTimeStamp(), callEvent.getTimeStamp());
+				Assert.assertEquals(_call1.getType(), callEvent.getType());
+				Assert.assertEquals(_call1.getLatitude(), callEvent.getLatitude());
+				Assert.assertEquals(_call1.getLongitude(), callEvent.getLongitude());
 				if(callEvent.getCaller().equals("0")) {
-					Assert.assertEquals(call2.getReciever(),callEvent.getReciever());
+					Assert.assertEquals(_call2.getReciever(),callEvent.getReciever());
 					
 				} else if (callEvent.getReciever().equals("0")) {
-					Assert.assertEquals(call1.getCaller(),callEvent.getCaller());
+					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
-				Assert.assertEquals(call1.getEndTime(),callEvent.getEndTime());
+				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
 			} else if (Sms.class.isInstance(event)) {
 				
 				Sms smsEvent = (Sms)event;
-				Assert.assertEquals(sms1.getTimeStamp(), smsEvent.getTimeStamp());
-				Assert.assertEquals(sms1.getType(), smsEvent.getType());
-				Assert.assertEquals(sms1.getLatitude(), smsEvent.getLatitude());
-				Assert.assertEquals(sms1.getLongitude(), smsEvent.getLongitude());
+				Assert.assertEquals(_sms1.getTimeStamp(), smsEvent.getTimeStamp());
+				Assert.assertEquals(_sms1.getType(), smsEvent.getType());
+				Assert.assertEquals(_sms1.getLatitude(), smsEvent.getLatitude());
+				Assert.assertEquals(_sms1.getLongitude(), smsEvent.getLongitude());
 				if(smsEvent.getSender().equals("0")) {
-					Assert.assertEquals(sms2.getReciever(),smsEvent.getReciever());
+					Assert.assertEquals(_sms2.getReciever(),smsEvent.getReciever());
 					
 				} else if (smsEvent.getReciever().equals("0")) {
-					Assert.assertEquals(sms1.getSender(),smsEvent.getSender());
+					Assert.assertEquals(_sms1.getSender(),smsEvent.getSender());
 				}
-				Assert.assertEquals(sms1.getMessage(),smsEvent.getMessage());
+				Assert.assertEquals(_sms1.getMessage(),smsEvent.getMessage());
 			}
 		}
 	}

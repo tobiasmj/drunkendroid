@@ -37,9 +37,9 @@ import com.thoughtworks.xstream.XStream;
  *
  */
 public class TripResource extends ServerResource {
-	private String imeiNumber;
-	private long returnId;
-	private int tripId;
+	private String _imeiNumber;
+	private long _returnId;
+	private int _tripId;
 	
 	/**
 	 * Method invoked for adding trips 
@@ -51,7 +51,7 @@ public class TripResource extends ServerResource {
 	@Post
 	public Representation storeRepresentation(Representation entity) throws ResourceException {
 		DomRepresentation result = null;
-		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+		_imeiNumber = (String) getRequest().getAttributes().get("IMEI");
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
 			
@@ -63,8 +63,8 @@ public class TripResource extends ServerResource {
 				xStream.registerConverter(new TripConverter());
 				xStream.alias("trip", Trip.class);
 				Trip trip = (Trip) xStream.fromXML(entity.getStream());
-				trip.setImeiNumber(imeiNumber);
-				returnId = rep.insertTrip(trip);
+				trip.setImeiNumber(_imeiNumber);
+				_returnId = rep.insertTrip(trip);
 				// set the status and build an response 
 				setStatus(Status.SUCCESS_CREATED);
 		        try {  
@@ -72,7 +72,7 @@ public class TripResource extends ServerResource {
 		            Document d = result.getDocument();  
 		            // add the tripid element to the representation.
 		            Element eltTripId = d.createElement("tripId");  
-		            eltTripId.appendChild(d.createTextNode(Long.toString(returnId)));
+		            eltTripId.appendChild(d.createTextNode(Long.toString(_returnId)));
 		            d.appendChild(eltTripId);
 		            
 		        } catch (IOException e) {
@@ -113,9 +113,9 @@ public class TripResource extends ServerResource {
 	public Representation store(Representation entity) throws ResourceException {
 		Representation result = null;
 		
-		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+		_imeiNumber = (String) getRequest().getAttributes().get("IMEI");
 
-		tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
+		_tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 		
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
@@ -129,8 +129,8 @@ public class TripResource extends ServerResource {
 				xStream.registerConverter(new TripConverter());
 				xStream.alias("trip", Trip.class);
 				Trip trip = (Trip) xStream.fromXML(entity.getStream());
-				trip.setTripId(tripId);
-				trip.setImeiNumber(imeiNumber);
+				trip.setTripId(_tripId);
+				trip.setImeiNumber(_imeiNumber);
 				rep.updateTrip(trip);
 				
 				setStatus(Status.SUCCESS_OK);
@@ -166,14 +166,14 @@ public class TripResource extends ServerResource {
 	@Get  
     public Representation represent() {
 		
-		imeiNumber = (String) getRequest().getAttributes().get("IMEI");
-		tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
+		_imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+		_tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 
     	DomRepresentation result = null;
     	try {
 
     		Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
-    		Trip trip =	rep.getTrip(new Trip(tripId));
+    		Trip trip =	rep.getTrip(new Trip(_tripId));
     		XStream xStream = new XStream();
     		xStream.registerConverter(new TripConverter());
     		xStream.alias("trip", Trip.class);
