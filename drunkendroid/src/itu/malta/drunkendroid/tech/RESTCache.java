@@ -97,7 +97,17 @@ public class RESTCache implements IRemoteDataFacade {
 						List<Trip> updateTrips = getUpdateCandidates();
 						//Try to update each Trip
 						for(Trip t : updateTrips){
-							_server.updateTrip(t, t.events);
+							//The server should throw exceptions all the way here.
+							try{
+								_server.updateTrip(t, t.events);
+								for(Event e : t.events){
+									//The trip is already set to online.
+									setEventProcessed(e);
+								}
+							}
+							finally{
+								//nothing
+							}
 						}
 						
 						break;
@@ -112,7 +122,7 @@ public class RESTCache implements IRemoteDataFacade {
 							if(t.remoteId != null){
 								//a remoteId has been obtained.
 								//and the trip is now online.
-								setTripOnlineAndUpdateForeignId(t);
+								setTripProcessedAndUpdateForeignId(t);
 								//set the events online
 								for(Event e : t.events){
 									/*
@@ -124,7 +134,7 @@ public class RESTCache implements IRemoteDataFacade {
 									 * Filtered: Personal event which should not
 									 * be uploaded unless the user has consented.
 									 */
-									setEventOnline(e);
+									setEventProcessed(e);
 								}
 							}
 						}
@@ -136,7 +146,7 @@ public class RESTCache implements IRemoteDataFacade {
 					}			
 				}
 				
-				private void setEventOnline(Event e){
+				private void setEventProcessed(Event e){
 					SQLiteDatabase db = _dbHelper.getDBInstance();
 					ContentValues values = new ContentValues(1);
 					final String whereClause = "id = ?";
@@ -153,7 +163,7 @@ public class RESTCache implements IRemoteDataFacade {
 					}
 				}
 				
-				private void setTripOnlineAndUpdateForeignId(Trip t){
+				private void setTripProcessedAndUpdateForeignId(Trip t){
 					SQLiteDatabase db = _dbHelper.getDBInstance();
 					ContentValues values = new ContentValues(1);
 					final String whereClause = "id = ?";
@@ -214,7 +224,17 @@ public class RESTCache implements IRemoteDataFacade {
 					for(Trip t : candidateTrips){
 						t = _localSqlFacade.getTrip(t.startDate);
 						//Filter it.
+						//The discarded events should also be set online, to show they have been processed
+						TreeSet<Event> filteredOutEvents = new TreeSet<Event>();
+						filteredOutEvents.addAll(t.events);
+						
 						t.events = Trip.filterEvents(t.events, uploadTripFilter);
+						//Now remove the ones which will be processed.
+						filteredOutEvents.removeAll(t.events);
+						//Mark the rest as processed.
+						for(Event e : filteredOutEvents){
+							setEventProcessed(e);
+						}
 					}
 					
 					return candidateTrips;
