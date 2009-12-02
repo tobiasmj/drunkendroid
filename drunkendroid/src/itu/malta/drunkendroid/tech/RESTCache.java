@@ -36,12 +36,14 @@ public class RESTCache implements IRESTCache {
 		_dbHelper = DBHelper.getInstance(this._context);
 		_localSqlFacade = new LocalDataFacadeForSQLite(context);
 		_server = new RESTServerFacade(this._context, conn);
-		_queueLooper = new QueueLooper();
-		_queueLooper.start();
+		//The Looper
 		//Build the uploadTripFilter
-		uploadTripFilter = new TreeSet<Class<?>>();
-		uploadTripFilter.add(ReadingEvent.class);
-		uploadTripFilter.add(LocationEvent.class);
+		uploadTripFilter = new TreeSet<String>();
+		uploadTripFilter.add(ReadingEvent.class.getName());
+		uploadTripFilter.add(LocationEvent.class.getName());
+		_queueLooper = new QueueLooper();
+		_queueLooper.isDaemon();
+		_queueLooper.start();
 	}
 
 	/**
