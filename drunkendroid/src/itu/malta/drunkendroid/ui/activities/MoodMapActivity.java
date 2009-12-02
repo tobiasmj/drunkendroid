@@ -10,9 +10,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.Projection;
 
-import android.graphics.Point;
 import android.os.Bundle;
 import android.view.MotionEvent;
 

@@ -11,7 +11,6 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;

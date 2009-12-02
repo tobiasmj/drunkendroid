@@ -17,9 +17,8 @@ import itu.malta.drunkendroid.ui.map.MoodOverlay;
 import itu.malta.drunkendroid.ui.map.CallEventsOverlay;
 import itu.malta.drunkendroid.ui.map.SMSEventsOverlay;
 
-import android.graphics.Point;
-import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -69,6 +68,7 @@ public class ViewTripActivity extends MapActivity {
         	
             for(Event e : events)
             {
+            	Log.i(getResources().getString(R.string.log_tag), e.latitude + "x" + e.longitude);
             	// Set the min and max latitude and longitude
             	if(e.latitude != null && e.longitude != null)
             	{

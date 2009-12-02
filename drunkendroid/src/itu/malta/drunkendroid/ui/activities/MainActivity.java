@@ -1,7 +1,5 @@
 package itu.malta.drunkendroid.ui.activities;
 
-import java.awt.Color;
-
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.services.DrunkenService;
 import android.app.Activity;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
