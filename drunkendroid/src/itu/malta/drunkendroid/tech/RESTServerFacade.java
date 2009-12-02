@@ -88,10 +88,12 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * Blocking call
 	 * This method expects a Trip which already has a remoteId.
 	 * To obtain a remoteId call the upload function.
+	 * @throws RESTFacadeException to indicate failure which could not be handled.
 	 */
-	synchronized public void updateTrip(Trip t, List<Event> events) {
+	synchronized public void updateTrip(Trip t, List<Event> events) throws RESTFacadeException {
 		if(t.remoteId == null){
-			throw new IllegalStateException("Tried to update a trip which has not been uploaded");
+			String cause = "Tried to update a trip which has no remoteId";
+			throw new RESTFacadeException(LOGTAG, cause);
 		}
 		
 		try {
@@ -106,11 +108,13 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	        if(responseCode >= 400 && responseCode < 500){
 	        	//This is in the 400: We have done something wrong.
 	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.startDate + ", the server returned malformed xml");
+	        	throw new RESTFacadeException(LOGTAG, "Got a reponse code in the 400 series");
 	        }
 	        else if(responseCode >= 500 && responseCode < 600){
 	        	//This is in the 500 range
+	        	//Something is wrong on the server
+	        	//Try to connect a few times more.
 	        	int tries = 0;
-	        	
 	        	while(responseCode > 400 && tries++ < 3){
 		        	try {
 						Thread.sleep(1000);
@@ -122,9 +126,10 @@ public class RESTServerFacade implements IRemoteDataFacade {
 		      	}
 	        } 
 		} catch (IOException e1) {
-			//The XML was not build properly. Log the problem and do nothing further.
-			//We ought to tell the user about these problems.
-			Log.e(LOGTAG, "The xml needed to post an update command, could not be generated: " + e1.getMessage());
+			//The XML was not build properly.
+			String cause = "The xml needed to post an update command, could not be generated: " + e1.getMessage();
+			Log.e(LOGTAG, cause);
+			throw new RESTFacadeException(LOGTAG, cause , e1);
 		}
 	}
 	
@@ -133,9 +138,8 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @param t the trip to be uploaded to the server, with containing events.
 	 * @return The foreign ID of the trip.Can be null, if there was a problem which could not be solved.
 	 */
-	synchronized public void uploadTrip(Trip t)
-	{/* TODO: add synchronization in order to handle multiple upload request to the same trip.
-		this may occur if an number of events are added simultaneously	*/
+	synchronized public void uploadTrip(Trip t) throws RESTFacadeException
+	{
 		try {
 	        //Build xml
 	    	String xml = XMLBuilder.buildXmlFromTrip(t);
