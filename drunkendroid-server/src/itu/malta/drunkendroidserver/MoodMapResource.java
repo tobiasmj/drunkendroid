@@ -7,6 +7,7 @@ import itu.malta.drunkendroidserver.domain.MoodMap;
 import itu.malta.drunkendroidserver.tech.DatabaseConnection;
 import itu.malta.drunkendroidserver.util.*;
 import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
+import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -117,27 +118,26 @@ public class MoodMapResource extends ServerResource {
 			if(moodMapGrid != null) {
 			XStream xStream = new XStream();
 			xStream.registerConverter(new MoodMapConverter());
-			xStream.alias("MoodMapReading", GridCell.class);
+			xStream.alias("p", GridCell.class);
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     		DocumentBuilder builder = null;
     		Document document = null;
 			
     		builder = factory.newDocumentBuilder();
-			
+			String xmlOutput = "<points>";
 	            result = new DomRepresentation(MediaType.TEXT_XML);  
 	            // Generate a DOM document representing the list of  
 	            // MoodMapReadings.  
-	            String xmlMoodMapReadings = "<MoodMap>";
 	            for(int i = 0; i < gridY; i++){
 	            	for(int j = 0; j < gridX; j++){
 	            		if (moodMapGrid[i][j] != null){
-	            			xmlMoodMapReadings = xmlMoodMapReadings + xStream.toXML(moodMapGrid[i][j]);
+	            			xmlOutput = xmlOutput + xStream.toXML(moodMapGrid[i][j]);
 	             		}
 	            	}
 	            }
-    			xmlMoodMapReadings = xmlMoodMapReadings + "</MoodMap>";
-	        document = builder.parse(new InputSource(new StringReader(xmlMoodMapReadings)));
+	        xmlOutput = xmlOutput + "</points>";
+            document = builder.parse(new InputSource(new StringReader(xmlOutput)));
 			result.setDocument(document);
 			}	  			 
 			return result;

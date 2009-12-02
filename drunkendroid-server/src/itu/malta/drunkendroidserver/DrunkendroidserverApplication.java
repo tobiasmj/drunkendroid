@@ -25,10 +25,7 @@ public class DrunkendroidserverApplication extends Application {
         router.attach("/drunkendroid/trip/event/{IMEI}/{TripId}", EventResource.class);
         
         // get moodmap from server
-        router.attach("/drunkendroid/moodmapOld/{StartTimeStamp}/{EndTimeStamp}/{Latitude}/{Longitude}/{Height}/{Width}", MoodMapResourceOld.class);
         router.attach("/drunkendroid/moodmap/{StartTimeStamp}/{EndTimeStamp}/{ULLatitude}/{ULLongitude}/{LRLatitude}/{LRLongitude}", MoodMapResource.class);
-        router.attach("/drunkendroid/minimizedMoodmap/{StartTimeStamp}/{EndTimeStamp}/{ULLatitude}/{ULLongitude}/{LRLatitude}/{LRLongitude}", MinimizedMoodMapResource.class);
-        
         return router;  
     }  
   

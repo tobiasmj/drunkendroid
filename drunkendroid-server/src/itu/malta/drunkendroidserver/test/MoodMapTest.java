@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import junit.framework.Assert;
 import itu.malta.drunkendroidserver.domain.GridCell;
-import itu.malta.drunkendroidserver.util.xstreem.converters.MinimizedMoodMapConverter;
+import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 import itu.malta.drunkendroidserver.util.xstreem.converters.MoodMapConverter;
 
 import org.junit.After;
@@ -53,7 +53,7 @@ public class MoodMapTest {
 	/**
 	 * Test method for {@link MoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
 	 */
-	@Test
+	/*@Test
 	public void testMarshal() {
 	XStream xStream = new XStream();
 	xStream.registerConverter(new MoodMapConverter());
@@ -68,14 +68,14 @@ public class MoodMapTest {
 	Assert.assertEquals(gc.getLongitude(), tgc.getLongitude(), 0.0);
 
 	}
-
+*/
 	/**
-	 * Test method for {@link MinimizedMoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
+	 * Test method for {@link MoodMapConverter#marshal(Object,HierarchicalStreamWriter,MarshallingContext)}.
 	 */
 	@Test
-	public void testMinimizedMarshal() {
+	public void testMarshal() {
 		XStream xStream = new XStream();
-		xStream.registerConverter(new MinimizedMoodMapConverter());
+		xStream.registerConverter(new MoodMapConverter());
 		xStream.alias("p",GridCell.class);
 	
 		LinkedList<?> gc = (LinkedList<?>)xStream.fromXML("<p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\" />");
@@ -89,10 +89,10 @@ public class MoodMapTest {
 		}
 	}
 	/**
-	 * Test method for {@link MinimizedMoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
+	 * Test method for {@link MoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
 	 */
 	@Test
-	public void testMinimizedUnmarshal() {
+	public void testUnmarshal() {
 		GridCell cc = createMock(GridCell.class);
 		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
 		expect(cc.getLongitude()).andStubReturn(14.4889622588559);
@@ -100,12 +100,12 @@ public class MoodMapTest {
 		replay(cc);
 
 		XStream xStream = new XStream();
-		xStream.registerConverter(new MinimizedMoodMapConverter());
-		xStream.alias("points", cc.getClass());
+		xStream.registerConverter(new MoodMapConverter());
+		xStream.alias("p", cc.getClass());
 
 		String xmlOutput = xStream.toXML(cc);
 		//xmlOutput = xmlOutput.replaceAll("\n", "").replaceAll(" ", "");
-		Assert.assertEquals("<points>\n  <p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\"/>\n</points>",xmlOutput);
+		Assert.assertEquals("<p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\"/>",xmlOutput);
 		
 	}
 	
@@ -113,7 +113,7 @@ public class MoodMapTest {
 	/**
 	 * Test method for {@link MoodMapConverter#unmarshal(HierarchicalStreamReader,UnmarshallingContext)}.
 	 */
-	@Test
+	/*@Test
 	public void testUnmarshal() {
 		GridCell cc = createMock(GridCell.class);
 		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
@@ -129,7 +129,7 @@ public class MoodMapTest {
 		xmlOutput = xmlOutput.replaceAll("\n", "").replaceAll(" ", "");
 		Assert.assertEquals("<MoodMapReading><MoodMapValue>120</MoodMapValue><MoodMapLongitude>14.4889622588559</MoodMapLongitude><MoodMapLatitude>35.9237275622272</MoodMapLatitude></MoodMapReading>",xmlOutput);
 		
-	}
+	}*/
 
 	/**
 	 * Test method for {@link MoodMapConverter#canConvert(Class)}.

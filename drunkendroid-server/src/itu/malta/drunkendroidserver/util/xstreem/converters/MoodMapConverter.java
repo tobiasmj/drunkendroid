@@ -1,6 +1,7 @@
 package itu.malta.drunkendroidserver.util.xstreem.converters;
 
 import java.lang.reflect.Proxy;
+import java.util.LinkedList;
 
 import itu.malta.drunkendroidserver.domain.GridCell;
 
@@ -20,44 +21,36 @@ public class MoodMapConverter implements Converter{
 	public void marshal(Object value, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		  GridCell MMReading = (GridCell) value;
-          writer.startNode("MoodMapValue");
-          writer.setValue(Integer.toString(MMReading.getAverage()));
-          writer.endNode();
-          writer.startNode("MoodMapLongitude");
-          writer.setValue(Double.toString(MMReading.getLongitude()));
-          writer.endNode();
-          writer.startNode("MoodMapLatitude");
-          writer.setValue(Double.toString(MMReading.getLatitude()));
-          writer.endNode();
+		  writer.addAttribute("value", Integer.toString(MMReading.getAverage()));
+		  writer.addAttribute("long", Double.toString(MMReading.getLongitude()));
+		  writer.addAttribute("lat", Double.toString(MMReading.getLatitude()));
 	}
 	
 	/**
-	 * Method for un-marshaling an Trip from XML into an object
+	 * Method for un-marshaling MoodMap points from XML into an objects
 	 */
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		
+		LinkedList<GridCell> points = new LinkedList<GridCell>();
 		String longitude = "";
 		String latitude = "";
 		String value = "";
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            if ("MoodMapLongitude".equals(reader.getNodeName())) {
-                longitude = reader.getValue();
+            if ("p".equals(reader.getNodeName())) {
+                longitude = reader.getAttribute("long");
+                latitude = reader.getAttribute("lat");
+                value = reader.getAttribute("value");
                     
-            } else if ("MoodMapLatitude".equals(reader.getNodeName())) {
-                latitude = reader.getValue();
-            } else if ("MoodMapValue".equals(reader.getNodeName())) {
-            	value = reader.getValue();
             }
             reader.moveUp();
+            GridCell gc = new GridCell(Double.valueOf(longitude),Double.valueOf(latitude));
+    		gc.setValue(Integer.valueOf(value));
+    		points.add(gc);
         }
-		
-		GridCell gc = new GridCell(Double.valueOf(longitude),Double.valueOf(latitude));
-		gc.setValue(Integer.valueOf(value));
-		
-		return gc;
+		return points;
 	}
 
 	/**
