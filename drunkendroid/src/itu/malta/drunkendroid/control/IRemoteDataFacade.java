@@ -26,6 +26,6 @@ public interface IRemoteDataFacade {
 	 * 
 	 * If an error occurs the trip is not updated
 	 */
-	public void uploadTrip(Trip t);
-	public void updateTrip(Trip t, List<Event> eventList);
+	public void uploadTrip(Trip t) throws RESTFacadeException;
+	public void updateTrip(Trip t, List<Event> eventList) throws RESTFacadeException;
 }
