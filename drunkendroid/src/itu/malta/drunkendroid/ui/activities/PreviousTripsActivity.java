@@ -210,11 +210,10 @@ public class PreviousTripsActivity extends ListActivity {
 										"Uploading trip", "Please wait..");
 								Thread t = new Thread(new Runnable() {
 									public void run() {
-										_repo
-												.uploadTrip(
-														(_trips.get(id)).startDate,
-														listener._choices);
-										_progressDialog.dismiss();	
+										_repo.uploadTrip(
+												(_trips.get(id)).startDate,
+												listener._choices);
+										_progressDialog.dismiss();
 									}
 
 								});

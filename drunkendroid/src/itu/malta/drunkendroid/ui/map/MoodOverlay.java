@@ -4,6 +4,11 @@ import java.util.List;
 
 import itu.malta.drunkendroid.control.DataFacade;
 import itu.malta.drunkendroid.domain.ReadingEvent;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 
 import com.google.android.maps.GeoPoint;
@@ -16,6 +21,11 @@ public class MoodOverlay extends Overlay
     private HeatMap _heatmap = HeatMap.getInstance();
     private GeoPoint _mapCenter;
     private Integer _zoomLevel;
+    private Context _context;
+    
+    public MoodOverlay(Context context) {
+    	_context = context;
+    }
     
 	@Override
 	public void draw(Canvas canvas, MapView mapView, boolean shadow)
@@ -79,6 +89,8 @@ public class MoodOverlay extends Overlay
 	 */
 	private void getMoodData(MapView mapView)
 	{
+		final MapView view = mapView;
+		
 		System.out.println("Get moodmap");
 		_dataFacade = new DataFacade(mapView.getContext());
 		
@@ -92,13 +104,29 @@ public class MoodOverlay extends Overlay
 		double lrLat = mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan + latSpan * 0.05) / 2)/1E6;
 		double lrLong = mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan + longSpan * 0.05) / 2)/1E6;
 		
-		List<ReadingEvent> data = _dataFacade.getReadingEvents(
-				(long)130773960,
-				(long)131027900,
-				(double)ulLat,
-				(double)ulLong,
-				(double)lrLat,
-				(double)lrLong);
+		List<ReadingEvent> data = null;
+		try {
+			data = _dataFacade.getReadingEvents(
+					(long)130773960,
+					(long)131027900,
+					(double)ulLat,
+					(double)ulLong,
+					(double)lrLat,
+					(double)lrLong);
+		} catch (RESTFacadeException e) {
+			new AlertDialog.Builder(_context)
+		      .setMessage("Could not connect to server. Please check you connection or try again.\nTry again?")
+		      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					getMoodData(view);
+					return;
+				}
+			}).setNegativeButton("No", new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					((Activity)_context).finish();
+				}
+			}).show();
+		}
 		
 		if(data != null)
 		{

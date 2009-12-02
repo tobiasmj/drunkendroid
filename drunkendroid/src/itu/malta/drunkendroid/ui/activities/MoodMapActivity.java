@@ -41,7 +41,7 @@ public class MoodMapActivity extends MapActivity {
 	        public void run()
 	        {
 	            // Add overlay
-	            _moodOverlay = new MoodOverlay();
+	            _moodOverlay = new MoodOverlay(MoodMapActivity.this);
 	            List<Overlay> overlays = _mapView.getOverlays();
 	            overlays.add(_moodOverlay);
 	        }

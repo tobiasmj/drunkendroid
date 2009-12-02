@@ -9,36 +9,46 @@ import java.util.Set;
 import android.content.Context;
 import android.location.Location;
 
-public class TripRepository{
+public class TripRepository {
 	private Trip activeTrip = null;
 	private IDataFacade data;
-	
-	public TripRepository(Context context){
+
+	public TripRepository(Context context) {
 		data = new DataFacade(context);
-		
+
 		activeTrip = data.getActiveTrip();
 	}
 
+	/**
+	 * Returns whether there is an active trip or not. Used to indicate user of
+	 * existing active trip when launching new trip.
+	 */
+	public boolean hasActiveTrip() {
+		if(activeTrip == null)
+			return false;
+		else 
+			return true;
+	}
+
 	public void addEvent(Event e) {
-		if(activeTrip == null){
+		if (activeTrip == null) {
 			activeTrip = data.startTrip();
 		}
 		data.addEvent(activeTrip, e);
 	}
-	
-	public int getEventCount(Trip t){
+
+	public int getEventCount(Trip t) {
 		return data.getEventCount(t);
 	}
 
 	public void closeRepository() {
-		if(data != null){
+		if (data != null) {
 			data.closeFacade();
 		}
 	}
 
 	public void endTrip() {
-		if(activeTrip != null)
-		{
+		if (activeTrip != null) {
 			data.closeTrip(activeTrip);
 		}
 		activeTrip = null;
@@ -56,20 +66,21 @@ public class TripRepository{
 	public Trip getTrip(Long startTime) {
 		return data.getTrip(startTime);
 	}
-	
-	public void deleteTrip(Long startTime){
+
+	public void deleteTrip(Long startTime) {
 		data.deleteTrip(startTime);
 	}
-		
+
 	public void updateEventsWithoutLocation(Location location) {
-		if(activeTrip == null){
+		if (activeTrip == null) {
 			data.getActiveTrip();
 		}
-		if(activeTrip != null){
-			data.updateEventsWithoutLocation(activeTrip, location.getLatitude(), location.getLongitude());
+		if (activeTrip != null) {
+			data.updateEventsWithoutLocation(activeTrip,
+					location.getLatitude(), location.getLongitude());
 		}
 	}
-	
+
 	public void uploadTrip(Long startTime, Set<Class<?>> uploadTypes) {
 		Trip t = data.getTrip(startTime);
 		t.events = Trip.filterEvents(t.events, uploadTypes);
