@@ -8,6 +8,7 @@ import org.easymock.Capture;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -194,8 +195,10 @@ public class RESTconnectionTest extends AndroidTestCase {
 		
 		rest = new RESTServerFacade(this.getContext(), conn);
 		
+		ArrayList<Event> eventList1 = new ArrayList<Event>();
+		eventList1.add(e1);
 		//Execute
-		rest.updateTrip(t, e1);
+		rest.updateTrip(t, eventList1);
 		
 		//Verify
 		assertTrue(uri.hasCaptured());
@@ -248,8 +251,10 @@ public class RESTconnectionTest extends AndroidTestCase {
 		
 		rest = new RESTServerFacade(this.getContext(), conn);
 		
+		ArrayList<Event> eventList1 = new ArrayList<Event>();
+		eventList1.add(e1);
 		//Execute
-		rest.updateTrip(t, e1);
+		rest.updateTrip(t, eventList1);
 		
 		//Verify
 		assertTrue(uri.hasCaptured());
@@ -303,10 +308,11 @@ public class RESTconnectionTest extends AndroidTestCase {
 			//These values are parameters for the server, since we use a mock, they don't matter.
 			Long starTime = 0L;
 			Long endTime = 0L;
-			Long distance = 0L;
-			Double latitude = 0D;
-			Double longitude = 0D;
-			List<ReadingEvent> result = rest.getReadingEvents(starTime, endTime, latitude, longitude, distance);
+			Double ulLatitude = 0D;
+			Double ulLongitude = 0D;
+			Double lrLatitude = 0D;
+			Double lrLongitude = 0D;
+			List<ReadingEvent> result = rest.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 			
 			//verify
 			ReadingEvent r1 = result.get(0);
