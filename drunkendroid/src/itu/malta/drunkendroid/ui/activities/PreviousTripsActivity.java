@@ -2,19 +2,13 @@ package itu.malta.drunkendroid.ui.activities;
 
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
-import itu.malta.drunkendroid.domain.IncomingCallEvent;
-import itu.malta.drunkendroid.domain.IncomingSMSEvent;
-import itu.malta.drunkendroid.domain.OutgoingCallEvent;
-import itu.malta.drunkendroid.domain.OutgoingSMSEvent;
-import itu.malta.drunkendroid.domain.Trip;
+import itu.malta.drunkendroid.domain.*;
 import android.os.Bundle;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;

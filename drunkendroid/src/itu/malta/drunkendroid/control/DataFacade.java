@@ -109,14 +109,13 @@ public class DataFacade implements IDataFacade {
 
 		Log.i(_LOGTAG, "Trying to update events witouth location in the trip with id " + t.localId);
 		List<Event> updatedEvents = _local.updateEventsWithoutLocation(t, latitude, longitude);
-
+		ArrayList<Event> eventList = new ArrayList<Event>();
 		//now update the trip on the server.
 		for(Event e : updatedEvents){
 			//TODO This ought to be done in a different thread.
-			ArrayList<Event> eventList = new ArrayList<Event>();
 			eventList.add(e);
-			_remote.updateTrip(t, eventList);
 		}
+		_remote.updateTrip(t, eventList);
 	}
 
 	/**
@@ -158,9 +157,10 @@ public class DataFacade implements IDataFacade {
 	}
 	
 	public void uploadTrip(Trip t) {
+		
 		try {
-			wait(2000);
-		} catch (InterruptedException e) {
+			_remote.updateTrip(t, t.events);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

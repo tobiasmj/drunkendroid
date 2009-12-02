@@ -89,7 +89,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * This method expects a Trip which already has a remoteId.
 	 * To obtain a remoteId call the upload function.
 	 */
-	synchronized public void updateTrip(Trip t, List<Event> eventList) {
+	synchronized public void updateTrip(Trip t, List<Event> events) {
 		if(t.remoteId == null){
 			throw new IllegalStateException("Tried to update a trip which has not been uploaded");
 		}
@@ -97,7 +97,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 		try {
 			//Build xml
 	    	String xml;
-			xml = XMLBuilder.buildXmlFromEvents(eventList);
+			xml = XMLBuilder.buildXmlFromEvents(events);
 			//Now try to send it
 	        HttpResponse response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
 	        		String.valueOf(t.remoteId), xml);

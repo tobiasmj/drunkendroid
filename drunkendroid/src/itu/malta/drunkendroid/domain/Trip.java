@@ -2,12 +2,11 @@ package itu.malta.drunkendroid.domain;
 
 import java.util.*;
 
-
 public class Trip {
 	public List<Event> events = new ArrayList<Event>();
 	public Long startDate = null;
-	public Long localId;
-	public Long remoteId;
+	public Long localId = null;
+	public Long remoteId = null;
 	
 	//TODO Make a comment in the report concerning optimization by excluding getter/setter!
 	
