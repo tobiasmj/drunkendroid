@@ -8,17 +8,11 @@ import itu.malta.drunkendroid.domain.OutgoingCallEvent;
 import itu.malta.drunkendroid.domain.OutgoingSMSEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import android.app.AlertDialog;
@@ -29,7 +23,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
