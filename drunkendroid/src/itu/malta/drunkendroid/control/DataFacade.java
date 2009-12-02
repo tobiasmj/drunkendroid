@@ -4,12 +4,8 @@ import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IRESTCache;
-import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.LocalDataFacadeForSQLite;
 import itu.malta.drunkendroid.tech.RESTCache;
-import itu.malta.drunkendroid.tech.RESTServerFacade;
-import itu.malta.drunkendroid.tech.WebserviceConnectionREST;
-import itu.malta.drunkendroid.tech.dummy.DummyRESTfacade;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
 import java.util.ArrayList;
@@ -124,7 +120,7 @@ public class DataFacade implements IDataFacade {
 	 */
 	public void closeFacade() {
 		_local.closeFacade();
-		//remote doesn't need to get closed.
+		_remote.closeFacade();
 		_local = null;
 		_remote = null;
 	}

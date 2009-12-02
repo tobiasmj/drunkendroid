@@ -33,5 +33,10 @@ public class DummyRESTfacade implements IRESTCache {
 		
 	}
 
+	public void closeFacade() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

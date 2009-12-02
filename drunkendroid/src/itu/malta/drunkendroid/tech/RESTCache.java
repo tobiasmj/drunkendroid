@@ -43,6 +43,7 @@ public class RESTCache implements IRESTCache {
 		uploadTripFilter.add(LocationEvent.class.getName());
 		_queueLooper = new QueueLooper();
 		_queueLooper.isDaemon();
+		_queueLooper.setName("QueueLooper");
 		_queueLooper.start();
 	}
 
@@ -298,5 +299,12 @@ public class RESTCache implements IRESTCache {
 			
 			return trips;
 		}
+	}
+
+	public void closeFacade() {
+		//Remember to close the QueueLooper Thread.
+		_queueLooper.mHandler.getLooper().quit();
+		//It might have been asleep so wake it up.
+		//_queueLooper.interrupt();
 	}
 }

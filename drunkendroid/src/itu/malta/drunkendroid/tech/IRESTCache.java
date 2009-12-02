@@ -15,4 +15,6 @@ public interface IRESTCache {
 	
 	public void uploadTrip(Trip t);
 	public void updateTrip(Trip t, List<Event> eventList);
+
+	public void closeFacade();
 }
