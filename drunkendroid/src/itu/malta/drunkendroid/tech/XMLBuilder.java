@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
+
 import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
@@ -131,12 +132,12 @@ public final class XMLBuilder {
 		serializer.startDocument("UTF-8", true);
 		serializer.startTag("", TRIP);
 		serializer.startTag("", EVENTS);
-		for (Event e : t.getTripEvents()) {
+		for (Event e : t.events) {
 			addEventXml(serializer, e);
 		}
 		serializer.endTag("", EVENTS);
 		serializer.startTag("", STARTDATETIME);
-		serializer.text(String.valueOf(t.getStartDate()));
+		serializer.text(String.valueOf(t.startDate));
 		serializer.endTag("", STARTDATETIME);
 		serializer.startTag("", TRIP_NAME);
 		//TODO Implement Trip Name

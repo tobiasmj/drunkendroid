@@ -40,7 +40,7 @@ public class DataFacade implements IDataFacade {
 		//The server is being updated
 		if(e.latitude != null && e.longitude != null){
 			//also upload to the server, if the location is known.
-			if(t.getRemoteID() == null){
+			if(t.remoteId == null){
 				_remote.uploadTrip(t);
 			}
 			else{
@@ -104,8 +104,10 @@ public class DataFacade implements IDataFacade {
 	 */
 	public void updateEventsWithoutLocation(Trip t, Double latitude,
 			Double longitude) {
-		Log.i(_LOGTAG, "Trying to update events witouth location in the trip with id " + t.getLocalID());
+
+		Log.i(_LOGTAG, "Trying to update events witouth location in the trip with id " + t.localId);
 		List<Event> updatedEvents = _local.updateEventsWithoutLocation(t, latitude, longitude);
+
 		//now update the trip on the server.
 		for(Event e : updatedEvents){
 			//TODO This ought to be done in a different thread.
@@ -151,5 +153,14 @@ public class DataFacade implements IDataFacade {
 	
 	public void deleteTrip(Long startTime) {
 		_local.deleteTrip(startTime);
+	}
+	
+	public void uploadTrip(Trip t) {
+		try {
+			wait(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

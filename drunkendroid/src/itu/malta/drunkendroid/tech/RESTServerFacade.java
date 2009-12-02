@@ -90,7 +90,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * To obtain a remoteId call the upload function.
 	 */
 	synchronized public void updateTrip(Trip t, List<Event> eventList) {
-		if(t.getRemoteID() == null){
+		if(t.remoteId == null){
 			throw new IllegalStateException("Tried to update a trip which has not been uploaded");
 		}
 		
@@ -100,12 +100,12 @@ public class RESTServerFacade implements IRemoteDataFacade {
 			xml = XMLBuilder.buildXmlFromEvents(eventList);
 			//Now try to send it
 	        HttpResponse response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
-	        		String.valueOf(t.getRemoteID()), xml);
+	        		String.valueOf(t.remoteId), xml);
 	        
 	        int responseCode = response.getStatusLine().getStatusCode();
 	        if(responseCode >= 400 && responseCode < 500){
 	        	//This is in the 400: We have done something wrong.
-	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.getStartDate() + ", the server returned malformed xml");
+	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.startDate + ", the server returned malformed xml");
 	        }
 	        else if(responseCode >= 500 && responseCode < 600){
 	        	//This is in the 500 range
@@ -118,7 +118,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 						//Got an interrupt. No problem. Just proceed.
 					}
 		        	response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
-			        		String.valueOf(t.getRemoteID()), xml);
+			        		String.valueOf(t.remoteId), xml);
 		      	}
 	        } 
 		} catch (IOException e1) {
@@ -161,11 +161,11 @@ public class RESTServerFacade implements IRemoteDataFacade {
         				tries += 1;
         			} 
         		}
-        		t.setRemoteID(resultId);
+        		t.remoteId = resultId;
         	}
 	        //Everything is fine
         	else{
-        		t.setRemoteID(resultId);
+        		t.remoteId = resultId;
         	}
 	    }
 	    catch(IOException e){

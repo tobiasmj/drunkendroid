@@ -28,7 +28,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		try{
 			db.beginTransaction();
 			ContentValues readingValues = new ContentValues();
-			readingValues.put("trip", t.getLocalID());
+			readingValues.put("trip", t.localId);
 			readingValues.put("dateTime", e.dateTime);
 			readingValues.put("longitude", e.longitude);
 			readingValues.put("latitude", e.latitude);
@@ -73,8 +73,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			throw new SQLException("The new trip didn't get inserted to the trip table");
 	    }
 	    Trip newTrip = new Trip();
-	    newTrip.setDateInMilliSec(currentTime);
-	    newTrip.setLocalID(tripId);
+	    newTrip.startDate = currentTime;
+	    newTrip.localId = tripId;
 	    return newTrip;
 	}
 	
@@ -82,7 +82,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		final String activeColumn = "active";
 		final String idColumn = "id";
 		final String whereClause = idColumn + "= ?";
-		final String[] whereArgs = {String.valueOf(t.getLocalID())};
+		final String[] whereArgs = {String.valueOf(t.localId)};
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
 		//End the ongoing trip, by setting the trip in the db as stored.
@@ -121,9 +121,9 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				long localId = returnedTrips.getLong(1);
 				long remoteId = returnedTrips.getLong(2);
 				Trip trip = new Trip();
-				trip.setDateInMilliSec(startDateTime);
-				trip.setLocalID(localId);
-				trip.setRemoteID(remoteId);
+				trip.startDate = startDateTime;
+				trip.localId = localId;
+				trip.remoteId = remoteId;
 				trips.add(trip);
 			}
 		}
@@ -154,9 +154,9 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				long foreignId = result.getLong(1);
 				long startTime = result.getLong(2);
 				
-				trip.setLocalID(tripId);
-				trip.setRemoteID(foreignId);
-				trip.setDateInMilliSec(startTime);
+				trip.localId = tripId;
+				trip.remoteId = foreignId;
+				trip.startDate = startTime;
 				
 				resultList.add(trip);
 			}
@@ -187,10 +187,10 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		if(!selectionCursor.moveToFirst())
 			throw new IllegalArgumentException("The trip could not be located");
 		//The trip was located, fill it with info
-		loadedTrip.setDateInMilliSec(startTime);
+		loadedTrip.startDate = startTime;
 		Long tripId = selectionCursor.getLong(0);
-		loadedTrip.setLocalID(tripId);
-		loadedTrip.setRemoteID(selectionCursor.getLong(1));
+		loadedTrip.localId = tripId;
+		loadedTrip.remoteId = selectionCursor.getLong(1);
 		selectionCursor.close();
 		
 		//Build the trip, by building each event
@@ -242,7 +242,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			//Add an id to the event
 			e.id = selectionOfReadings.getInt(7);
 			//Add the event to the trip
-			loadedTrip.AddEvent(e);
+			loadedTrip.events.add(e);
 		}
 		selectionOfReadings.close();
 		
@@ -295,7 +295,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		//Now do the update
 		ContentValues values = new ContentValues(2);
 		final String whereClause = " longitude IS NULL AND latitude IS NULL AND trip = ?";
-		final String[] whereArgs = {String.valueOf(t.getLocalID())};
+		final String[] whereArgs = {String.valueOf(t.localId)};
 		
 		values.put("longitude", String.valueOf(longitude));
 		values.put("latitude",  String.valueOf(latitude));
@@ -333,9 +333,9 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
-		final String[] whereArgs = {String.valueOf(t.getLocalID())};
+		final String[] whereArgs = {String.valueOf(t.localId)};
 		
-		values.put("foreignId", String.valueOf(t.getRemoteID()));
+		values.put("foreignId", String.valueOf(t.remoteId));
 		try{
 			db.beginTransaction();
 			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
@@ -347,7 +347,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		
 	}
 	public int getEventCount(Trip t) {
-		Long localTripId = t.getLocalID();
+		Long localTripId = t.localId;
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		final String[] columns = {"count(*)"};
 		final String whereClause = " trip = ?";
@@ -377,13 +377,13 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			Trip t = this.getTrip(startTime);
 			//Delete the trip
 			final String whereClauseTRIP = "id = ?";
-			final String[] whereArgsTRIP = {String.valueOf(t.getLocalID())};
+			final String[] whereArgsTRIP = {String.valueOf(t.localId)};
 			db.beginTransaction();
 			db.delete(DBHelper.TABLE_TRIP, whereClauseTRIP, whereArgsTRIP);
 			
 			//Delete the events
 			final String whereClauseEVENT = "trip = ?";
-			final String[] whereArgsEVENT = {String.valueOf(t.getLocalID())};
+			final String[] whereArgsEVENT = {String.valueOf(t.localId)};
 			db.delete(DBHelper.TABLE_EVENT, whereClauseEVENT, whereArgsEVENT);
 			db.setTransactionSuccessful();
 		}

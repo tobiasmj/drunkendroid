@@ -1,7 +1,10 @@
 package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.domain.*;
+
 import java.util.List;
+import java.util.Set;
+
 import android.content.Context;
 import android.location.Location;
 
@@ -64,5 +67,11 @@ public class TripRepository{
 		if(activeTrip != null){
 			data.updateEventsWithoutLocation(activeTrip, location.getLatitude(), location.getLongitude());
 		}
+	}
+	
+	public void uploadTrip(Long startTime, Set<Class<?>> uploadTypes) {
+		Trip t = data.getTrip(startTime);
+		t.events = Trip.filterEvents(t.events, uploadTypes);
+		data.uploadTrip(t);
 	}
 }

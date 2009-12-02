@@ -64,7 +64,7 @@ public class ViewTripActivity extends MapActivity {
             int minLong = (int)(+181 * 1E6);
             int maxLong = (int)(-181 * 1E6);
             
-        	ArrayList<Event> events = trip.getTripEvents();
+        	List<Event> events = trip.events;
         	
             for(Event e : events)
             {

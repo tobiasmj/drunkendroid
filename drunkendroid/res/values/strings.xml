@@ -17,6 +17,7 @@
     <string name="log_tag">DrunkDroid</string>
     <string name="no_previous_trips">There are no previous trips</string>
     <string name="view_trip">View trip</string>
+    <string name="upload_choice">Choose what to upload</string>
     
     <string-array name="mood_read_intervals">
     	<item>15</item>
@@ -26,4 +27,12 @@
     	<item>120</item>
     	<item>Never</item>
     </string-array>
+    
+    <string-array name="possible_upload_types">
+    	<item>Incoming call</item>
+    	<item>Outgoing call</item>
+    	<item>Incoming SMS</item>
+    	<item>Outgoing SMS</item>
+    </string-array>
+    
 </resources>

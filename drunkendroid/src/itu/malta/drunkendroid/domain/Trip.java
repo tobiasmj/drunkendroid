@@ -4,12 +4,14 @@ import java.util.*;
 
 
 public class Trip {
-	private ArrayList<Event> events = new ArrayList<Event>();
-	private Long startDate = null;
-	private Long localId;
-	private Long remoteId;
+	public List<Event> events = new ArrayList<Event>();
+	public Long startDate = null;
+	public Long localId;
+	public Long remoteId;
 	
-	protected void setStartDate(Long d){
+	//TODO Make a comment in the report concerning optimization by excluding getter/setter!
+	
+	public void setStartDate(Long d){
 		if(this.startDate != null){
 			if(this.startDate < d)
 				startDate = d;
@@ -18,36 +20,16 @@ public class Trip {
 			startDate = d;
 		}
 	}
-
-	public void setDateInMilliSec(long timeInMillis) {
-		setStartDate(timeInMillis);
-	}
 	
-	public Long getStartDate(){
-		return this.startDate;
-	}
-	
-	public void AddEvent(Event e) {
-		events.add(e);
-	}
-	
-	public ArrayList<Event> getTripEvents() {
-		return events;
-	}
-
-	public Long getLocalID() {
-		return localId;
-	}
-	
-	public void setLocalID(Long id){
-		this.localId = id;
-	}
-
-	public Long getRemoteID() {
-		return remoteId;
-	}
-	
-	public void setRemoteID(Long id){
-		this.remoteId = id;
+	public static List<Event> filterEvents(List<Event> events, Set<Class<?>> filter) {
+		List<Event> filteredEvents = new ArrayList<Event>();
+		
+		for(Event e : events) {
+			if(filter.contains(e.getClass())) {
+				filteredEvents.add(e);
+			}
+		}
+		
+		return filteredEvents;
 	}
 }
