@@ -32,11 +32,10 @@ import com.thoughtworks.xstream.XStream;
  * Class that handles requests for retrieving MoodMaps.
  */
 public class MoodMapResource extends ServerResource {
-	long _startTimeStamp, _endTimeStamp;
-	double _latitude, _longitude, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
-	int _height, _width;
-	int gridX = 20 , gridY = 20;
-	GridCell[][] _moodMapGrid;
+	private long _startTimeStamp, _endTimeStamp;
+	private double _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
+	private int _gridX = 20 , _gridY = 20;
+	private GridCell[][] _moodMapGrid;
 	
 	/**
 	 * Handles get requests for MoodMaps, based on the provided URL arguments.
@@ -59,21 +58,12 @@ public class MoodMapResource extends ServerResource {
 		_LRlatitude = Double.parseDouble(getRequest().getAttributes().get("LRLatitude").toString());
 		_LRlongitude = Double.parseDouble(getRequest().getAttributes().get("LRLongitude").toString());
 		
-		//height = Integer.parseInt(getRequest().getAttributes().get("Height").toString());
-		//width = Integer.parseInt(getRequest().getAttributes().get("Width").toString());
-		
-		//Calculate corners of the moodmap
-		//ULlatitude = latitude + HelperFunctions.change_in_latitude(-width/1000);
-		//ULlongitude = longitude + HelperFunctions.change_in_longitude(ULlatitude, -height/1000);
-		
-		//LRlatitude = latitude + HelperFunctions.change_in_latitude(width/1000);
-		//LRlongitude = longitude + HelperFunctions.change_in_longitude(LRlatitude, height/1000);
 		} catch (NumberFormatException e) {
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			
 		}
 		// create the MoodMap object
-		MoodMap moodMap = new MoodMap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude, gridX, gridY);
+		MoodMap moodMap = new MoodMap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude, _gridX, _gridY);
 		
 		try {
 			// set up the repository
@@ -128,8 +118,8 @@ public class MoodMapResource extends ServerResource {
 	            result = new DomRepresentation(MediaType.TEXT_XML);  
 	            // Generate a DOM document representing the list of  
 	            // MoodMapReadings.  
-	            for(int i = 0; i < gridY; i++){
-	            	for(int j = 0; j < gridX; j++){
+	            for(int i = 0; i < _gridY; i++){
+	            	for(int j = 0; j < _gridX; j++){
 	            		if (_moodMapGrid[i][j] != null){
 	            			xmlOutput = xmlOutput + xStream.toXML(_moodMapGrid[i][j]);
 	             		}

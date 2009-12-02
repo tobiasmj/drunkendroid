@@ -23,8 +23,8 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  */
 public class Call implements IEvent{
 
-	long _readingTime;
-	double _latitude, _longitude;
+	private long _readingTime;
+	private double _latitude, _longitude;
 	private long _tripId = 0;
 	private String _caller;
 	private String _reciever;
