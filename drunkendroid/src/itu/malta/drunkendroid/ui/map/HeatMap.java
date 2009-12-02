@@ -143,7 +143,7 @@ public class HeatMap{
     {
 		Point p = projection.toPixels(mp.getGeoPoint(), null);
 		
-		int radius = (_radius * mp.getMood()) / 256;
+		int radius = (_radius * mp.getMood()) / 255;
 		if(radius < 1) radius = 1;
 		
 		// Create gradient circle

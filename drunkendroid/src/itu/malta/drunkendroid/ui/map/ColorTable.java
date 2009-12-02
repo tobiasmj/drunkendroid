@@ -28,8 +28,8 @@ public class ColorTable {
 		Paint paint = new Paint();
 		int[] gradientColors = new int[]{Color.TRANSPARENT,
 				 Color.argb(155, 35, 170, 227), // Light blue
-				 Color.argb(155, 128, 223, 59), // Green
-				 Color.argb(155, 255, 200, 0), // Yellow
+				 Color.argb(155, 99, 217, 14), // Green
+				 Color.argb(155, 255, 246, 12), // Yellow
 				 Color.argb(155, 216, 15, 15)}; // Red
 		LinearGradient gradient = new LinearGradient(0, 0, bmp.getWidth(), bmp.getHeight(), gradientColors, null, TileMode.CLAMP);
 		paint.setShader(gradient);
