@@ -192,55 +192,57 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		loadedTrip.setLocalID(tripId);
 		loadedTrip.setRemoteID(selectionCursor.getLong(1));
 		selectionCursor.close();
-		//Build the trip
-		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood", "sender", "receiver", "message"};
+		
+		//Build the trip, by building each event
+		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood", "sender", "receiver", "message", "id"};
 		String[] whereTripEQ = {String.valueOf(tripId)};
 		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
+			Event e = null;
 			Long date = selectionOfReadings.getLong(0);
 			Double longitude = selectionOfReadings.getDouble(1);
 			Double latitude = selectionOfReadings.getDouble(2);
+			
 			if(selectionOfReadings.isNull(3)){
 				if(selectionOfReadings.isNull(6)) {
 					//This is either a call or a LocationEvent since there is no mood or message
 					if(selectionOfReadings.isNull(5)) {
 						if(selectionOfReadings.isNull(4)) {
 							//This is just a Location event, since there is no sender, receiver or message.
-							loadedTrip.AddEvent(new LocationEvent(date, latitude, longitude));
+							e = (new LocationEvent(date, latitude, longitude));
 						} else {
 						//This is an incoming call, since there is a sender
-						IncomingCallEvent e = new IncomingCallEvent(date, latitude, longitude, selectionOfReadings.getString(4));
-						loadedTrip.AddEvent(e);
+						e = new IncomingCallEvent(date, latitude, longitude, selectionOfReadings.getString(4));
 						}
 					} 
 					else {
 						//This is and outgoing call, since there is a receiver
-						OutgoingCallEvent e = new OutgoingCallEvent(date, latitude, longitude, selectionOfReadings.getString(5));
-						loadedTrip.AddEvent(e);
+						e = new OutgoingCallEvent(date, latitude, longitude, selectionOfReadings.getString(5));
 					}
 				}
 				else {
 					//This is an SMS, since there is a message
 					if(selectionOfReadings.isNull(5)) {
 						//This is an incoming sms, since there is no receiver
-						IncomingSMSEvent e = new IncomingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
-						loadedTrip.AddEvent(e);
+						e = new IncomingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
 					} else {
 						//This is and outgoing sms, since there is a receiver
-						OutgoingSMSEvent e = new OutgoingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
-						loadedTrip.AddEvent(e);
+						e = new OutgoingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
 					}
 				}
 			}
 			else {
 				//This is a reading event, since there is a mood
-				ReadingEvent r = new ReadingEvent(date, 
+				e = new ReadingEvent(date, 
 						latitude, 
 						longitude, 
 						selectionOfReadings.getInt(3)); //Add mood
-				loadedTrip.AddEvent(r);
 			}
+			//Add an id to the event
+			e.id = selectionOfReadings.getInt(7);
+			//Add the event to the trip
+			loadedTrip.AddEvent(e);
 		}
 		selectionOfReadings.close();
 		
@@ -251,7 +253,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
 		//Find the events which will be updated.
-		final String[] columns = {"dateTime", "mood", "sender", "receiver", "message"}; //the location is not known silly.
+		final String[] columns = {"dateTime", "mood", "sender", "receiver", "message", "id"}; //the location is not known silly.
 		final String selection = " longitude IS NULL AND latitude IS NULL";
 		List<Event> events = new ArrayList<Event>();
 		
@@ -260,21 +262,25 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		try{
 			if(cursor.moveToFirst()){
 				do {
-					if(cursor.isNull(3) && cursor.isNull(4) && cursor.isNull(5)) {
+					Event e = null;
+					if(cursor.isNull(2) && cursor.isNull(3) && cursor.isNull(4)) {
 						//This is either a location- or readingEvent.
 						Long date = cursor.getLong(0);
 						//does the event have a mood?
 						if(cursor.isNull(1)){
 							//No
 							//This is a locationEvent
-							events.add(new LocationEvent(date, latitude, longitude));
+							e = new LocationEvent(date, latitude, longitude);
 						}
 						else {
 							//Yes
 							//This is a ReadingEvent
 							int mood = cursor.getInt(1);
-							events.add(new ReadingEvent(date, latitude, longitude, mood));
+							e = new ReadingEvent(date, latitude, longitude, mood);
 						}
+					}
+					if(e != null){
+						e.id = cursor.getInt(5);
 					}
 					
 				} while (cursor.moveToNext());

@@ -8,6 +8,7 @@ public abstract class Event {
 	public Long dateTime;
 	public Double latitude;
 	public Double longitude;
+	public int id;
 	
 	public Event(Location location) {
 		this.dateTime = Calendar.getInstance().getTimeInMillis();
