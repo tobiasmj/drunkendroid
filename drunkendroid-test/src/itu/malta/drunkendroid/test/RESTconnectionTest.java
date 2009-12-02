@@ -68,7 +68,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		assertEquals(2343456, tripIdResult.intValue());
 	}
 	
-	public void testConsumePostResponseWithMalformedXML() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException{
+	public void testConsumePostResponseWithMalformedXML() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException, RESTFacadeException{
 		//Build
 		final String content = "<error><code>1</code><message>Payload not text/XML</message></error>";
 		//Build an inputStream from to provide the mock object with.
@@ -100,7 +100,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		assertNull(t.remoteId);
 	}
 	
-	public void testConsumePostWithServerError() throws IllegalStateException, IOException{
+	public void testConsumePostWithServerError() throws IllegalStateException, IOException, RESTFacadeException{
 		//Build
 		final String content1 = "<error><code>7</code><message>Dummy server error. Unit testing</message></error>";
 		//Build an inputStream from to provide the mock object with.
@@ -154,7 +154,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 	
 	}
 	
-	public void testBuildXMLFromStandAloneEvent(){
+	public void testBuildXMLFromStandAloneEvent() throws RESTFacadeException{
 		Trip t = this.generateTrip();
 		t.remoteId = 42L; //just a random test number
 		Event e1 = new LocationEvent(Calendar.getInstance().getTimeInMillis(), (Double)34.123456, (Double)14.123456);
@@ -207,7 +207,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		assertEquals(expectedXML, xmlContent.getValue());
 	}
 
-	public void testBuildXMLFromStandAloneReadingEvent(){
+	public void testBuildXMLFromStandAloneReadingEvent() throws RESTFacadeException{
 		Trip t = this.generateTrip();
 		t.remoteId = 42L; //just a random test number
 		int mood = 90;
