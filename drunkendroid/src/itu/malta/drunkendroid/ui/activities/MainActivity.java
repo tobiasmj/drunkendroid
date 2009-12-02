@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SlidingDrawer;
 
@@ -22,6 +23,7 @@ public class MainActivity extends Activity {
 	SlidingDrawer slider;
 	ImageView startServiceBtn;
 	ImageView stopServiceBtn;
+	RelativeLayout moodReading;
 	View.OnClickListener buttonListener = new MyOnClickListener();
 
 	/** Called when the activity is first created. */
@@ -33,6 +35,8 @@ public class MainActivity extends Activity {
 	}
 
 	private void Setup() {
+		moodReading = (RelativeLayout) this.findViewById(R.id.MoodReadingLayout);
+		
 		SeekBar seekBar = (SeekBar) findViewById(R.id.SeekBar01);
 		seekBar.setOnSeekBarChangeListener(new MySeekbarListener());		
 		
@@ -64,9 +68,11 @@ public class MainActivity extends Activity {
 	private void ToggleServiceButtons() {
 		if (DrunkenService.getInstance() == null) {
 			stopServiceBtn.setVisibility(View.GONE);
+			moodReading.setVisibility(RelativeLayout.GONE);
 			startServiceBtn.setVisibility(View.VISIBLE);
 		} else {
 			startServiceBtn.setVisibility(View.GONE);
+			moodReading.setVisibility(RelativeLayout.VISIBLE);
 			stopServiceBtn.setVisibility(View.VISIBLE);
 		}
 	}
@@ -153,6 +159,7 @@ public class MainActivity extends Activity {
 					startService(i);
 					
 					stopServiceBtn.setVisibility(View.VISIBLE);
+					moodReading.setVisibility(RelativeLayout.VISIBLE);
 					startServiceBtn.setVisibility(View.GONE);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());

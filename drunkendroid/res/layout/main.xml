@@ -3,7 +3,7 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	<RelativeLayout android:id="@+id/MoodReadingLayout"
-		android:layout_width="fill_parent" android:layout_height="100px">
+		android:layout_width="fill_parent" android:layout_height="110px">
 		<Button android:layout_centerInParent="true" android:id="@+id/NewReadingBtn"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:text="Click to enter new MoodReading" />
