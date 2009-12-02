@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -62,6 +63,8 @@ public class MoodOverlay extends Overlay
 	 */
 	private Canvas getHeatmap(Canvas canvas, MapView mapView)
 	{
+		Log.i("DrunkDroid", _mapCenter + " =? " + mapView.getMapCenter());
+		Log.i("DrunkDroid", _zoomLevel + " =? " + mapView.getZoomLevel());
 		_mapCenter = mapView.getMapCenter();
 		_zoomLevel = mapView.getZoomLevel();
 		getMoodData(mapView);
@@ -99,10 +102,10 @@ public class MoodOverlay extends Overlay
 		
 		// Calculate an upper-left and a lower-right corner for the map.
 		// The calculation adds 5 percent in each direction
-		double ulLat = mapView.getMapCenter().getLatitudeE6()/1E6 + ((latSpan + latSpan * 0.05) / 2)/1E6;
-		double ulLong = mapView.getMapCenter().getLongitudeE6()/1E6 - ((longSpan + longSpan * 0.05) / 2)/1E6;
-		double lrLat = mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan + latSpan * 0.05) / 2)/1E6;
-		double lrLong = mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan + longSpan * 0.05) / 2)/1E6;
+		double ulLat = mapView.getMapCenter().getLatitudeE6()/1E6 + ((latSpan + latSpan * 0.3) / 2)/1E6;
+		double ulLong = mapView.getMapCenter().getLongitudeE6()/1E6 - ((longSpan + longSpan * 0.3) / 2)/1E6;
+		double lrLat = mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan + latSpan * 0.3) / 2)/1E6;
+		double lrLong = mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan + longSpan * 0.3) / 2)/1E6;
 		
 		List<ReadingEvent> data = null;
 		try {

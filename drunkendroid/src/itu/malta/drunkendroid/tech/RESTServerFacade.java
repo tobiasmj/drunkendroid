@@ -13,7 +13,6 @@ import itu.malta.drunkendroid.domain.*;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 import android.content.Context;
 import android.telephony.TelephonyManager;
-import android.util.AndroidRuntimeException;
 import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.w3c.dom.Attr;
