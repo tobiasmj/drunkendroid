@@ -97,7 +97,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		//Verify
 		rest.uploadTrip(t);
 		//Don't know how to do these assertions right yet.
-		assertNull(t.getRemoteID());
+		assertNull(t.remoteId);
 	}
 	
 	public void testConsumePostWithServerError() throws IllegalStateException, IOException{
@@ -147,7 +147,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 		rest = new RESTServerFacade(this.getContext(), conn);
 		//Verify
 		rest.uploadTrip(t);
-		Long tripIdResult = t.getRemoteID();
+		Long tripIdResult = t.remoteId;
 		verify(conn);
 		//Don't know how to do these assertions right yet.
 		assertEquals(2343456, tripIdResult.intValue());
@@ -156,7 +156,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 	
 	public void testBuildXMLFromStandAloneEvent(){
 		Trip t = this.generateTrip();
-		t.setRemoteID(42L); //just a random test number
+		t.remoteId = 42L; //just a random test number
 		Event e1 = new LocationEvent(Calendar.getInstance().getTimeInMillis(), (Double)34.123456, (Double)14.123456);
 		//Expected results
 		String expectedURI;
@@ -209,7 +209,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 
 	public void testBuildXMLFromStandAloneReadingEvent(){
 		Trip t = this.generateTrip();
-		t.setRemoteID(42L); //just a random test number
+		t.remoteId = 42L; //just a random test number
 		int mood = 90;
 		ReadingEvent e1 = new ReadingEvent(Calendar.getInstance().getTimeInMillis(), (Double)34.123456, (Double)14.123456, mood);
 		//Expected results
@@ -340,10 +340,10 @@ public class RESTconnectionTest extends AndroidTestCase {
 		ReadingEvent r2 = new ReadingEvent(new Long(1255816433), (Double)35.909141, (Double)14.503580, 95);
 		// ReadingEvent 3	
 		ReadingEvent r3 = new ReadingEvent(new Long(1255816733), (Double)35.909275, (Double)14.502825, 62);
-		t.AddEvent(r1);
-		t.AddEvent(r2);
-		t.AddEvent(r3);
-		t.setDateInMilliSec(1255816133);
+		t.events.add(r1);
+		t.events.add(r2);
+		t.events.add(r3);
+		t.startDate = 1255816133L;
 		return t;
 	}
 }

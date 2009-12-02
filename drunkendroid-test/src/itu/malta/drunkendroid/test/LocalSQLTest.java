@@ -42,7 +42,7 @@ public class LocalSQLTest extends AndroidTestCase {
 		
 		// ReadingEvent 1
 		Trip t2 = _dbh.startTrip();
-		t2.setDateInMilliSec(1255816733);
+		t2.startDate = 1255816733L;
 		ReadingEvent r2_1 = new ReadingEvent(new Long(1255816733), (Double)35.908422, (Double)14.502362, 270);
 		_dbh.addEvent(t2, r2_1);
 	}
@@ -59,7 +59,7 @@ public class LocalSQLTest extends AndroidTestCase {
 			Trip t = _dbh.getAllTrips().get(0);
 			
 			int count_before = _dbh.getAllTrips().size();
-			_dbh.deleteTrip(t.getStartDate());
+			_dbh.deleteTrip(t.startDate);
 			int count_after = _dbh.getAllTrips().size();
 			
 			assertTrue(( count_before - 1) == ( count_after ));
@@ -87,10 +87,10 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Trip> returnedTrips = _dbh.getAllTrips();
 			assertTrue(returnedTrips.size() > 0);
 			Trip someTrip = returnedTrips.get(1);
-			Long someTripStartDate = someTrip.getStartDate();
+			Long someTripStartDate = someTrip.startDate;
 			
 			Trip returnedTrip = _dbh.getTrip(someTripStartDate);
-			assertEquals(someTripStartDate, returnedTrip.getStartDate());
+			assertEquals(someTripStartDate, returnedTrip.startDate);
 		}
 		finally{
 			this.flushDB();
@@ -104,15 +104,15 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Trip> trips = _dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
 			Long foreignId = new Long(123456789);
-			Long testTripStartDate = testTrip.getStartDate();
+			Long testTripStartDate = testTrip.startDate;
 			
 			//Build
-			testTrip.setRemoteID(foreignId);
+			testTrip.remoteId = foreignId;
 			_dbh.addRemoteIdToTrip(testTrip);
 			testTrip = _dbh.getTrip(testTripStartDate);
 			
 			//verify
-			assertEquals(foreignId, testTrip.getRemoteID());
+			assertEquals(foreignId, testTrip.remoteId);
 		}
 		finally{
 			this.flushDB();
@@ -125,8 +125,8 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Trip> trips = _dbh.getAllTrips();
 			Trip testTrip = trips.get(1);
 			
-			Trip controlTrip = _dbh.getTrip(testTrip.getStartDate());
-			int eventCount = controlTrip.getTripEvents().size();
+			Trip controlTrip = _dbh.getTrip(testTrip.startDate);
+			int eventCount = controlTrip.events.size();
 			int testCount = _dbh.getEventCount(testTrip);
 			
 			assertTrue(eventCount > 0);
@@ -219,8 +219,8 @@ public class LocalSQLTest extends AndroidTestCase {
 			List<Event> updatedEvents = _dbh.updateEventsWithoutLocation(testTrip, latitude, longitude);
 			
 			//Build verifications objects.
-			testTrip = _dbh.getTrip(testTrip.getStartDate());
-			List<Event> testEvents = testTrip.getTripEvents();
+			testTrip = _dbh.getTrip(testTrip.startDate);
+			List<Event> testEvents = testTrip.events;
 			
 			//Verify
 			assertEquals(2, updatedEvents.size());
