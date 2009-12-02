@@ -3,9 +3,19 @@ package itu.malta.drunkendroid.tech.exception;
 import android.util.AndroidException;
 
 public class RESTFacadeException extends AndroidException {
-
+	protected String msg;
+	protected String LOGTAG;
+	
 	public RESTFacadeException(String LOGTAG, String msg){
 		super(LOGTAG + ": "+ msg);
+		this.LOGTAG = LOGTAG;
+		this.msg = msg;
+	}
+	
+	public RESTFacadeException(String LOGTAG, String msg, Exception cause){
+		super(cause);
+		this.LOGTAG = LOGTAG;
+		this.msg = msg;
 	}
 	
 	/**
