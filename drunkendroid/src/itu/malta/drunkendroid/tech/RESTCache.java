@@ -28,23 +28,25 @@ public class RESTCache implements IRESTCache {
 	LocalDataFacadeForSQLite _localSqlFacade;
 	RESTServerFacade _server;
 	Context _context;
-	QueueLooper _queueLooper;
+	static QueueLooper _queueLooper = null;
 	
-	public RESTCache(Context context){
+	public RESTCache(Context context, IWebserviceConnection conn){
 		this._context = context;
-		IWebserviceConnection conn = new WebserviceConnectionREST();
 		_dbHelper = DBHelper.getInstance(this._context);
 		_localSqlFacade = new LocalDataFacadeForSQLite(context);
 		_server = new RESTServerFacade(this._context, conn);
 		//The Looper
 		//Build the uploadTripFilter
-		uploadTripFilter = new TreeSet<String>();
+		uploadTripFilter = new TreeSet<String>();	
 		uploadTripFilter.add(ReadingEvent.class.getName());
 		uploadTripFilter.add(LocationEvent.class.getName());
-		_queueLooper = new QueueLooper();
-		_queueLooper.isDaemon();
-		_queueLooper.setName("QueueLooper");
-		_queueLooper.start();
+		//A little bit of thread safety.
+		if(_queueLooper == null){
+			_queueLooper = new QueueLooper();
+			_queueLooper.isDaemon();
+			_queueLooper.setName("QueueLooper");
+			_queueLooper.start();
+		}
 	}
 
 	/**

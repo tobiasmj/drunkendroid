@@ -21,6 +21,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
 	private DefaultHttpClient httpClient = new DefaultHttpClient();
 	
 	public WebserviceConnectionREST(){
+		//Inspired by: http://groups.google.com/group/android-developers/browse_thread/thread/bf9474271ab80c64/9a200fd39171b5d2?lnk=raot&fwc=1
 		HttpParams params = httpClient.getParams();
 		HttpConnectionParams.setConnectionTimeout(params, 2000); //2 Seconds connection timeout
 		HttpConnectionParams.setSoTimeout(params, 5000); //5 Seconds retrieve data timeout.
@@ -66,7 +67,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
         catch (Exception ex)
         {
         	Log.e(LOGTAG, "Caught an unknown exception, while doing a get call");
-            throw new RESTFacadeException(LOGTAG, "Caught an unknown Exception while doing a get call");
+        	throw new RESTFacadeException(LOGTAG, "Caught an unknown Exception while doing a get call");
         }
 	}
 	
