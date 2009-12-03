@@ -41,11 +41,22 @@ public class GridCell{
 	}
 	
 	/**
-	 * get the avarage value of readings within the GridCell.
+	 * get the average value of readings within the GridCell.
 	 * @return integer from 0-255.
 	 */
-	public int getAverage() {
-		return (this._value/this._count);
+	public long getAverage() {
+		if(_count <= 2 ) {
+			return Math.round((_value/_count)*0.2);
+		} else if (_count <=10) {
+			return Math.round((_value/_count)*0.3);
+		} else if (_count <=25) {
+			return Math.round((_value/_count)*0.5);
+		} else if (_count <= 50) {
+			return Math.round((_value/_count)*0.75);
+		} else if (_count <= 100) {
+			return Math.round((_value/_count)*0.9);
+		}
+		return _value/_count;
 	}
 	public double getLongitude(){
 		return this._longitude;

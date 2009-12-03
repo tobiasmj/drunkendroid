@@ -38,7 +38,7 @@ public class MockCalculateMoodMapDatabaseConnection implements IDatabaseConnecti
 		try {
 			
 			//Statement 
-			expect(stmt.executeQuery("select mood, longitude, latitude from Reading where dateTime between 1 and 10 and longitude between 5.0 and 10.0 and latitude between 5.0 and 10.0")).andReturn(rs);
+			expect(stmt.executeQuery("select mood, longitude, latitude from Mood where timeStamp between 1 and 10 and longitude between 5.0 and 10.0 and latitude between 5.0 and 10.0")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
 		    stmt.close();

@@ -191,9 +191,9 @@ public class EventConverter implements Converter{
 								eventType = reader.getValue();
 							} else if("dateTime".equals(reader.getNodeName())) {
 								timeStamp = Long.valueOf(reader.getValue());
-								if(timeStamp > signedHigh) {
+								/*if(timeStamp > signedHigh) {
 									throw new NumberFormatException("timeStamp out of bounds");
-								}
+								}*/
 
 							} else if("longitude".equals(reader.getNodeName())) {
 								longitude = Double.valueOf(reader.getValue());

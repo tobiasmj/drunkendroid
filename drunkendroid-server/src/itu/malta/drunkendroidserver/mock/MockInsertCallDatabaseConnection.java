@@ -41,7 +41,7 @@ public class MockInsertCallDatabaseConnection implements IDatabaseConnection {
 			EasyMock.expectLastCall();
 		    replay(rs);
 		    
-		    expect(stmt.executeUpdate("Insert into Call(trip,dateTime,latitude,longitude,caller,reciever,endTime) values (1,1,10.0,10.0,004551883250,004551883250,2)")).andReturn(1);
+		    expect(stmt.executeUpdate("Insert into Call(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (1,1,10.0,10.0,004551883250,004551883250,2)")).andReturn(1);
 		    //expect(stmt.getGeneratedKeys()).andReturn(rs);
 		    stmt.close();
 		    EasyMock.expectLastCall();

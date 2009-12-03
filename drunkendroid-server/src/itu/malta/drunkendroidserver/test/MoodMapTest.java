@@ -77,7 +77,7 @@ public class MoodMapTest {
 		GridCell cc = createMock(GridCell.class);
 		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
 		expect(cc.getLongitude()).andStubReturn(14.4889622588559);
-		expect(cc.getAverage()).andStubReturn(120);
+		expect(cc.getAverage()).andStubReturn(120L);
 		replay(cc);
 
 		XStream xStream = new XStream();
@@ -101,7 +101,7 @@ public class MoodMapTest {
 		GridCell cc = createMock(GridCell.class);
 		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
 		expect(cc.getLongitude()).andStubReturn(14.4889622588559);
-		expect(cc.getAverage()).andStubReturn(120);
+		expect(cc.getAverage()).andStubReturn(120L);
 		replay(cc);
 
 		Assert.assertEquals(true,mmc.canConvert(GridCell.class));

@@ -54,10 +54,10 @@ public class MoodMapResource extends ServerResource {
 		
 		_ULlatitude = Double.parseDouble(getRequest().getAttributes().get("ULLatitude").toString());
 		_ULlongitude = Double.parseDouble(getRequest().getAttributes().get("ULLongitude").toString());
-		
+		System.out.println("UL. lat: " + _ULlatitude + " long: " + _ULlongitude);
 		_LRlatitude = Double.parseDouble(getRequest().getAttributes().get("LRLatitude").toString());
 		_LRlongitude = Double.parseDouble(getRequest().getAttributes().get("LRLongitude").toString());
-		
+		System.out.println("LR. lat: " + _LRlatitude + " long: " + _LRlongitude);		
 		} catch (NumberFormatException e) {
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			

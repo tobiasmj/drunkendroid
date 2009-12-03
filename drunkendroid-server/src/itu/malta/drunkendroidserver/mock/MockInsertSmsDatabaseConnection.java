@@ -41,7 +41,7 @@ public class MockInsertSmsDatabaseConnection implements IDatabaseConnection {
 			EasyMock.expectLastCall();
 		    replay(rs);
 		    
-		    expect(stmt.executeUpdate("Insert into SMS(trip,dateTime,latitude,longitude,sender,reciever,endTime) values (1,1,10.0,10.0,004551883250,004551883250,test message)")).andReturn(1);
+		    expect(stmt.executeUpdate("Insert into SMS(trip,timeStamp,latitude,longitude,sender,reciever) values (1,1,10.0,10.0,004551883250,004551883250,test message)")).andReturn(1);
 		    //expect(stmt.getGeneratedKeys()).andReturn(rs);
 		    stmt.close();
 		    EasyMock.expectLastCall();

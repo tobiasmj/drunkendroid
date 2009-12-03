@@ -32,7 +32,7 @@ public class MockUpdateTripDatabaseConnection implements IDatabaseConnection {
 		Statement stmt = createMock(java.sql.Statement.class);
 		Connection mockConnection = createMock(java.sql.Connection.class);
 
-		expect(stmt.executeUpdate("Update trip set name = \'testTrip\' , startDateTime = 1, endDateTime = 2 where id = 1")).andReturn((int) 0);
+		expect(stmt.executeUpdate("Update trip set name = \'testTrip\' , startTimeStamp = 1, endTimeStamp = 2 where id = 1")).andReturn((int) 0);
 		stmt.close();
 		EasyMock.expectLastCall();
 		replay(stmt);

@@ -43,7 +43,7 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into Call(trip,dateTime,latitude,longitude,caller,reciever,endTime) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
+				_stmt.executeUpdate("Insert into Call(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -77,7 +77,7 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into SMS(trip,dateTime,latitude,longitude,sender,reciever,endTime) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getReciever() + "," + sms.getMessage() + ")");
+				_stmt.executeUpdate("Insert into SMS(trip,timeStamp,latitude,longitude,sender,reciever) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getReciever() + "," + sms.getMessage() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -111,7 +111,7 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into Location(trip,dateTime,latitude,longitude) values (" + location.getTripId() + "," + location.getTimeStamp() + "," + location.getLatitude() + "," + location.getLongitude() + ")");
+				_stmt.executeUpdate("Insert into Location(trip,timeStamp,latitude,longitude) values (" + location.getTripId() + "," + location.getTimeStamp() + "," + location.getLatitude() + "," + location.getLongitude() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -145,7 +145,7 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into Reading(trip,dateTime,latitude,longitude,mood) values (" + reading.getTripId() + "," + reading.getTimeStamp() + "," + reading.getLatitude() + "," + reading.getLongitude() + "," + reading.getMood() +")");
+				_stmt.executeUpdate("Insert into Mood(trip,timeStamp,latitude,longitude,mood) values (" + reading.getTripId() + "," + reading.getTimeStamp() + "," + reading.getLatitude() + "," + reading.getLongitude() + "," + reading.getMood() +")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -181,7 +181,7 @@ public class Repository {
 		try {
 			//insert the trip in the database
 			_stmt = _conn.createStatement();
-			_stmt.executeUpdate("Insert into Trip (IMEINumber,startDateTime,endDateTime,name) values (" + trip.getImeiNumber() + "," + trip.getStartTime() + "," + trip.getEndTime() + "," + "\"" + trip.getName() + "\"" + ")", Statement.RETURN_GENERATED_KEYS);
+			_stmt.executeUpdate("Insert into Trip (IMEINumber,startTimeStamp,endTimeStamp,name) values (" + trip.getImeiNumber() + "," + trip.getStartTime() + "," + trip.getEndTime() + "," + "\"" + trip.getName() + "\"" + ")", Statement.RETURN_GENERATED_KEYS);
 			rs = _stmt.getGeneratedKeys();
 
 			if (rs.next()) {
@@ -239,7 +239,7 @@ public class Repository {
 		try {
 			_stmt = _conn.createStatement();
 			// update the trip.
-			_stmt.executeUpdate("Update trip set name = \'" + trip.getName() + "\' , startDateTime = " + trip.getStartTime() + ", endDateTime = "+ trip.getEndTime() + " where id = " + trip.getTripId());
+			_stmt.executeUpdate("Update trip set name = \'" + trip.getName() + "\' , startTimeStamp = " + trip.getStartTime() + ", endTimeStamp = "+ trip.getEndTime() + " where id = " + trip.getTripId());
 		} finally {
 
 			if (_stmt != null) {
@@ -266,44 +266,44 @@ public class Repository {
 			LinkedList<IEvent> events = new LinkedList<IEvent>(); 
 
 			// get all reading events for a given tripId
-			_stmt.executeQuery("Select dateTime,longitude,latitude,mood from reading where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp,longitude,latitude,mood from Mood where trip = " + trip.getTripId());
 			rs = _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Reading(rs.getLong("dateTime"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
+				events.add(new Reading(rs.getLong("timeStamp"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
 			}
 
 			// get all location events for a given tripId
-			_stmt.executeQuery("Select dateTime, longitude,latitude from Location where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp, longitude,latitude from Location where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Location(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude")));
+				events.add(new Location(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude")));
 			}
 			
 			// get all call events for a given tripId
-			_stmt.executeQuery("Select dateTime, longitude,latitude,caller,reciever,endTime from Call where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from Call where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Call(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTime")));
+				events.add(new Call(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTimeStamp")));
 			}
 			
 			// get all sms events for a given tripId
-			_stmt.executeQuery("Select dateTime, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Sms(rs.getLong("dateTime"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
+				events.add(new Sms(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
 			}
 
 			// create trip object 
-			_stmt.executeQuery("Select name,startDateTime,endDateTime from trip where id = " + trip.getTripId());
+			_stmt.executeQuery("Select name,startTimeStamp,endTimeStamp from trip where id = " + trip.getTripId());
 
 			rs = _stmt.getResultSet();
 			Trip newTrip = null;
 			if (rs.first()) {
-				newTrip = new Trip(rs.getLong("startDateTime"), rs.getLong("endDateTime"), rs.getString("name"));
+				newTrip = new Trip(rs.getLong("startTimeStamp"), rs.getLong("endTimeStamp"), rs.getString("name"));
 				newTrip.setTripId(trip.getTripId());
 			}
 
@@ -353,14 +353,19 @@ public class Repository {
 		double snapLatMin = Math.round(mm.getLatMin()/gridHeight) * gridHeight;
 		double snapLongMax = Math.round(mm.getLongMax() / gridWidth) * gridWidth;
 		double snapLatMax = Math.round(mm.getLatMax()/gridHeight) * gridHeight; 
+		System.out.println("snapLatMin : " + snapLatMin);
+		System.out.println("snapLongMin : " + snapLongMin);
+		System.out.println("snapLatMax : " + snapLatMax);
+		System.out.println("snapLongMax : " + snapLongMax);
 		
+	
 		
 		
 		
 		ResultSet rs = null;
 		try { 
 			_stmt = _conn.createStatement();
-			String query =  "select mood, longitude, latitude from Reading where dateTime between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
+			String query =  "select mood, longitude, latitude from Mood where timeStamp between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
 			" and longitude between " + snapLongMin + " and " +snapLongMax + " and latitude between " + snapLatMin + " and " + snapLatMax;
 			
 			_stmt.executeQuery(query);

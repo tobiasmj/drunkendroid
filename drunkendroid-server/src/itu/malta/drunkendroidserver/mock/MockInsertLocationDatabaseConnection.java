@@ -42,7 +42,7 @@ public class MockInsertLocationDatabaseConnection implements IDatabaseConnection
 			EasyMock.expectLastCall();
 		    replay(rs);
 		    
-		    expect(stmt.executeUpdate("Insert into Location(trip,dateTime,latitude,longitude) values (1,1,10.0,10.0)")).andReturn(1);
+		    expect(stmt.executeUpdate("Insert into Location(trip,timeStamp,latitude,longitude) values (1,1,10.0,10.0)")).andReturn(1);
 		    //expect(stmt.getGeneratedKeys()).andReturn(rs);
 		    stmt.close();
 		    EasyMock.expectLastCall();

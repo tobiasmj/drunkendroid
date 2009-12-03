@@ -21,7 +21,7 @@ public class MoodMapConverter implements Converter{
 	public void marshal(Object value, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		  GridCell MMReading = (GridCell) value;
-		  writer.addAttribute("value", Integer.toString(MMReading.getAverage()));
+		  writer.addAttribute("value", Long.toString(MMReading.getAverage()));
 		  writer.addAttribute("long", Double.toString(MMReading.getLongitude()));
 		  writer.addAttribute("lat", Double.toString(MMReading.getLatitude()));
 	}
