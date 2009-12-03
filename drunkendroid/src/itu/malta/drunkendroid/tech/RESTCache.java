@@ -118,7 +118,7 @@ public class RESTCache implements IRESTCache {
 		final String whereClause = "id = ?";
 		final String[] whereArgs = {String.valueOf(t.localId)};
 		
-		values.put("foreignId", String.valueOf(t.localId));
+		values.put("foreignId", String.valueOf(t.remoteId));
 		values.put("online", String.valueOf(1)); //set to online
 		try{
 			db.beginTransaction();
@@ -309,8 +309,6 @@ public class RESTCache implements IRESTCache {
 						break;
 					}			
 				}
-				
-				
 			};
 			//Start the looper, and start handling messages for this thread
 			Looper.loop();
