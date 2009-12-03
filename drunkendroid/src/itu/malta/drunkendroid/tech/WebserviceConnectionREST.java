@@ -9,6 +9,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.util.Log;
 
@@ -16,11 +18,16 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
 	private static final String BASE_URI = "http://192.168.0.12:8182/drunkendroid/";
 	private static final String targetDomain = "192.168.0.12";
 	private static final String LOGTAG = "WebServiceConnectionREST";
+	private DefaultHttpClient httpClient = new DefaultHttpClient();
+	
+	public WebserviceConnectionREST(){
+		HttpParams params = httpClient.getParams();
+		HttpConnectionParams.setConnectionTimeout(params, 2000); //2 Seconds connection timeout
+		HttpConnectionParams.setSoTimeout(params, 5000); //5 Seconds retrieve data timeout.
+	}
 	
 	public HttpResponse post(String uri, String xmlContent) throws RESTFacadeException{
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-        
-        HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
+		HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
         // Using POST here
         HttpPost httpPost = new HttpPost(BASE_URI+uri);
         // Make sure the server knows what kind of a response we will accept
@@ -44,9 +51,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
 	}
 
 	public HttpResponse get(String uri) throws RESTFacadeException {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-        
-        HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
+		HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
         // Using GET here
         HttpGet httpGet = new HttpGet(BASE_URI+uri);
         // Make sure the server knows what kind of a response we will accept
@@ -66,9 +71,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
 	}
 	
 	public HttpResponse put(String uri, String xmlContent) throws RESTFacadeException{
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-        
-        HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
+		HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
         // Using PUT here
         HttpPut httpPut = new HttpPut(BASE_URI+uri);
         // Make sure the server knows what kind of a response we will accept
