@@ -5,12 +5,12 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
 
 /**
  * 
- * Class representing a Reading.
+ * Class representing a Mood Reading.
  *
  */
 public class Mood implements IEvent{
 
-	private long _readingTime;
+	private long _timeStamp;
 	private double _latitude, _longitude;
 	private int _mood = -1;
 	private long _tripId = 0;
@@ -24,13 +24,13 @@ public class Mood implements IEvent{
 	}
 	/**
 	 * Constructor
-	 * @param readingTime the time of the reading in unixTimeformat
+	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds.
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 * @param mood the mood valued 0-255
 	 */
-	public Mood (long readingTime, double latitude, double longitude, int mood ) {
-		this._readingTime = readingTime;
+	public Mood (long timeStamp, double latitude, double longitude, int mood ) {
+		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
 		this._mood = mood;
@@ -38,20 +38,20 @@ public class Mood implements IEvent{
 	/**
 	 * Constructor 
 	 * @param tripId the tripId associated with the reading
-	 * @param readingTime the time of the reading in unixTimeformat
+	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds.
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 * @param mood the mood valued 0-255
 	 */
-	public Mood (long tripId, long readingTime, double latitude, double longitude, int mood ) {
+	public Mood (long tripId, long timeStamp, double latitude, double longitude, int mood ) {
 		this._tripId = tripId;
-		this._readingTime = readingTime;
+		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
 		this._mood = mood;
 	}
 	public String getEventType() {
-		return "reading";
+		return "mood";
 	}
 
 	public double getLatitude() {
@@ -67,12 +67,12 @@ public class Mood implements IEvent{
 
 	@Override
 	public long getTimeStamp() {
-		return _readingTime;
+		return _timeStamp;
 	}
 
 	@Override
 	public String getType() {
-		return "reading";
+		return "mood";
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class Mood implements IEvent{
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
-		_readingTime = timeStamp;
+		_timeStamp = timeStamp;
 		
 	}
 }

@@ -23,7 +23,7 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  */
 public class Call implements IEvent{
 
-	private long _readingTime;
+	private long _timeStamp;
 	private double _latitude, _longitude;
 	private long _tripId = 0;
 	private String _caller;
@@ -39,12 +39,12 @@ public class Call implements IEvent{
 	}
 	/**
 	 * Constructor
-	 * @param readingTime the time of the reading in unixTimeformat
+	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public Call (long readingTime, double latitude, double longitude, String caller, String reciever, long endTime) {
-		this._readingTime = readingTime;
+	public Call (long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
+		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
 		this._caller = caller;
@@ -54,13 +54,13 @@ public class Call implements IEvent{
 	/**
 	 * Constructor 
 	 * @param tripId the tripId associated with the reading
-	 * @param readingTime the time of the reading in unixTimeformat
+	 * @param timeStamp the time of the reading in unixTimeformat
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public Call (long tripId, long readingTime, double latitude, double longitude, String caller, String reciever, long endTime) {
+	public Call (long tripId, long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
 		this._tripId = tripId;
-		this._readingTime = readingTime;
+		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
 		this._caller = caller;
@@ -81,7 +81,7 @@ public class Call implements IEvent{
 
 	@Override
 	public long getTimeStamp() {
-		return _readingTime;
+		return _timeStamp;
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class Call implements IEvent{
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
-		_readingTime = timeStamp;
+		_timeStamp = timeStamp;
 		
 	}
 	public String getCaller() {

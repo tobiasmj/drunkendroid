@@ -91,15 +91,15 @@ public class RepositoryTest {
 		rep.insertLocation(location);
 	}
 	/**
-	 * Test method for insertReading
+	 * Test method for insertMood
 	 * @throws SQLException 
 	 */
 	@Test
-	public void testInsertReading() throws SQLException {
+	public void testInsertMood() throws SQLException {
 		Repository rep = new Repository(MockInsertMoodDatabaseConnection.getInstance().getConn());
-		Mood reading = new Mood(1, 10, 10, 100);
-		reading.setTripId(1);
-		rep.insertReading(reading);
+		Mood mood = new Mood(1, 10, 10, 100);
+		mood.setTripId(1);
+		rep.insertMood(mood);
 	}
 	/**
 	 * Test method for getMoodMap
@@ -151,7 +151,7 @@ public class RepositoryTest {
 		Trip eTrip = new Trip(1L, 2L, "testTrip");
 		eTrip.setTripId(1);
 
-		Mood eReading = new Mood(1L,1D,2D,1);
+		Mood eMood = new Mood(1L,1D,2D,1);
 		Location eLocation = new Location(1L,1D,2D);
 		Call eCall = new Call(1L,1D,2D,"004551883250","004551883250",2L);
 		Sms eSms = new Sms(1L,1D,2D,"004551883250","004551883250","test message");
@@ -163,11 +163,11 @@ public class RepositoryTest {
 		while(eTrip.moreEvents()) {
 			IEvent event = eTrip.getNextEvent();
 			if(Mood.class.isInstance(event)) {
-				Mood rEvent = (Mood)event;
-				Assert.assertEquals(eReading.getLatitude(), rEvent.getLatitude());				
-				Assert.assertEquals(eReading.getLongitude(), rEvent.getLongitude());				
-				Assert.assertEquals(eReading.getMood(), rEvent.getMood());				
-				Assert.assertEquals(eReading.getTimeStamp(), rEvent.getTimeStamp());				
+				Mood mEvent = (Mood)event;
+				Assert.assertEquals(eMood.getLatitude(), mEvent.getLatitude());				
+				Assert.assertEquals(eMood.getLongitude(), mEvent.getLongitude());				
+				Assert.assertEquals(eMood.getMood(), mEvent.getMood());				
+				Assert.assertEquals(eMood.getTimeStamp(), mEvent.getTimeStamp());				
 
 			} else if (Location.class.isInstance(event)) {
 				Location lEvent = (Location)event;

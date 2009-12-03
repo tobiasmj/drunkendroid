@@ -26,7 +26,7 @@ public class GridCell{
 	}
 	
 	/**
-	 * Method to add a reading value to the GridCell
+	 * Method to add a mood value to the GridCell
 	 * @param value
 	 */
 	public void addValue(int value){
@@ -41,7 +41,7 @@ public class GridCell{
 	}
 	
 	/**
-	 * get the average value of readings within the GridCell.
+	 * get the average value of mood readings within the GridCell.
 	 * @return integer from 0-255.
 	 */
 	public long getAverage() {

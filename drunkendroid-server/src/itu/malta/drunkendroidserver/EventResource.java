@@ -76,8 +76,8 @@ public class EventResource extends ServerResource {
 					event = (IEvent) events.get(i);
 					event.setTripId(_tripId);
 					if(Mood.class.isInstance(event)) {
-						Mood rEvent = (Mood)event;
-						rep.insertReading(rEvent);
+						Mood mEvent = (Mood)event;
+						rep.insertMood(mEvent);
 					} else if (Location.class.isInstance(event)) {
 						Location lEvent = (Location)event;
 						rep.insertLocation(lEvent);

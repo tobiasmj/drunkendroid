@@ -29,7 +29,7 @@ public class ConverterTest {
 	private XStream _xStream;
 	private String _tripXML, _eventsXML;
 	private Trip _trip;
-	private Mood _reading;
+	private Mood _mood;
 	private Location _loc;
 	private Call _call1, _call2;
 	private Sms _sms1, _sms2;
@@ -46,21 +46,21 @@ public class ConverterTest {
 	public void setUp() throws Exception {
 		_trip = new Trip(1255816133L, 1255816133L, "ginsaturday");
 		_events = new LinkedList<IEvent>();
-		_reading = new Mood(1255816133L,35.908422D,14.502362D, 124);
+		_mood = new Mood(1255816133L,35.908422D,14.502362D, 124);
 		_loc = new Location(1255816133L,14.502362D,35.908422D);
 		_call1 = new Call(1255816133L,35.908422D,14.502362D,"004551883250","0",12558161155L);
 		_call2 = new Call(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
 		_sms1 = new Sms(1255816133L,35.908422D,14.502362D,"004551883250","0","test message");
 		_sms2 = new Sms(1255816133L,35.908422D,14.502362D,"0","004551883250","test message");
 		
-		_events.add(_reading);
+		_events.add(_mood);
 		_events.add(_loc);
 		_events.add(_call1);
 		_events.add(_call2);
 		_events.add(_sms1);
 		_events.add(_sms2);
 		
-		_trip.addEvent(_reading);
+		_trip.addEvent(_mood);
 		_trip.addEvent(_loc);
 		_trip.addEvent(_call1);
 		_trip.addEvent(_call2);
@@ -71,7 +71,7 @@ public class ConverterTest {
 			"<trip>\n" +
 	  		"  <events>\n" +
 	    	"    <event>\n" +
-	     	"      <eventType>reading</eventType>\n" +
+	     	"      <eventType>mood</eventType>\n" +
 	     	"      <dateTime>1255816133</dateTime>\n" +
 	     	"      <longitude>14.502362</longitude>\n" +
 	     	"      <latitude>35.908422</latitude>\n" +
@@ -133,7 +133,7 @@ public class ConverterTest {
 		_eventsXML = 
 			"<events>\n" +
 			"  <event>\n" +
-	     	"    <eventType>reading</eventType>\n" +
+	     	"    <eventType>mood</eventType>\n" +
 	     	"    <dateTime>1255816133</dateTime>\n" +
 	     	"    <longitude>14.502362</longitude>\n" +
 	     	"    <latitude>35.908422</latitude>\n" +
@@ -225,12 +225,12 @@ public class ConverterTest {
 		while (_trip.moreEvents()) {
 			IEvent testEvent = _trip.getNextEvent();
 			if (testEvent.getClass().equals(Mood.class)) {
-				Mood readingTestEvent = (Mood) testEvent;
-				Assert.assertEquals(_reading.getTimeStamp(), readingTestEvent.getTimeStamp());
-				Assert.assertEquals(_reading.getType(), readingTestEvent.getType());
-				Assert.assertEquals(_reading.getLatitude(), readingTestEvent.getLatitude());
-				Assert.assertEquals(_reading.getLongitude(), readingTestEvent.getLongitude());	
-				Assert.assertEquals(_reading.getMood(), readingTestEvent.getMood());
+				Mood moodTestEvent = (Mood) testEvent;
+				Assert.assertEquals(_mood.getTimeStamp(), moodTestEvent.getTimeStamp());
+				Assert.assertEquals(_mood.getType(), moodTestEvent.getType());
+				Assert.assertEquals(_mood.getLatitude(), moodTestEvent.getLatitude());
+				Assert.assertEquals(_mood.getLongitude(), moodTestEvent.getLongitude());	
+				Assert.assertEquals(_mood.getMood(), moodTestEvent.getMood());
 			} else if (testEvent.getClass().equals(Location.class)) {
 
 				Location locationTestEvent = (Location) testEvent;
@@ -311,12 +311,12 @@ public class ConverterTest {
 			event = (IEvent) events.get(i);
 			
 			if(Mood.class.isInstance(event)) {
-				Mood rEvent = (Mood)event;
-				Assert.assertEquals(_reading.getTimeStamp(), rEvent.getTimeStamp());
-				Assert.assertEquals(_reading.getType(), rEvent.getType());
-				Assert.assertEquals(_reading.getLatitude(), rEvent.getLatitude());
-				Assert.assertEquals(_reading.getLongitude(), rEvent.getLongitude());
-				Assert.assertEquals(_reading.getMood(), rEvent.getMood());
+				Mood mEvent = (Mood)event;
+				Assert.assertEquals(_mood.getTimeStamp(), mEvent.getTimeStamp());
+				Assert.assertEquals(_mood.getType(), mEvent.getType());
+				Assert.assertEquals(_mood.getLatitude(), mEvent.getLatitude());
+				Assert.assertEquals(_mood.getLongitude(), mEvent.getLongitude());
+				Assert.assertEquals(_mood.getMood(), mEvent.getMood());
 			} else if (Location.class.isInstance(event)) {
 				Location lEvent = (Location)event;
 				Assert.assertEquals(_loc.getTimeStamp(), lEvent.getTimeStamp());

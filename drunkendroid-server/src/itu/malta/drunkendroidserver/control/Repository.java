@@ -135,17 +135,17 @@ public class Repository {
 		}
 	}
 	/**
-	 * Method for inserting a Reading
-	 * @param reading, the reading object to be inserted
+	 * Method for inserting a moodReading
+	 * @param mood, the Mood object to be inserted
 	 * @throws SQLException, thrown when an SQL error occurs.
 	 */
-	public void insertReading(Mood reading) throws SQLException {
-		// make sure that the reading has a tripid associated.
-		if (reading.getTripId() != 0) {
+	public void insertMood(Mood mood) throws SQLException {
+		// make sure that the mood has a tripid associated.
+		if (mood.getTripId() != 0) {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into Mood(trip,timeStamp,latitude,longitude,mood) values (" + reading.getTripId() + "," + reading.getTimeStamp() + "," + reading.getLatitude() + "," + reading.getLongitude() + "," + reading.getMood() +")");
+				_stmt.executeUpdate("Insert into Mood(trip,timeStamp,latitude,longitude,mood) values (" + mood.getTripId() + "," + mood.getTimeStamp() + "," + mood.getLatitude() + "," + mood.getLongitude() + "," + mood.getMood() +")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -194,7 +194,7 @@ public class Repository {
 						IEvent event = trip.getNextEvent();
 						event.setTripId(tripID);
 						if(event.getClass().equals(Mood.class)) {
-							insertReading((Mood)event);
+							insertMood((Mood)event);
 						} else if (event.getClass().equals(Location.class)) {
 							insertLocation((Location)event);
 						}
@@ -265,7 +265,7 @@ public class Repository {
 			_stmt = _conn.createStatement();
 			LinkedList<IEvent> events = new LinkedList<IEvent>(); 
 
-			// get all reading events for a given tripId
+			// get all mood events for a given tripId
 			_stmt.executeQuery("Select timeStamp,longitude,latitude,mood from Mood where trip = " + trip.getTripId());
 			rs = _stmt.getResultSet();
 
@@ -340,7 +340,7 @@ public class Repository {
 	public GridCell[][] calculateMoodMap(MoodMap mm) throws SQLException {
 		int gridX = mm.getGridX();
 		int gridY = mm.getGridY();
-		double readingLong, readingLat;
+		double moodReadingLong, moodReadingLat;
 		double width = mm.getLongMax() - mm.getLongMin();
 		double height = mm.getLatMax() - mm.getLatMin();
 		double gridWidth = width/gridX;
@@ -365,7 +365,7 @@ public class Repository {
 		ResultSet rs = null;
 		try { 
 			_stmt = _conn.createStatement();
-			String query =  "select mood, longitude, latitude from Mood where timeStamp between " + mm.getStartReadingTime() + " and " + mm.getEndReadingTime() +
+			String query =  "select mood, longitude, latitude from Mood where timeStamp between " + mm.getStartTimeStamp() + " and " + mm.getEndTimeStamp() +
 			" and longitude between " + snapLongMin + " and " +snapLongMax + " and latitude between " + snapLatMin + " and " + snapLatMax;
 			
 			_stmt.executeQuery(query);
@@ -373,14 +373,14 @@ public class Repository {
 			int xCoord, yCoord;
 			// iterate all the mood readings and calculate their place in the grid
 			while(rs.next()) {
-				readingLong = rs.getDouble("longitude");
-				readingLat = rs.getDouble("latitude");
-				xCoord = (int)((readingLong - snapLongMin)/gridWidth);
+				moodReadingLong = rs.getDouble("longitude");
+				moodReadingLat = rs.getDouble("latitude");
+				xCoord = (int)((moodReadingLong - snapLongMin)/gridWidth);
 
 				if(xCoord > 0) {
 					xCoord = xCoord -1;
 				}
-				yCoord = (int)((readingLat - snapLatMin)/gridHeight);
+				yCoord = (int)((moodReadingLat - snapLatMin)/gridHeight);
 				if(yCoord > 0) {
 					yCoord = yCoord -1;
 				}

@@ -47,11 +47,11 @@ public class EventConverter implements Converter{
 				writer.startNode("latitude");
 				writer.setValue(Double.toString(event.getLatitude()));
 				writer.endNode();
-				if(event.getType().equals("reading")){
-					Mood readingEvent = (Mood) event;
+				if(event.getType().equals("mood")){
+					Mood moodEvent = (Mood) event;
 					writer.startNode("data");
 					writer.startNode("mood");
-					writer.setValue(Integer.toString(readingEvent.getMood()));
+					writer.setValue(Integer.toString(moodEvent.getMood()));
 					writer.endNode();
 					writer.endNode();	
 				} else if(event.getType().equals("call")) {
@@ -107,11 +107,11 @@ public class EventConverter implements Converter{
 			writer.startNode("latitude");
 			writer.setValue(Double.toString(event.getLatitude()));
 			writer.endNode();
-			if(event.getType().equals("reading")){
-				Mood readingEvent = (Mood) event;
+			if(event.getType().equals("mood")){
+				Mood moodEvent = (Mood) event;
 				writer.startNode("data");
 				writer.startNode("mood");
-				writer.setValue(Integer.toString(readingEvent.getMood()));
+				writer.setValue(Integer.toString(moodEvent.getMood()));
 				writer.endNode();
 				writer.endNode();	
 			}  else if(event.getType().equals("call")) {
@@ -161,7 +161,6 @@ public class EventConverter implements Converter{
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		int signedHigh = 2147483647;
 		Long timeStamp = 0L;
 		Double longitude = -1D;
 		Double latitude = -1D;
@@ -202,7 +201,7 @@ public class EventConverter implements Converter{
 							} else if("data".equals(reader.getNodeName())) {
 								while(reader.hasMoreChildren()) {
 									reader.moveDown();
-									if(eventType.equals("reading")) {
+									if(eventType.equals("mood")) {
 										if("mood".equals(reader.getNodeName())) {
 											mood = Integer.valueOf(reader.getValue());
 										}
@@ -231,7 +230,7 @@ public class EventConverter implements Converter{
 						}
 					}
 
-					if(eventType.equals("reading")) {
+					if(eventType.equals("mood")) {
 						events.add(new Mood(timeStamp,latitude,longitude,mood));	
 					} else if(eventType.equals("location")) {
 						events.add(new Location(timeStamp, longitude, latitude));

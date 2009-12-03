@@ -6,7 +6,7 @@ package itu.malta.drunkendroidserver.domain;
  */
 public class MoodMap {
 
-	private long _startReadingTime, _endReadingTime;
+	private long _startTimeStamp, _endTimeStamp;
 
 	private double _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
 
@@ -37,11 +37,11 @@ public class MoodMap {
 	public double getULlongitude() {
 		return _ULlongitude;
 	}
-	public long getStartReadingTime() {
-		return _startReadingTime;
+	public long getStartTimeStamp() {
+		return _startTimeStamp;
 	}
-	public long getEndReadingTime() {
-		return _endReadingTime;
+	public long getEndTimeStamp() {
+		return _endTimeStamp;
 	}
 	public double getLatMax() {
 		return _latMax;
@@ -57,15 +57,15 @@ public class MoodMap {
 	}
 	/***
 	 * Constructor.
-	 * @param readingTime timeStamp of the requested MoodMap 
+	 * @param startTimeStamp timeStamp of the requested MoodMap 
 	 * @param ULlatitude UpperLeftCorner latitude of the MoodMap
 	 * @param ULlongitude UpperLeftCorner longitude of the MoodMap
 	 * @param LRlatitude LowerRightCorner latitude of the MoodMap
 	 * @param LRlongitude LowerRightCorner longitude of the MoodMap
 	 */
-	public MoodMap (long startReadingTime,long endReadingTime, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude, int gridX, int gridY) {
-		_startReadingTime = startReadingTime;
-		_endReadingTime = endReadingTime;
+	public MoodMap (long startTimeStamp,long endTimeStamp, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude, int gridX, int gridY) {
+		_startTimeStamp = startTimeStamp;
+		_endTimeStamp = endTimeStamp;
 		_ULlatitude = ULlatitude;
 		_ULlongitude = ULlongitude;
 		_LRlatitude = LRlatitude;
