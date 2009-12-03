@@ -25,7 +25,7 @@ import android.telephony.TelephonyManager;
 import android.test.AndroidTestCase;
 import static org.easymock.EasyMock.*;
 
-public class RESTconnectionTest extends AndroidTestCase {
+public class RESTServerFacadeTest extends AndroidTestCase {
 	RESTServerFacade rest = null;
 
 	protected void setUp(){
@@ -35,7 +35,7 @@ public class RESTconnectionTest extends AndroidTestCase {
 	protected void tearDown(){
 	}
 	
-	public void testConsumePostResponseWithStatus201() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException{
+	public void testConsumePostResponseWithStatus201() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IllegalStateException, IOException, RESTFacadeException{
 		//Build
 		final String content = "<tripId>2343456</tripId>";
 		//Build an inputStream from to provide the mock object with.
