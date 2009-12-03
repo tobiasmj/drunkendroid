@@ -4,7 +4,7 @@ import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.GridCell;
 import itu.malta.drunkendroidserver.domain.Location;
 import itu.malta.drunkendroidserver.domain.MoodMap;
-import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Mood;
 import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
@@ -139,7 +139,7 @@ public class Repository {
 	 * @param reading, the reading object to be inserted
 	 * @throws SQLException, thrown when an SQL error occurs.
 	 */
-	public void insertReading(Reading reading) throws SQLException {
+	public void insertReading(Mood reading) throws SQLException {
 		// make sure that the reading has a tripid associated.
 		if (reading.getTripId() != 0) {
 			ResultSet rs = null;
@@ -193,8 +193,8 @@ public class Repository {
 
 						IEvent event = trip.getNextEvent();
 						event.setTripId(tripID);
-						if(event.getClass().equals(Reading.class)) {
-							insertReading((Reading)event);
+						if(event.getClass().equals(Mood.class)) {
+							insertReading((Mood)event);
 						} else if (event.getClass().equals(Location.class)) {
 							insertLocation((Location)event);
 						}
@@ -270,7 +270,7 @@ public class Repository {
 			rs = _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Reading(rs.getLong("timeStamp"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
+				events.add(new Mood(rs.getLong("timeStamp"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
 			}
 
 			// get all location events for a given tripId

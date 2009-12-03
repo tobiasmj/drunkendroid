@@ -14,17 +14,17 @@ import itu.malta.drunkendroidserver.interfaces.IDatabaseConnection;
  * Used for UnitTests, creates a Mock database object instead of a prober database connection.
  */
 
-public class MockInsertReadingDatabaseConnection implements IDatabaseConnection {
+public class MockInsertMoodDatabaseConnection implements IDatabaseConnection {
 
-	private MockInsertReadingDatabaseConnection(){
+	private MockInsertMoodDatabaseConnection(){
 	}
 
-	private static class MockInsertTripDatabaseConnectionSingleton {
-		private static final IDatabaseConnection INSTANCE = new MockInsertReadingDatabaseConnection();
+	private static class MockInsertMoodDatabaseConnectionSingleton {
+		private static final IDatabaseConnection INSTANCE = new MockInsertMoodDatabaseConnection();
 	}
 
 	public static IDatabaseConnection getInstance(){
-		return MockInsertTripDatabaseConnectionSingleton.INSTANCE;
+		return MockInsertMoodDatabaseConnectionSingleton.INSTANCE;
 	}
 	
 	@Override

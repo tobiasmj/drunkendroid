@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.Location;
-import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Mood;
 import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
@@ -45,7 +45,7 @@ public class TripConverter implements Converter{
 					writer.setValue(Double.toString(event.getLatitude()));
 				writer.endNode();
 				if(event.getType().equals("reading")){
-					Reading readingEvent = (Reading) event;
+					Mood readingEvent = (Mood) event;
 					writer.startNode("data");
 						writer.startNode("mood");
 							writer.setValue(Integer.toString(readingEvent.getMood()));
@@ -191,7 +191,7 @@ public class TripConverter implements Converter{
 					}
 
 					if(eventType.equals("reading")) {
-						events.add(new Reading(timeStamp,latitude,longitude,mood));	
+						events.add(new Mood(timeStamp,latitude,longitude,mood));	
 					} else if(eventType.equals("location")) {
 						events.add(new Location(timeStamp, longitude, latitude));
 					} else if (eventType.equals("call")) {

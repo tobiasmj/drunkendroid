@@ -10,7 +10,7 @@ import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.GridCell;
 import itu.malta.drunkendroidserver.domain.Location;
 import itu.malta.drunkendroidserver.domain.MoodMap;
-import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Mood;
 import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
@@ -18,7 +18,7 @@ import itu.malta.drunkendroidserver.mock.MockCalculateMoodMapDatabaseConnection;
 import itu.malta.drunkendroidserver.mock.MockGetTripDatabaseConnection;
 import itu.malta.drunkendroidserver.mock.MockInsertCallDatabaseConnection;
 import itu.malta.drunkendroidserver.mock.MockInsertLocationDatabaseConnection;
-import itu.malta.drunkendroidserver.mock.MockInsertReadingDatabaseConnection;
+import itu.malta.drunkendroidserver.mock.MockInsertMoodDatabaseConnection;
 import itu.malta.drunkendroidserver.mock.MockInsertSmsDatabaseConnection;
 import itu.malta.drunkendroidserver.mock.MockInsertTripDatabaseConnection;
 import itu.malta.drunkendroidserver.mock.MockUpdateTripDatabaseConnection;
@@ -96,8 +96,8 @@ public class RepositoryTest {
 	 */
 	@Test
 	public void testInsertReading() throws SQLException {
-		Repository rep = new Repository(MockInsertReadingDatabaseConnection.getInstance().getConn());
-		Reading reading = new Reading(1, 10, 10, 100);
+		Repository rep = new Repository(MockInsertMoodDatabaseConnection.getInstance().getConn());
+		Mood reading = new Mood(1, 10, 10, 100);
 		reading.setTripId(1);
 		rep.insertReading(reading);
 	}
@@ -151,7 +151,7 @@ public class RepositoryTest {
 		Trip eTrip = new Trip(1L, 2L, "testTrip");
 		eTrip.setTripId(1);
 
-		Reading eReading = new Reading(1L,1D,2D,1);
+		Mood eReading = new Mood(1L,1D,2D,1);
 		Location eLocation = new Location(1L,1D,2D);
 		Call eCall = new Call(1L,1D,2D,"004551883250","004551883250",2L);
 		Sms eSms = new Sms(1L,1D,2D,"004551883250","004551883250","test message");
@@ -162,8 +162,8 @@ public class RepositoryTest {
 		Assert.assertEquals(eTrip.getTripId(), it.getTripId());
 		while(eTrip.moreEvents()) {
 			IEvent event = eTrip.getNextEvent();
-			if(Reading.class.isInstance(event)) {
-				Reading rEvent = (Reading)event;
+			if(Mood.class.isInstance(event)) {
+				Mood rEvent = (Mood)event;
 				Assert.assertEquals(eReading.getLatitude(), rEvent.getLatitude());				
 				Assert.assertEquals(eReading.getLongitude(), rEvent.getLongitude());				
 				Assert.assertEquals(eReading.getMood(), rEvent.getMood());				

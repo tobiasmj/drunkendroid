@@ -4,7 +4,7 @@ package itu.malta.drunkendroidserver;
 import itu.malta.drunkendroidserver.control.Repository;
 import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.Location;
-import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Mood;
 import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
 import itu.malta.drunkendroidserver.tech.DatabaseConnection;
@@ -60,7 +60,7 @@ public class EventResource extends ServerResource {
 				// setting up XStream for marshaling and un-marshalling events.
 				XStream xStream = new XStream();
 				xStream.registerConverter(new EventConverter());
-				xStream.alias("events", Reading.class);
+				xStream.alias("events", Mood.class);
 				xStream.alias("events", Location.class);
 				xStream.alias("events", Call.class);
 				xStream.alias("events", Sms.class);
@@ -75,8 +75,8 @@ public class EventResource extends ServerResource {
 				for (int i = 0; i < events.size(); i++ ) {
 					event = (IEvent) events.get(i);
 					event.setTripId(_tripId);
-					if(Reading.class.isInstance(event)) {
-						Reading rEvent = (Reading)event;
+					if(Mood.class.isInstance(event)) {
+						Mood rEvent = (Mood)event;
 						rep.insertReading(rEvent);
 					} else if (Location.class.isInstance(event)) {
 						Location lEvent = (Location)event;

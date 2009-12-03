@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import junit.framework.Assert;
 import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.Location;
-import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Mood;
 import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.domain.Trip;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
@@ -29,7 +29,7 @@ public class ConverterTest {
 	private XStream _xStream;
 	private String _tripXML, _eventsXML;
 	private Trip _trip;
-	private Reading _reading;
+	private Mood _reading;
 	private Location _loc;
 	private Call _call1, _call2;
 	private Sms _sms1, _sms2;
@@ -46,7 +46,7 @@ public class ConverterTest {
 	public void setUp() throws Exception {
 		_trip = new Trip(1255816133L, 1255816133L, "ginsaturday");
 		_events = new LinkedList<IEvent>();
-		_reading = new Reading(1255816133L,35.908422D,14.502362D, 124);
+		_reading = new Mood(1255816133L,35.908422D,14.502362D, 124);
 		_loc = new Location(1255816133L,14.502362D,35.908422D);
 		_call1 = new Call(1255816133L,35.908422D,14.502362D,"004551883250","0",12558161155L);
 		_call2 = new Call(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
@@ -224,8 +224,8 @@ public class ConverterTest {
 		
 		while (_trip.moreEvents()) {
 			IEvent testEvent = _trip.getNextEvent();
-			if (testEvent.getClass().equals(Reading.class)) {
-				Reading readingTestEvent = (Reading) testEvent;
+			if (testEvent.getClass().equals(Mood.class)) {
+				Mood readingTestEvent = (Mood) testEvent;
 				Assert.assertEquals(_reading.getTimeStamp(), readingTestEvent.getTimeStamp());
 				Assert.assertEquals(_reading.getType(), readingTestEvent.getType());
 				Assert.assertEquals(_reading.getLatitude(), readingTestEvent.getLatitude());
@@ -277,7 +277,7 @@ public class ConverterTest {
 	public void testEventMarshal() {
 		XStream xStream = new XStream();
 		xStream.registerConverter(new EventConverter());
-		xStream.alias("event", Reading.class);
+		xStream.alias("event", Mood.class);
 		xStream.alias("event", Location.class);
 		xStream.alias("event", Call.class);
 		xStream.alias("event", Sms.class);
@@ -295,7 +295,7 @@ public class ConverterTest {
 	public void testEventUnMarshal() {
 		XStream xStream = new XStream();
 		xStream.registerConverter(new EventConverter());
-		xStream.alias("events", Reading.class);
+		xStream.alias("events", Mood.class);
 		xStream.alias("events", Location.class);
 		xStream.alias("events", Call.class);
 		xStream.alias("events", Sms.class);
@@ -310,8 +310,8 @@ public class ConverterTest {
 		for (int i = 0; i < events.size(); i++ ) {
 			event = (IEvent) events.get(i);
 			
-			if(Reading.class.isInstance(event)) {
-				Reading rEvent = (Reading)event;
+			if(Mood.class.isInstance(event)) {
+				Mood rEvent = (Mood)event;
 				Assert.assertEquals(_reading.getTimeStamp(), rEvent.getTimeStamp());
 				Assert.assertEquals(_reading.getType(), rEvent.getType());
 				Assert.assertEquals(_reading.getLatitude(), rEvent.getLatitude());

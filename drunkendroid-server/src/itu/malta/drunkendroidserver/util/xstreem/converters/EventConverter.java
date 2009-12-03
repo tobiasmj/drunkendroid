@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import itu.malta.drunkendroidserver.domain.Call;
 import itu.malta.drunkendroidserver.domain.Location;
-import itu.malta.drunkendroidserver.domain.Reading;
+import itu.malta.drunkendroidserver.domain.Mood;
 import itu.malta.drunkendroidserver.domain.Sms;
 import itu.malta.drunkendroidserver.interfaces.IEvent;
 
@@ -48,7 +48,7 @@ public class EventConverter implements Converter{
 				writer.setValue(Double.toString(event.getLatitude()));
 				writer.endNode();
 				if(event.getType().equals("reading")){
-					Reading readingEvent = (Reading) event;
+					Mood readingEvent = (Mood) event;
 					writer.startNode("data");
 					writer.startNode("mood");
 					writer.setValue(Integer.toString(readingEvent.getMood()));
@@ -93,7 +93,7 @@ public class EventConverter implements Converter{
 				writer.endNode();
 			}
 
-		} else if (Reading.class.isInstance(value) || Location.class.isInstance(value) || Call.class.isInstance(value) || Sms.class.isInstance(value) ) {
+		} else if (Mood.class.isInstance(value) || Location.class.isInstance(value) || Call.class.isInstance(value) || Sms.class.isInstance(value) ) {
 			IEvent event = (IEvent)value;
 			writer.startNode("eventType");
 			writer.setValue(event.getType());
@@ -108,7 +108,7 @@ public class EventConverter implements Converter{
 			writer.setValue(Double.toString(event.getLatitude()));
 			writer.endNode();
 			if(event.getType().equals("reading")){
-				Reading readingEvent = (Reading) event;
+				Mood readingEvent = (Mood) event;
 				writer.startNode("data");
 				writer.startNode("mood");
 				writer.setValue(Integer.toString(readingEvent.getMood()));
@@ -232,7 +232,7 @@ public class EventConverter implements Converter{
 					}
 
 					if(eventType.equals("reading")) {
-						events.add(new Reading(timeStamp,latitude,longitude,mood));	
+						events.add(new Mood(timeStamp,latitude,longitude,mood));	
 					} else if(eventType.equals("location")) {
 						events.add(new Location(timeStamp, longitude, latitude));
 					} else if (eventType.equals("call")) {
@@ -253,7 +253,7 @@ public class EventConverter implements Converter{
 	 */
 	@Override
 	public boolean canConvert(Class clazz) {
-		if(clazz.equals(Reading.class)) {
+		if(clazz.equals(Mood.class)) {
 			return true;
 		} else if (clazz.equals(Location.class)) {
 			return true;

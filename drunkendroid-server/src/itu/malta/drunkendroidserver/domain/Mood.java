@@ -8,7 +8,7 @@ import itu.malta.drunkendroidserver.interfaces.IEvent;
  * Class representing a Reading.
  *
  */
-public class Reading implements IEvent{
+public class Mood implements IEvent{
 
 	private long _readingTime;
 	private double _latitude, _longitude;
@@ -29,7 +29,7 @@ public class Reading implements IEvent{
 	 * @param longitude the longitude of the reading
 	 * @param mood the mood valued 0-255
 	 */
-	public Reading (long readingTime, double latitude, double longitude, int mood ) {
+	public Mood (long readingTime, double latitude, double longitude, int mood ) {
 		this._readingTime = readingTime;
 		this._latitude = latitude;
 		this._longitude = longitude;
@@ -43,7 +43,7 @@ public class Reading implements IEvent{
 	 * @param longitude the longitude of the reading
 	 * @param mood the mood valued 0-255
 	 */
-	public Reading (long tripId, long readingTime, double latitude, double longitude, int mood ) {
+	public Mood (long tripId, long readingTime, double latitude, double longitude, int mood ) {
 		this._tripId = tripId;
 		this._readingTime = readingTime;
 		this._latitude = latitude;
