@@ -120,7 +120,7 @@ public class DataFacade implements IDataFacade {
 	 */
 	public void closeFacade() {
 		_local.closeFacade();
-		_remote.closeFacade();
+		_remote.closeCache();
 		_local = null;
 		_remote = null;
 	}

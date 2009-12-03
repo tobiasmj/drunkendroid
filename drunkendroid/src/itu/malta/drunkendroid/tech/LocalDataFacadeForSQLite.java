@@ -119,11 +119,13 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			while(returnedTrips.moveToNext()){
 				long startDateTime = returnedTrips.getLong(0);
 				long localId = returnedTrips.getLong(1);
-				long remoteId = returnedTrips.getLong(2);
 				Trip trip = new Trip();
 				trip.startDate = startDateTime;
 				trip.localId = localId;
-				trip.remoteId = remoteId;
+				if(!returnedTrips.isNull(2)){
+					trip.remoteId = returnedTrips.getLong(2);
+				}
+				
 				trips.add(trip);
 			}
 		}
@@ -151,12 +153,14 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				Trip trip = new Trip();
 				
 				long tripId = result.getLong(0);
-				long foreignId = result.getLong(1);
 				long startTime = result.getLong(2);
-				
 				trip.localId = tripId;
-				trip.remoteId = foreignId;
 				trip.startDate = startTime;
+				
+				//If we just set it, it'll get a default value instead of retaining null.
+				if(!result.isNull(1)){
+					trip.remoteId = result.getLong(1);
+				}
 				
 				resultList.add(trip);
 			}
@@ -190,7 +194,9 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		loadedTrip.startDate = startTime;
 		Long tripId = selectionCursor.getLong(0);
 		loadedTrip.localId = tripId;
-		loadedTrip.remoteId = selectionCursor.getLong(1);
+		if(!selectionCursor.isNull(1)){
+			loadedTrip.remoteId = selectionCursor.getLong(1);
+		}
 		selectionCursor.close();
 		
 		//Build the trip, by building each event

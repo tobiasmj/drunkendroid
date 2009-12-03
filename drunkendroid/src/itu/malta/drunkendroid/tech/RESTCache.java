@@ -143,7 +143,8 @@ public class RESTCache implements IRESTCache {
 							}
 						}
 						catch (RESTFacadeException e) {
-							// Don't handle
+							// Just log it.
+							Log.e(LOGTAG, "Tried to execute an uploadcall: " + e.getMessage());
 						}
 						break;
 					default:
@@ -225,7 +226,7 @@ public class RESTCache implements IRESTCache {
 			//and the trip must have events which have not been set online.
 			SQLiteDatabase db = _dbHelper.getDBInstance();
 			final String tripQuery = "SELECT t.id, t.startDateTime FROM Trip t, Event e WHERE " +
-				"e.online != 1 AND t.online = 1 AND e.trip = t.id " +
+				"e.online IS NULL AND t.online = 1 AND e.trip = t.id " +
 				"GROUP BY t.id";
 			
 			//Find Trips with !online events
@@ -277,7 +278,7 @@ public class RESTCache implements IRESTCache {
 		private List<Trip> getUpLoadCandidates() {
 			SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
 			final String[] columns = {"startDateTime"};
-			final String selection = " online != 1 AND foreignId IS NULL";;
+			final String selection = " online IS NULL AND foreignId IS NULL";;
 			List<Trip> trips = new ArrayList<Trip>();
 			
 			dbInstance.beginTransaction();
@@ -301,10 +302,8 @@ public class RESTCache implements IRESTCache {
 		}
 	}
 
-	public void closeFacade() {
+	public void closeCache() {
 		//Remember to close the QueueLooper Thread.
 		_queueLooper.mHandler.getLooper().quit();
-		//It might have been asleep so wake it up.
-		//_queueLooper.interrupt();
 	}
 }

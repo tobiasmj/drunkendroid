@@ -1,5 +1,7 @@
 package itu.malta.drunkendroid.tech;
 
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -8,11 +10,14 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.util.Log;
+
 public class WebserviceConnectionREST implements IWebserviceConnection{
 	private static final String BASE_URI = "http://192.168.0.12:8182/drunkendroid/";
 	private static final String targetDomain = "192.168.0.12";
+	private static final String LOGTAG = "WebServiceConnectionREST";
 	
-	public HttpResponse post(String uri, String xmlContent){
+	public HttpResponse post(String uri, String xmlContent) throws RESTFacadeException{
 		DefaultHttpClient httpClient = new DefaultHttpClient();
         
         HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
@@ -33,8 +38,8 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
          }
         catch (Exception ex)
         {
-                ex.printStackTrace();
-                return null;
+        	Log.e(LOGTAG, "Caught an unknown exception");
+            throw new RESTFacadeException(LOGTAG, "Caught an unknown Exception while connecting");
         }
 	}
 

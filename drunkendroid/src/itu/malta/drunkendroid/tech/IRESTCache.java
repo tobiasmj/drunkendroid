@@ -2,7 +2,6 @@ package itu.malta.drunkendroid.tech;
 
 import java.util.List;
 
-import itu.malta.drunkendroid.control.IRemoteDataFacade;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;
@@ -16,5 +15,5 @@ public interface IRESTCache {
 	public void uploadTrip(Trip t);
 	public void updateTrip(Trip t, List<Event> eventList);
 
-	public void closeFacade();
+	public void closeCache();
 }
