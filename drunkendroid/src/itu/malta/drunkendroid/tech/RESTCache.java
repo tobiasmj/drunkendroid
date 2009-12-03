@@ -192,10 +192,10 @@ public class RESTCache implements IRESTCache {
 	/**
 	 * If a trip has not been uploaded before,
 	 * none of it's events have been uploaded either.
-	 * So gather everything together.
+	 * So gather everything together. And filter it before returning.
 	 * @return
 	 */
-	synchronized private List<Trip> getUpLoadCandidates() {
+	synchronized private List<Trip> getUploadCandidates() {
 		SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
 		final String[] columns = {"startDateTime"};
 		final String selection = " online IS NULL AND foreignId IS NULL";;
@@ -216,6 +216,22 @@ public class RESTCache implements IRESTCache {
 		finally{
 			dbInstance.endTransaction();
 			cursor.close();
+		}
+		
+		//Filter the trips
+		for(Trip t : trips){
+			//Filter it.
+			//The discarded events should also be set online, to show they have been processed
+			TreeSet<Event> filteredOutEvents = new TreeSet<Event>();
+			filteredOutEvents.addAll(t.events);
+			
+			t.events = Trip.filterEvents(t.events, uploadTripFilter);
+			//Now remove the ones which will be processed.
+			filteredOutEvents.removeAll(t.events);
+			//Mark the rest as processed.
+			for(Event e : filteredOutEvents){
+				setEventProcessed(e);
+			}
 		}
 		
 		return trips;
@@ -260,7 +276,7 @@ public class RESTCache implements IRESTCache {
 					case UPLOADCALL:
 						Log.i(LOGTAG, "Handling an upload call");
 						//TODO: Implement
-						List<Trip> uploadTrips = getUpLoadCandidates();
+						List<Trip> uploadTrips = getUploadCandidates();
 						try{
 							for(Trip t : uploadTrips){
 								_server.uploadTrip(t);

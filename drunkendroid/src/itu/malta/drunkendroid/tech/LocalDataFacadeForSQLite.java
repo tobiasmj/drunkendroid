@@ -101,7 +101,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 
 	public List<Trip> getAllTrips() {
 		ArrayList<Trip> trips = new ArrayList<Trip>();
-		String[] selectedTripColumns = {"startDateTime, id, foreignId"};
+		String[] selectedTripColumns = {"startDateTime", "id" , "foreignId"};
 		Cursor returnedTrips = null;
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
