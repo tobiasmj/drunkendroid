@@ -91,7 +91,7 @@ public final class XMLBuilder {
 		if (LocationEvent.class.isInstance(e))
 			serializer.text("event");
 		else if (ReadingEvent.class.isInstance(e))
-			serializer.text("reading");
+			serializer.text("mood");
 		else if (CallEvent.class.isInstance(e))
 			serializer.text("call");
 		else if (SMSEvent.class.isInstance(e))
