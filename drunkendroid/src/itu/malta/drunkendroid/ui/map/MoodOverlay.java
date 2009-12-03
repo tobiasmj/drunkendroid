@@ -9,23 +9,42 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
+import com.google.android.maps.Projection;
 
 public class MoodOverlay extends Overlay
 {
 	private DataFacade _dataFacade;
     private HeatMap _heatmap = HeatMap.getInstance();
-    private GeoPoint _mapCenter;
-    private Integer _zoomLevel;
+    private MapView _mapView;
     private Context _context;
     
-    public MoodOverlay(Context context) {
+    // Used for connection issues
+    private boolean _isTrying = true;
+    
+    // Used to check updates on map
+    private GeoPoint _mapCenter;
+    private Integer _zoomLevel;
+    private Point _startPoint = new Point(0,0);
+    private boolean _changed = false;
+    
+    public MoodOverlay(Context context, MapView mapView) {
     	_context = context;
+    	_mapView = mapView;
+    }
+    
+    public void clicked()
+    {
+    	Log.i("DrunkDroid", "YEEEEEEEEP!!!!!!!!!!!!!");
     }
     
 	@Override
@@ -33,25 +52,62 @@ public class MoodOverlay extends Overlay
 	{
 		if(shadow == false)
 		{
+			mapView.getController().stopAnimation(true);
+			mapView.getController().stopPanning();
+			MapActivity mapActivity = (MapActivity)mapView.getContext();
 			
 			// Create heatmap for the first time
-			if(_mapCenter == null && _zoomLevel == null)
+			if(_heatmap.getHeatmap() == null)
 			{
-				System.out.println("Create heatmap");
-				canvas = getHeatmap(canvas, mapView);
+				Log.i("DrunkDroid", "Create heatmap");
+				canvas = getHeatmap(canvas);
 			}
-			// Update heatmap if map is changed
-			else if(!_mapCenter.equals(mapView.getMapCenter()) || _zoomLevel != mapView.getZoomLevel())
+			// If map has just changed, request new map
+			else if(_changed)
 			{
-				System.out.println("Update heatmap");
-				canvas = getHeatmap(canvas, mapView);
+				Log.i("DrunkDroid","Updating heatmap");
+				canvas = getHeatmap(canvas);
+				_changed = false;
+			}
+			// Map is moved, move the overlay along
+			else if(_mapCenter.getLatitudeE6() != mapView.getMapCenter().getLatitudeE6() ||
+					_mapCenter.getLongitudeE6() != mapView.getMapCenter().getLongitudeE6())
+			{
+				Log.i("DrunkDroid", "Moving heatmap");
+				Projection oldProj = _mapView.getProjection();
+				Projection newProj = mapView.getProjection();
+
+				Point oldStart = oldProj.toPixels(_mapCenter, null);
+				Point newStart = newProj.toPixels(mapView.getMapCenter(), null);
+				
+				int startX = oldStart.x - newStart.x;
+				int startY = oldStart.y - newStart.y;
+
+				_startPoint = new Point(_startPoint.x+startX,_startPoint.y+startY);
+				
+				canvas = moveHeatmap(canvas, _startPoint.x, _startPoint.y);
+				_changed = true;
+			}
+			// Map is zoomed, zoom the overlay too
+			else if(_zoomLevel != mapView.getZoomLevel())
+			{
+				Log.i("DrunkDroid", "Zooming heatmap");
+				if(_zoomLevel > mapView.getZoomLevel())
+					canvas = zoomHeatmap(canvas, -1);
+				else
+					canvas = zoomHeatmap(canvas, 1); 
+				_changed = true;
 			}
 			// Reuse heatmap if map is unchanged
 			else
 			{
-				System.out.println("Reuse heatmap");
+				Log.i("DrunkDroid", "Reuse heatmap");
 				canvas = reuseHeatmap(canvas);
 			}
+			
+			// Update mapCenter and zoomlevel
+			_mapCenter = mapView.getMapCenter();
+			_zoomLevel = mapView.getZoomLevel();
 		}
 	}
 	
@@ -61,14 +117,11 @@ public class MoodOverlay extends Overlay
 	 * @param mapView
 	 * @return A heatmap canvas
 	 */
-	private Canvas getHeatmap(Canvas canvas, MapView mapView)
+	private Canvas getHeatmap(Canvas canvas)
 	{
-		Log.i("DrunkDroid", _mapCenter + " =? " + mapView.getMapCenter());
-		Log.i("DrunkDroid", _zoomLevel + " =? " + mapView.getZoomLevel());
-		_mapCenter = mapView.getMapCenter();
-		_zoomLevel = mapView.getZoomLevel();
-		getMoodData(mapView);
-		canvas.drawBitmap(_heatmap.createHeatmap(mapView), 0, 0, null);
+		getMoodData();
+		canvas.drawBitmap(_heatmap.createHeatmap(_mapView), 0, 0, null);
+		_startPoint = new Point(0,0); // Reset bitmap upper-left point
 
 		return canvas;
 	}
@@ -86,48 +139,88 @@ public class MoodOverlay extends Overlay
 	}
 	
 	/**
+	 * Move the last created heatmap
+	 * @param canvas
+	 * @return A heatmap canvas
+	 */
+	private Canvas moveHeatmap(Canvas canvas, int x, int y)
+	{
+		canvas.drawBitmap(_heatmap.getHeatmap(), x, y, null);
+		
+		return canvas;
+	}
+	
+	/**
+	 * Zoom the last created heatmap
+	 * @param canvas
+	 * @return A heatmap canvas
+	 */
+	private Canvas zoomHeatmap(Canvas canvas, int zoomWay)
+	{
+		Bitmap bitmap = _heatmap.getHeatmap();
+		if(zoomWay == -1)
+		{
+			canvas.drawBitmap(bitmap, 0, 0, null);
+			canvas.scale(0.5f, 0.5f, (float)(bitmap.getWidth())/4, (float)(bitmap.getHeight())*3/4);
+		}
+		else if(zoomWay == 1)
+		{
+			canvas.drawBitmap(bitmap, -bitmap.getWidth()/4, -bitmap.getHeight()/4, null);
+			canvas.scale(2f, 2f, -(float)(bitmap.getWidth())*1/2, (float)(bitmap.getWidth())*2);
+		}
+		
+		return canvas;
+	}
+	
+	/**
 	 * Calls the DataFacade that handles communication with server.
 	 * If data is received then clear and add new points to heatmap.
 	 * @param mapView
 	 */
-	private void getMoodData(MapView mapView)
+	private void getMoodData()
 	{
-		final MapView view = mapView;
+		Log.i("DrunkDroid", "Get moodmap");
+		_dataFacade = new DataFacade(_mapView.getContext());
 		
-		System.out.println("Get moodmap");
-		_dataFacade = new DataFacade(mapView.getContext());
-		
-		int latSpan = mapView.getLatitudeSpan();
-		int longSpan = mapView.getLongitudeSpan();
+		int latSpan = _mapView.getLatitudeSpan();
+		int longSpan = _mapView.getLongitudeSpan();
 		
 		// Calculate an upper-left and a lower-right corner for the map.
 		// The calculation adds 5 percent in each direction
-		double ulLat = mapView.getMapCenter().getLatitudeE6()/1E6 + ((latSpan + latSpan * 0.3) / 2)/1E6;
-		double ulLong = mapView.getMapCenter().getLongitudeE6()/1E6 - ((longSpan + longSpan * 0.3) / 2)/1E6;
-		double lrLat = mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan + latSpan * 0.3) / 2)/1E6;
-		double lrLong = mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan + longSpan * 0.3) / 2)/1E6;
+		double ulLat = _mapView.getMapCenter().getLatitudeE6()/1E6 + ((latSpan * 1.2) / 2)/1E6;
+		double ulLong = _mapView.getMapCenter().getLongitudeE6()/1E6 - ((longSpan * 1.2) / 2)/1E6;
+		double lrLat = _mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan * 1.2) / 2)/1E6;
+		double lrLong = _mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan * 1.2) / 2)/1E6;
+
+		Log.i("DrunkDroid","MapView UL: " + ulLat + "x" + ulLong);
+		Log.i("DrunkDroid","MapView LR: " + lrLat + "x" + lrLong);
 		
 		List<ReadingEvent> data = null;
-		try {
-			data = _dataFacade.getReadingEvents(
-					(long)130773960,
-					(long)131027900,
-					(double)ulLat,
-					(double)ulLong,
-					(double)lrLat,
-					(double)lrLong);
-		} catch (RESTFacadeException e) {
-			new AlertDialog.Builder(_context)
-		      .setMessage("Could not connect to server. Please check you connection or try again.\nTry again?")
-		      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {	
-					getMoodData(view);
-				}
-			}).setNegativeButton("No", new AlertDialog.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-					((Activity)_context).finish();
-				}
-			}).show();
+		
+		while(_isTrying)
+		{
+			try {
+				data = _dataFacade.getReadingEvents(
+						(long)130773960,
+						(long)131027900,
+						(double)ulLat,
+						(double)ulLong,
+						(double)lrLat,
+						(double)lrLong);
+			} catch (RESTFacadeException e) {
+				new AlertDialog.Builder(_context)
+			      .setMessage("Could not connect to server. Please check your connection or try again.\nTry again?")
+			      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {	
+						
+					}
+				}).setNegativeButton("No", new AlertDialog.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						_isTrying = false;
+					}
+				}).show();
+			}
+			_isTrying = false;
 		}
 		
 		if(data != null)
@@ -141,6 +234,6 @@ public class MoodOverlay extends Overlay
 				_heatmap.addMoodMapPoint(mp);
 			}
 		}
-		System.out.println("Moodmap constructed");
+		Log.i("DrunkDroid", "Moodmap constructed");
 	}
 }

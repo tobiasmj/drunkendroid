@@ -15,6 +15,7 @@ import android.graphics.Shader;
 import android.graphics.Bitmap.Config;
 import android.graphics.Shader.TileMode;
 import android.util.Log;
+import android.view.MotionEvent;
 
 public class HeatMap{
 
@@ -137,7 +138,6 @@ public class HeatMap{
 		if(getRadius() > 1)
 			radius = getRadius(); 
 		
-		Log.i("DrunkDroid", p.x + "x" + p.y + "(" + radius + ")");
 		// Create gradient circle
 		int[] gradientColors = new int[]{Color.argb(mp.getMood(), 255, 255, 255), Color.TRANSPARENT};
 		Shader gradientShader = new RadialGradient(p.x, p.y, radius, gradientColors, null, TileMode.CLAMP);

@@ -12,7 +12,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
 
 public class MoodMapActivity extends MapActivity {
 	MapView _mapView;
@@ -29,40 +28,26 @@ public class MoodMapActivity extends MapActivity {
     	
         _mapView = (MapView)findViewById(R.id.mapView);
         _mapView.setBuiltInZoomControls(true);
-        
+
         _mapController = _mapView.getController();
+        
         double lat = 35.9232054039299*1E6;
         double lng = 14.489096835067395*1E6;
         
         _gp = new GeoPoint((int)lat,(int)lng);
 
-        _mapController.setZoom(15);
+        _mapController.setZoom(16);
         _mapController.animateTo(_gp, new Runnable() {
 	        public void run()
 	        {
 	            // Add overlay
-	            _moodOverlay = new MoodOverlay(MoodMapActivity.this);
+	            _moodOverlay = new MoodOverlay(MoodMapActivity.this, _mapView);
 	            List<Overlay> overlays = _mapView.getOverlays();
 	            overlays.add(_moodOverlay);
 	        }
         });
     }
     
-    public boolean onTouchEvent(MotionEvent event) {
-    	
-    	if(event.getAction() == MotionEvent.ACTION_DOWN)
-    	{
-    		System.out.println("DOWN");
-    	}
-    	else if(event.getAction() == MotionEvent.ACTION_UP)
-    	{
-    		System.out.println("UP");
-    		
-    	}
-    	
-    	return true;
-    }
- 
     @Override
     protected boolean isRouteDisplayed() {
         return false;
