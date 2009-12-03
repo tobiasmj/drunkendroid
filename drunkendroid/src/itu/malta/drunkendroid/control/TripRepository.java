@@ -81,9 +81,10 @@ public class TripRepository {
 		}
 	}
 
-	public void uploadTrip(Long startTime, Set<String> uploadTypes) {
+	public void uploadTrip(Long startTime, Set<String> uploadTypes) throws RESTFacadeException {
 		Trip t = data.getTrip(startTime);
 		t.events = Trip.filterEvents(t.events, uploadTypes);
-		data.uploadTrip(t);
+		if(t.events.size() > 0)
+			data.updateFilteredTrip(t);
 	}
 }

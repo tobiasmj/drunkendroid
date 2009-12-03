@@ -38,5 +38,11 @@ public class DummyRESTfacade implements IRESTCache {
 		
 	}
 
+	public void updateFilteredTrip(Trip t, List<Event> eventList)
+			throws RESTFacadeException {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

@@ -122,6 +122,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 					}
 		        	response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
 			        		String.valueOf(t.remoteId), xml);
+		        	responseCode = response.getStatusLine().getStatusCode();
 		      	}
 	        } 
 		} catch (IOException e1) {

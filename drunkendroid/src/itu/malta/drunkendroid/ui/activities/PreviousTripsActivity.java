@@ -3,6 +3,7 @@ package itu.malta.drunkendroid.ui.activities;
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.*;
+import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,6 +99,20 @@ public class PreviousTripsActivity extends ListActivity {
 			}
 			_progressDialog.dismiss();
 			_adapter.notifyDataSetChanged();
+		}
+	};
+	
+	private Runnable uploadFailedJob = new Runnable() {
+		public void run() {
+			_progressDialog.dismiss();
+			new AlertDialog.Builder(PreviousTripsActivity.this).setTitle(
+					"Upload failed. Please try again later.").setPositiveButton("Ok",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									
+								}
+							}).create();
 		}
 	};
 
@@ -210,10 +225,17 @@ public class PreviousTripsActivity extends ListActivity {
 										"Uploading trip", "Please wait..");
 								Thread t = new Thread(new Runnable() {
 									public void run() {
-										_repo.uploadTrip(
-												(_trips.get(id)).startDate,
-												listener._choices);
-										_progressDialog.dismiss();
+										
+										try {
+											_repo.uploadTrip(
+													(_trips.get(id)).startDate,
+													listener._choices);
+										} catch (RESTFacadeException e) {
+											runOnUiThread(uploadFailedJob);
+										} finally {
+											_progressDialog.dismiss();
+										}
+										
 									}
 
 								});

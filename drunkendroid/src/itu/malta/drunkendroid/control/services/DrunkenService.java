@@ -32,16 +32,16 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	private int _readingInterval;
 	private ILocationAdapter _locationManager;
 	private TripRepository _repo;
+	private NotificationManager _notificationManager;
 	public final static int SERVICE_COMMAND_START_TRIP = 1;
 	public final static int SERVICE_COMMAND_END_TRIP = 2;
-	private NotificationManager _notificationManager;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		System.out.println("Service Started");
-		_notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		_notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		DrunkenService._service = this;
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
@@ -70,8 +70,13 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			Toast toast;
 			switch (intent.getExtras().getInt("command")) {
 			case SERVICE_COMMAND_START_TRIP:
-				toast = Toast.makeText(this, "Trip started!", 5);
-				toast.show();
+				if (_repo.hasActiveTrip()) {
+					toast = Toast.makeText(this, "NB! Continuing old trip!", 7);
+					toast.show();
+				} else {
+					toast = Toast.makeText(this, "Trip started!", 5);
+					toast.show();
+				}
 				break;
 			case SERVICE_COMMAND_END_TRIP:
 				_repo.endTrip();
@@ -129,7 +134,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		IntentFilter incomingSMSFilter = new IntentFilter(
 				"android.provider.Telephony.SMS_RECEIVED");
 		this.registerReceiver(_eventHandler, incomingSMSFilter);
-		
+
 		SharedPreferences prefs = getSharedPreferences("prefs_config",
 				MODE_PRIVATE);
 		prefs
@@ -176,15 +181,21 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			public void run() {
 				System.out.println("MoodRead Intervallet sat til "
 						+ _readingInterval);
-				_moodHandler.postDelayed(this, 10000);
-				Notification not = new Notification(R.drawable.icon, "Time for a new Mood Reading", System.currentTimeMillis());
+				_moodHandler.postDelayed(this, _readingInterval * 1000);
+				Notification not = new Notification(R.drawable.icon,
+						"Time for a new Mood Reading", System
+								.currentTimeMillis());
 				not.flags = Notification.FLAG_NO_CLEAR;
 				not.defaults |= Notification.DEFAULT_SOUND;
-				not.vibrate = new long[] {0,1000,2000,3000}; 
-				PendingIntent p = PendingIntent.getActivity(DrunkenService.this, 0, new Intent(DrunkenService.this, MoodReadActivity.class), 0);
-				not.setLatestEventInfo(DrunkenService.this, "DrunkDroid is running", "Click here to make a new Mood Reading!", p);
+				not.vibrate = new long[] { 0, 1000, 2000, 3000 };
+				PendingIntent p = PendingIntent.getActivity(
+						DrunkenService.this, 0, new Intent(DrunkenService.this,
+								MoodReadActivity.class), 0);
+				not.setLatestEventInfo(DrunkenService.this,
+						"DrunkDroid is running",
+						"Click here to make a new Mood Reading!", p);
 				_notificationManager.notify(1, not);
-				}
+			}
 		};
 		_moodHandler.removeMessages(0);
 		_moodHandler.postDelayed(run, 10000);
@@ -192,7 +203,9 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 
 	private class SMSObserver extends ContentObserver {
 
-		public SMSObserver(Handler handler) { super(handler); }
+		public SMSObserver(Handler handler) {
+			super(handler);
+		}
 
 		@Override
 		public void onChange(boolean selfChange) {

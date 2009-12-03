@@ -156,13 +156,7 @@ public class DataFacade implements IDataFacade {
 		_local.deleteTrip(startTime);
 	}
 	
-	public void uploadTrip(Trip t) {
-		
-		try {
-			_remote.updateTrip(t, t.events);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void updateFilteredTrip(Trip t) throws RESTFacadeException {
+		_remote.updateFilteredTrip(t, t.events);		
 	}
 }

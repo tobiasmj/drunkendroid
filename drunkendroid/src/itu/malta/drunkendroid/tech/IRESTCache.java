@@ -14,6 +14,7 @@ public interface IRESTCache {
 	
 	public void uploadTrip(Trip t);
 	public void updateTrip(Trip t, List<Event> eventList);
+	public void updateFilteredTrip(Trip t, List<Event> eventList) throws RESTFacadeException;
 
 	public void closeCache();
 }
