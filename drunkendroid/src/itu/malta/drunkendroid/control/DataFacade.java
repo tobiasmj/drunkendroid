@@ -115,7 +115,12 @@ public class DataFacade implements IDataFacade {
 			//TODO This ought to be done in a different thread.
 			eventList.add(e);
 		}
-		_remote.updateTrip(t, eventList);
+		
+		//If trip has no RemoteId, upload trip and get it.
+		if(t.remoteId == null)
+			_remote.uploadTrip(t);
+		else
+			_remote.updateTrip(t, eventList);
 	}
 
 	/**

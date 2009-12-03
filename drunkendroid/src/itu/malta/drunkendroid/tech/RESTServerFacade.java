@@ -172,9 +172,10 @@ public class RESTServerFacade implements IRemoteDataFacade {
         		t.remoteId = resultId;
         	}
 	    }
-	    catch(IOException e){
+	    catch(Exception e){
 	    	//Something was wrong when we tried to build up xml.
 	    	Log.e(LOGTAG, e.getMessage());
+	    	throw new RESTFacadeException(LOGTAG, "Unknown exception caught", e);
 	    }
 	}
 	

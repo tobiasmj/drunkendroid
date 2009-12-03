@@ -264,28 +264,25 @@ public class RESTCache implements IRESTCache {
 						try{
 							for(Trip t : uploadTrips){
 								_server.uploadTrip(t);
-								//Check whether a remoteId has been obtained
 								//Persist changes
-								if(t.remoteId != null){
-									//a remoteId has been obtained.
-									//and the trip is now online.
-									setTripProcessedAndUpdateForeignId(t);
-									//set the events online
-									for(Event e : t.events){
-										/*
-										 * All events will be set online.
-										 * also events which have been filtered by 
-										 * the uploadTrip function on the 
-										 * IRemoteDataFace implementation.
-										 * 
-										 * Filtered: Personal event which should not
-										 * be uploaded unless the user has consented.
-										 */
-										setEventProcessed(e);
+								//a remoteId has been obtained.
+								//and the trip is now online.
+								setTripProcessedAndUpdateForeignId(t);
+								//set the events online
+								for(Event e : t.events){
+									/*
+									 * All events will be set online.
+									 * also events which have been filtered by 
+									 * the uploadTrip function on the 
+									 * IRemoteDataFace implementation.
+									 * 
+									 * Filtered: Personal event which should not
+									 * be uploaded unless the user has consented.
+									 */
+									setEventProcessed(e);
 									}
 								}
 							}
-						}
 						catch (RESTFacadeException e) {
 							// Just log it.
 							Log.e(LOGTAG, "Tried to execute an uploadcall: " + e.getMessage());

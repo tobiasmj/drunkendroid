@@ -235,9 +235,7 @@ public class PreviousTripsActivity extends ListActivity {
 										} finally {
 											_progressDialog.dismiss();
 										}
-										
 									}
-
 								});
 								t.start();
 								// TODO upload implementation here!
