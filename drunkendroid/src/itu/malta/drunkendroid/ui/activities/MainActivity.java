@@ -166,7 +166,7 @@ public class MainActivity extends Activity {
 				break;
 			case R.id.mapViewBtn:
 				try {
-					startActivity(new Intent("VIEW_MAP"));
+					startActivity(new Intent("itu.malta.drunkendroid.VIEW_MAP"));
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
