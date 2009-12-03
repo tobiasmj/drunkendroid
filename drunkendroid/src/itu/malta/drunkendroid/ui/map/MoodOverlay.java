@@ -120,9 +120,8 @@ public class MoodOverlay extends Overlay
 			new AlertDialog.Builder(_context)
 		      .setMessage("Could not connect to server. Please check you connection or try again.\nTry again?")
 		      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
+				public void onClick(DialogInterface arg0, int arg1) {	
 					getMoodData(view);
-					return;
 				}
 			}).setNegativeButton("No", new AlertDialog.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {

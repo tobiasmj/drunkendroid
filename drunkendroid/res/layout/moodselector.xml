@@ -2,8 +2,8 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-	<SeekBar android:id="@+id/MoodBar" android:max="256"
-		android:layout_width="fill_parent" android:layout_margin="10px"
-		android:layout_height="wrap_content" />
-
+	<SeekBar style="@style/ImageSeekbar" android:id="@+id/SeekBar01"
+		android:max="256" android:layout_width="310px" android:paddingLeft="5px"
+		android:paddingRight="5px" android:layout_height="100px"
+		android:progressDrawable="@drawable/seekbar_horizontal" />
 </merge>

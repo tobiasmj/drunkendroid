@@ -3,6 +3,10 @@ package itu.malta.drunkendroid.control.services;
 import itu.malta.drunkendroid.R;
 import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.handlers.EventReceiver;
+import itu.malta.drunkendroid.ui.activities.MoodReadActivity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -30,13 +34,14 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	private TripRepository _repo;
 	public final static int SERVICE_COMMAND_START_TRIP = 1;
 	public final static int SERVICE_COMMAND_END_TRIP = 2;
+	private NotificationManager _notificationManager;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		System.out.println("Service Started");
-
+		_notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		DrunkenService._service = this;
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
@@ -95,6 +100,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		_locationManager.UnregisterLocationUpdates(this);
 		_moodHandler.removeMessages(0);
 		DrunkenService._service = null;
+		_notificationManager.cancel(1);
 	}
 
 	/**
@@ -170,12 +176,18 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			public void run() {
 				System.out.println("MoodRead Intervallet sat til "
 						+ _readingInterval);
-				_moodHandler.postDelayed(this, _readingInterval * 60000);
-			}
+				_moodHandler.postDelayed(this, 10000);
+				Notification not = new Notification(R.drawable.icon, "Time for a new Mood Reading", System.currentTimeMillis());
+				not.flags = Notification.FLAG_NO_CLEAR;
+				not.defaults |= Notification.DEFAULT_SOUND;
+				not.vibrate = new long[] {0,1000,2000,3000}; 
+				PendingIntent p = PendingIntent.getActivity(DrunkenService.this, 0, new Intent(DrunkenService.this, MoodReadActivity.class), 0);
+				not.setLatestEventInfo(DrunkenService.this, "DrunkDroid is running", "Click here to make a new Mood Reading!", p);
+				_notificationManager.notify(1, not);
+				}
 		};
 		_moodHandler.removeMessages(0);
-		_moodHandler.postDelayed(run, _readingInterval * 60000);
-		System.out.println("Interval sat til " + _readingInterval);
+		_moodHandler.postDelayed(run, 10000);
 	}
 
 	private class SMSObserver extends ContentObserver {
