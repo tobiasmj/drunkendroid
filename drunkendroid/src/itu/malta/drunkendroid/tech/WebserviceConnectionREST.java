@@ -43,7 +43,7 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
         }
 	}
 
-	public HttpResponse get(String uri) {
+	public HttpResponse get(String uri) throws RESTFacadeException {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
         
         HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
@@ -60,12 +60,12 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
         }
         catch (Exception ex)
         {
-                ex.printStackTrace();
-                return null;
+        	Log.e(LOGTAG, "Caught an unknown exception, while doing a get call");
+            throw new RESTFacadeException(LOGTAG, "Caught an unknown Exception while doing a get call");
         }
 	}
 	
-	public HttpResponse put(String uri, String xmlContent){
+	public HttpResponse put(String uri, String xmlContent) throws RESTFacadeException{
 		DefaultHttpClient httpClient = new DefaultHttpClient();
         
         HttpHost targetHost = new HttpHost(targetDomain, 8182, "http");
@@ -86,8 +86,8 @@ public class WebserviceConnectionREST implements IWebserviceConnection{
          }
         catch (Exception ex)
         {
-                ex.printStackTrace();
-                return null;
+        	Log.e(LOGTAG, "Caught an unknown exception, doing a put call");
+            throw new RESTFacadeException(LOGTAG, "Caught an unknown Exception while doing a put call");
         }
 	}
 
