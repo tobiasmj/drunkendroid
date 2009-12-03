@@ -33,6 +33,7 @@ import com.thoughtworks.xstream.XStream;
 public class EventResource extends ServerResource {
 	//private String imeiNumber;
 	private long _tripId;
+	private long _IMEINumber;
 
 	
 	
@@ -49,7 +50,7 @@ public class EventResource extends ServerResource {
 		//imeiNumber = (String) getRequest().getAttributes().get("IMEI");
 		//get the tripID
 		_tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
-
+		_IMEINumber = Long.parseLong((String)getRequest().getAttributes().get("IMEI"));
 		
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
@@ -57,6 +58,11 @@ public class EventResource extends ServerResource {
 
 				// setting up the repository 
 				Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
+				
+				if (!rep.checkTripExist(_tripId, _IMEINumber)) {
+					setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+					result = XmlResponse.generateErrorRepresentation("A Trip with TripId:" + _tripId + " and IMEI number:" + _IMEINumber + " does not exsist", "8");
+				}
 				// setting up XStream for marshaling and un-marshalling events.
 				XStream xStream = new XStream();
 				xStream.registerConverter(new EventConverter());

@@ -32,6 +32,26 @@ public class Repository {
 	public Repository(java.sql.Connection connection) {
 		this._conn = connection;
 	}
+	
+	
+	public boolean checkTripExist(Long tripId, Long IMEINumber) throws SQLException {
+		try {
+			
+			_stmt = _conn.createStatement();
+			return _stmt.execute("select id from Trip where id = " + tripId + "and IMEINumber = " + IMEINumber);
+		} finally {
+			if (_stmt != null) {
+				try {
+					_stmt.close();
+				} catch (SQLException ex) {
+					// ignore
+				}
+			}
+		}			
+
+	}
+	
+	
 	/**
 	 * Method for inserting a call
 	 * @param call, the call object to be inserted
@@ -43,7 +63,8 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into Call(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
+				//String str = "Insert into Call(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")";
+				_stmt.executeUpdate("Insert into PhoneCall(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -282,7 +303,7 @@ public class Repository {
 			}
 			
 			// get all call events for a given tripId
-			_stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from Call where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from PhoneCall where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
