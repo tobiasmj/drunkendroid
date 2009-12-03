@@ -10,49 +10,51 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 public class GPSLocationAdapter implements ILocationAdapter {
-	private LocationManager manager;
-	private LocationListener locationListener;
-	private Location lastKnownLocation;
-	private ArrayList<ILocationAdapterListener> listeners = new ArrayList<ILocationAdapterListener>();
-	private String provider;
-	private int time = 60000;
-	private int distance = 10;
+	private LocationManager _manager;
+	private LocationListener _locationListener;
+	private Location _lastKnownLocation;
+	private ArrayList<ILocationAdapterListener> _listeners = new ArrayList<ILocationAdapterListener>();
+	private String _provider;
+	private int _time = 60000;
+	private int _distance = 10;
+	private int _minAccuracy = 20;
 	
 	public GPSLocationAdapter(Context context)
 	{
 		System.out.println("GPSLocationAdapter created");
-		this.manager = (LocationManager)context.getSystemService(android.content.Context.LOCATION_SERVICE);
-		this.locationListener = new LocationListener()
+		this._manager = (LocationManager)context.getSystemService(android.content.Context.LOCATION_SERVICE);
+		this._locationListener = new LocationListener()
     	{
     		public void onLocationChanged(Location location)
     		{
     			System.out.println("GPSLocationAdapter onLocationChanged..");
-    			lastKnownLocation = location;
-    			for(ILocationAdapterListener i : listeners)
-    				i.OnLocationChange(lastKnownLocation);
+    			_lastKnownLocation = location;
+    			if(location.getAccuracy() < _minAccuracy) {
+    				for(ILocationAdapterListener i : _listeners)
+        				i.OnLocationChange(_lastKnownLocation);
+    			}
     		}
     		public void onProviderDisabled(String provider)	{}
     		public void onProviderEnabled(String provider) {}
     		public void onStatusChanged(String provider, int status, Bundle extras) {}
     	};
     	
-		provider = manager.getBestProvider(GetCriteria(), true);
-		lastKnownLocation = new Location(provider);
-		lastKnownLocation.setTime(Calendar.getInstance().getTimeInMillis());
+		_provider = _manager.getBestProvider(GetCriteria(), true);
+		_lastKnownLocation = new Location(_provider);
+		_lastKnownLocation.setTime(Calendar.getInstance().getTimeInMillis());
 		
 		OutdateLocation();
-		
 		Connect();
 	}
 	
 	public void Connect() {
 		// Request location updates
-    	manager.requestLocationUpdates(provider, time, distance, locationListener);
+    	_manager.requestLocationUpdates(_provider, _time, _distance, _locationListener);
     	
 	}
 	
 	public void Disconnect() {
-		manager.removeUpdates(locationListener);
+		_manager.removeUpdates(_locationListener);
 	}
 	
 	private Criteria GetCriteria() {
@@ -69,34 +71,34 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	
 	public Location GetLastKnownLocation()
 	{
-		return this.lastKnownLocation;
+		return this._lastKnownLocation;
 	}
 	
 	public void RegisterLocationUpdates(ILocationAdapterListener interest) {
 		boolean found = false;
-		for(ILocationAdapterListener i : listeners) {
+		for(ILocationAdapterListener i : _listeners) {
 			if (i == interest) {
 				found = true; break;
 			}
 		}
 		if(!found)
-			listeners.add(interest);
+			_listeners.add(interest);
 	}
 	
 	public void UnregisterLocationUpdates(ILocationAdapterListener interest) {
-		for(int i = 0; i<listeners.size(); i++) {
-			if(listeners.get(i) == interest) {
-				listeners.remove(i);
+		for(int i = 0; i<_listeners.size(); i++) {
+			if(_listeners.get(i) == interest) {
+				_listeners.remove(i);
 				break;
 			}
 		}
-		if(listeners.size() == 0)
+		if(_listeners.size() == 0)
 			Disconnect();
 	}
 
 	public void OutdateLocation() {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean("isOutdated", true);
-		lastKnownLocation.setExtras(bundle);
+		_lastKnownLocation.setExtras(bundle);
 	}
 }

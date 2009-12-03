@@ -27,16 +27,16 @@ public class EventReceiver extends BroadcastReceiver {
 		Message m = new Message();
 		m.obj = intent;
 		
-		if (intent.getAction().equals("NEW_MOOD_READING")) {
+		if (intent.getAction().equals("itu.malta.drunkendroid.NEW_MOOD_READING")) {
 			m.arg1 = EVENT_MOOD_READING;
-		} else if (intent.getAction().equals("NEW_LOCATION_CHANGE")) {
+		} else if (intent.getAction().equals("itu.malta.drunkendroid.NEW_LOCATION_CHANGE")) {
 			m.arg1 = EVENT_LOCATION_CHANGE;
 		} else if (intent.getAction().equals(
 				"android.intent.action.NEW_OUTGOING_CALL")) {
 			m.arg1 = EVENT_OUTGOING_CALL;
-		} else if (intent.getAction().equals("NEW_INCOMING_CALL")) {
+		} else if (intent.getAction().equals("itu.malta.drunkendroid.NEW_INCOMING_CALL")) {
 			m.arg1 = EVENT_INCOMING_CALL;
-		} else if (intent.getAction().equals("NEW_OUTGOING_SMS")) {
+		} else if (intent.getAction().equals("itu.malta.drunkendroid.NEW_OUTGOING_SMS")) {
 			m.arg1 = EVENT_OUTGOING_SMS;
 		} else if (intent.getAction().equals(
 				"android.provider.Telephony.SMS_RECEIVED")) {

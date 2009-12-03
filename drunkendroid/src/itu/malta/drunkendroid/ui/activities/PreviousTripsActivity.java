@@ -71,7 +71,7 @@ public class PreviousTripsActivity extends ListActivity {
 
 	private void ShowTrip(int position) {
 		if (_trips.size() > 0) {
-			Intent i = new Intent("VIEW_TRIP");
+			Intent i = new Intent("itu.malta.drunkendroid.VIEW_TRIP");
 			i.putExtra("startTime", _trips.get(position).startDate);
 			startActivity(i);
 		}
@@ -239,7 +239,7 @@ public class PreviousTripsActivity extends ListActivity {
 								});
 								t.start();
 								// TODO upload implementation here!
-								Log.i("DrunkDroid", "UPLOADER!"
+								Log.i("DrunkDroid", "Uploading trip with filter: "
 										+ listener._choices.toString());
 							}
 						}).setNegativeButton("Cancel",

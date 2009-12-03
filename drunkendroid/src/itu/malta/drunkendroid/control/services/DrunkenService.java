@@ -71,7 +71,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			switch (intent.getExtras().getInt("command")) {
 			case SERVICE_COMMAND_START_TRIP:
 				if (_repo.hasActiveTrip()) {
-					toast = Toast.makeText(this, "NB! Continuing old trip!", 7);
+					toast = Toast.makeText(this, "Continuing old trip!", 7);
 					toast.show();
 				} else {
 					toast = Toast.makeText(this, "Trip started!", 5);
@@ -114,21 +114,21 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 */
 	public void RegisterReceivers() {
 
-		IntentFilter moodReadingFilter = new IntentFilter("NEW_MOOD_READING");
+		IntentFilter moodReadingFilter = new IntentFilter("itu.malta.drunkendroid.NEW_MOOD_READING");
 		this.registerReceiver(_eventHandler, moodReadingFilter);
 
 		IntentFilter locationChangeFilter = new IntentFilter(
-				"NEW_LOCATION_CHANGE");
+				"itu.malta.drunkendroid.NEW_LOCATION_CHANGE");
 		this.registerReceiver(_eventHandler, locationChangeFilter);
 
 		IntentFilter outgoingCallFilter = new IntentFilter(
 				"android.intent.action.NEW_OUTGOING_CALL");
 		this.registerReceiver(_eventHandler, outgoingCallFilter);
 
-		IntentFilter incomingCallFilter = new IntentFilter("NEW_INCOMING_CALL");
+		IntentFilter incomingCallFilter = new IntentFilter("itu.malta.drunkendroid.NEW_INCOMING_CALL");
 		this.registerReceiver(_eventHandler, incomingCallFilter);
 
-		IntentFilter outgoingSMSFilter = new IntentFilter("NEW_OUTGOING_SMS");
+		IntentFilter outgoingSMSFilter = new IntentFilter("itu.malta.drunkendroid.NEW_OUTGOING_SMS");
 		this.registerReceiver(_eventHandler, outgoingSMSFilter);
 
 		IntentFilter incomingSMSFilter = new IntentFilter(
@@ -181,11 +181,11 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			public void run() {
 				System.out.println("MoodRead Intervallet sat til "
 						+ _readingInterval);
-				_moodHandler.postDelayed(this, _readingInterval * 1000);
+				_moodHandler.postDelayed(this, _readingInterval * 60000);
 				Notification not = new Notification(R.drawable.icon,
 						"Time for a new Mood Reading", System
 								.currentTimeMillis());
-				not.flags = Notification.FLAG_NO_CLEAR;
+				not.flags = Notification.FLAG_AUTO_CANCEL;
 				not.defaults |= Notification.DEFAULT_SOUND;
 				not.vibrate = new long[] { 0, 1000, 2000, 3000 };
 				PendingIntent p = PendingIntent.getActivity(
@@ -198,7 +198,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			}
 		};
 		_moodHandler.removeMessages(0);
-		_moodHandler.postDelayed(run, 10000);
+		_moodHandler.postDelayed(run, 1000);
 	}
 
 	private class SMSObserver extends ContentObserver {
@@ -210,8 +210,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			Intent i = new Intent("NEW_OUTGOING_SMS");
-			sendBroadcast(i);
+			sendBroadcast(new Intent("itu.malta.drunkendroid.NEW_OUTGOING_SMS"));
 		}
 	}
 
@@ -220,9 +219,8 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
 			super.onCallStateChanged(state, incomingNumber);
-
 			if (state == android.telephony.TelephonyManager.CALL_STATE_RINGING) {
-				Intent i = new Intent("NEW_INCOMING_CALL");
+				Intent i = new Intent("itu.malta.drunkendroid.NEW_INCOMING_CALL");
 				i.putExtra("phoneNumber", incomingNumber);
 				sendBroadcast(i);
 			}
@@ -230,8 +228,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	}
 
 	public void OnLocationChange(Location location) {
-		// The location of the device has changed.
-		Intent i = new Intent("NEW_LOCATION_CHANGE");
+		Intent i = new Intent("itu.malta.drunkendroid.NEW_LOCATION_CHANGE");
 		i.putExtra("location", location);
 		sendBroadcast(i);
 	}

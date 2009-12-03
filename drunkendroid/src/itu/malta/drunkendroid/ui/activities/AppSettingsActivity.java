@@ -20,7 +20,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class AppSettingsActivity extends Activity {
 	
 	private Spinner moodReadSpinner;
-	private CheckBox registerVolumeCheckBox;
 	private static final int SAVE_SETTINGS = Menu.FIRST;
 	private static final int RESTORE_SETTINGS = Menu.FIRST+1;
 	private static final int DISCARD_SETTINGS = Menu.FIRST+2;
@@ -41,8 +40,6 @@ public class AppSettingsActivity extends Activity {
 			  public void onNothingSelected(AdapterView<?> parent) {}
 			}
 		); 
-		
-		registerVolumeCheckBox = (CheckBox) this.findViewById(R.id.RegisterVolumeCheckBox);
 		
 		Button saveButton = (Button)this.findViewById(R.id.SaveSettingsButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -102,18 +99,12 @@ public class AppSettingsActivity extends Activity {
 			firstTimeLayer.setVisibility(View.VISIBLE);
 		
 		moodReadSpinner.setSelection(prefs.getInt("moodReadInterval", 0));
-		
-		if(prefs.getBoolean("registerVolume", true))
-			registerVolumeCheckBox.setChecked(true);
-		else
-			registerVolumeCheckBox.setChecked(false);
 	}
 	
 	private void SaveChanges() 
 	{
 		SharedPreferences.Editor prefsEditor = getSharedPrefs().edit();
 		prefsEditor.putInt("moodReadInterval", (int)moodReadSpinner.getSelectedItemId());
-		prefsEditor.putBoolean("registerVolume", registerVolumeCheckBox.isChecked());
 		prefsEditor.putBoolean("isConfigured", true);
 		prefsEditor.commit();
 	}
@@ -125,7 +116,6 @@ public class AppSettingsActivity extends Activity {
 	      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				moodReadSpinner.setSelection(0);
-				registerVolumeCheckBox.setChecked(true);
 			}
 		}).setNegativeButton("Cancel", new AlertDialog.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {

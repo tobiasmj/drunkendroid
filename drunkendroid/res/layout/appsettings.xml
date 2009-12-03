@@ -3,7 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+  android:layout_height="fill_parent"
+  >
 	<TextView android:id="@+id/FirstTimeUseLayout"
 		android:layout_width="fill_parent"
 		android:textSize="8pt"
@@ -28,25 +29,12 @@
 		android:layout_height="wrap_content"
 		android:colorForeground="@android:color/transparent">
 	</Spinner>
-	<LinearLayout 
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textColor="#ffffff"
-			android:text="Monitor Sound Level?"/>
-		<CheckBox android:id="@+id/RegisterVolumeCheckBox"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10px"
-		/>
-	</LinearLayout>
 	<LinearLayout android:orientation="horizontal"
 		android:layout_marginTop="15px"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		>
 		<Button android:id="@+id/SaveSettingsButton"
 			android:text="@string/save_settings_button"
 			android:layout_width="wrap_content"

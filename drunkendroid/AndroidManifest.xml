@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	  package="itu.malta.drunkendroid"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/appName" android:debuggable="true">
-    	<uses-library android:name="com.google.android.maps" />
-        <activity android:name=".ui.activities.MainActivity"
-                  android:label="@string/appName">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.activities.MoodMapActivity"
-                  android:label="@string/activity_mood_map">
-            <intent-filter>
-                <action android:name="VIEW_MAP" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.activities.ViewTripActivity"
-                  android:label="@string/view_trip">
-            <intent-filter>
-                <action android:name="VIEW_TRIP" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.activities.AppSettingsActivity" 
-        	      android:label="@string/activity_app_settings"
-        	      android:theme="@style/BrightTheme">
-        	<intent-filter>
-        		<action android:name="VIEW_SETTINGS" />
-        		<category android:name="android.intent.category.DEFAULT"></category>
-        	</intent-filter>
-        </activity>
-        <activity android:name=".ui.activities.PreviousTripsActivity" 
-        	      android:label="@string/activity_previous_trips">        	    
-        	<intent-filter>
-        		<action android:name="VIEW_PREVIOUS_TRIPS" />
-        		<category android:name="android.intent.category.DEFAULT"></category>
-        	</intent-filter>
-        </activity>      
-        <activity android:name=".ui.activities.MoodReadActivity" android:theme="@style/Dialog_No_Title">
-        	<intent-filter>
-        		<action android:name="MOOD_READING" />
-        		<category android:name="android.intent.category.DEFAULT"></category>
-        	</intent-filter>
-        </activity>
-        <service android:name=".control.services.DrunkenService" />
-    </application>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-persmision android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-sdk android:minSdkVersion="3" />
-
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	package="itu.malta.drunkendroid" android:versionCode="1"
+	android:versionName="1.0">
+	<application android:icon="@drawable/icon" android:label="@string/appName"
+		android:debuggable="true">
+		<uses-library android:name="com.google.android.maps" />
+		<activity android:name=".ui.activities.MainActivity"
+			android:label="@string/appName">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ui.activities.MoodMapActivity"
+			android:label="@string/activity_mood_map">
+			<intent-filter>
+				<action android:name="itu.malta.drunkendroid.VIEW_MAP" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ui.activities.ViewTripActivity"
+			android:label="@string/view_trip">
+			<intent-filter>
+				<action android:name="itu.malta.drunkendroid.VIEW_TRIP" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ui.activities.AppSettingsActivity"
+			android:label="@string/activity_app_settings">
+			<intent-filter>
+				<action android:name="itu.malta.drunkendroid.VIEW_SETTINGS" />
+				<category android:name="android.intent.category.DEFAULT"></category>
+			</intent-filter>
+		</activity>
+		<activity android:name=".ui.activities.PreviousTripsActivity"
+			android:label="@string/activity_previous_trips">
+			<intent-filter>
+				<action android:name="itu.malta.drunkendroid.VIEW_PREVIOUS_TRIPS" />
+				<category android:name="android.intent.category.DEFAULT"></category>
+			</intent-filter>
+		</activity>
+		<activity android:name=".ui.activities.MoodReadActivity"
+			android:theme="@style/Dialog_No_Title">
+			<intent-filter>
+				<action android:name="itu.malta.drunkendroid.MOOD_READING" />
+				<category android:name="android.intent.category.DEFAULT"></category>
+			</intent-filter>
+		</activity>
+		<service android:name=".control.services.DrunkenService" />
+	</application>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+	<uses-permission android:name="android.permission.READ_SMS" />
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-persmision android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-sdk android:minSdkVersion="3" />
 </manifest> 

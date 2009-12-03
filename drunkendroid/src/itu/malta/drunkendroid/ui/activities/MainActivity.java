@@ -19,7 +19,6 @@ public class MainActivity extends Activity {
 
 	private static final int MENU_SETTINGS = Menu.FIRST;
 	private static final int MENU_PREVIOUS_TRIPS = Menu.FIRST + 1;
-	private static final int MENU_UPLOAD = Menu.FIRST + 2;
 	SlidingDrawer slider;
 	ImageView startServiceBtn;
 	ImageView stopServiceBtn;
@@ -85,8 +84,6 @@ public class MainActivity extends Activity {
 		menu.add(0, MainActivity.MENU_PREVIOUS_TRIPS, 0,
 				R.string.menu_previous_trips).setIcon(
 				android.R.drawable.ic_menu_mapmode);
-		menu.add(0, MainActivity.MENU_UPLOAD, 0, R.string.menu_upload).setIcon(
-				android.R.drawable.ic_menu_upload);
 		return true;
 	}
 
@@ -97,7 +94,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case MainActivity.MENU_SETTINGS:
 			try {
-				intent = new Intent("VIEW_SETTINGS");
+				intent = new Intent("itu.malta.drunkendroid.VIEW_SETTINGS");
 				startActivity(intent);
 			} catch (Exception e) {
 				Log.i(this.getString(R.string.log_tag),
@@ -106,23 +103,13 @@ public class MainActivity extends Activity {
 			break;
 		case MainActivity.MENU_PREVIOUS_TRIPS:
 			try {
-				intent = new Intent("VIEW_PREVIOUS_TRIPS");
+				intent = new Intent("itu.malta.drunkendroid.VIEW_PREVIOUS_TRIPS");
 				startActivity(intent);
 			} catch (Exception e) {
 				Log.i(this.getString(R.string.log_tag),
 						"Unable to fire intent:" + intent.getAction());
 			}
 			break;
-		case MainActivity.MENU_UPLOAD:
-			try {
-				intent = new Intent("MOOD_READING");
-				startActivity(intent);
-			} catch (Exception e) {
-				Log.i(this.getString(R.string.log_tag),
-						"Unable to fire intent:" + intent.getAction());
-			}
-			break;
-
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
@@ -130,7 +117,7 @@ public class MainActivity extends Activity {
 	private class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			System.out.println("Sending Mood Reading!");
-			Intent i = new Intent("NEW_MOOD_READING");
+			Intent i = new Intent("itu.malta.drunkendroid.NEW_MOOD_READING");
 			i.putExtra("mood", (short) seekBar.getProgress());
 			sendBroadcast(i);
 			MainActivity.this.slider.animateClose();
