@@ -19,6 +19,13 @@
 			</LinearLayout>
 		</SlidingDrawer>
 	</RelativeLayout>
+	<RelativeLayout android:id="@+id/info_layout" android:layout_gravity="center_horizontal"
+		android:layout_width="fill_parent" android:layout_height="110px"
+		android:background="@drawable/info_box">
+		<TextView android:layout_height="110px" android:text="@string/main_activity_guide"
+			android:layout_width="fill_parent" android:id="@+id/program_guide"
+			android:orientation="horizontal" android:layout_gravity="center_horizontal" />
+	</RelativeLayout>
 	<TableLayout android:gravity="fill_horizontal" android:layout_gravity="center_horizontal"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<TableRow android:layout_width="fill_parent">
@@ -27,6 +34,17 @@
 		<ImageView android:layout_gravity="center" android:src="@drawable/end_trip_button" android:id="@+id/stopServiceBtn"
 		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
 		<ImageView android:layout_gravity="center" android:src="@drawable/map_button" android:id="@+id/mapViewBtn"
+		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
+		</TableRow>
+		<TableRow android:layout_width="fill_parent">
+		<TextView android:gravity="center" android:id="@+id/start_trip_text" 
+			android:text="@string/start_trip_name"
+		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
+		<TextView android:gravity="center" android:id="@+id/end_trip_text" 
+			android:text="@string/end_trip_name"
+		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
+		<TextView android:gravity="center" android:id="@+id/map_text" 
+			android:text="@string/map_name"
 		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
 		</TableRow>
 	</TableLayout>	

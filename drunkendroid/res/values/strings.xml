@@ -20,6 +20,10 @@
     <string name="no_previous_trips">There are no previous trips</string>
     <string name="view_trip">View trip</string>
     <string name="upload_choice">Choose what to upload</string>
+    <string name="main_activity_guide">To start a trip, press the drink-icon with the green arrow.</string>
+    <string name="start_trip_name">Start a new trip</string>
+    <string name="end_trip_name">End current trip</string>
+    <string name="map_name">View mood map</string>
     
     <string-array name="mood_read_intervals">
     	<item>15</item>

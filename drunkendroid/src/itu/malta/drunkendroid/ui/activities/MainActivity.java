@@ -11,9 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SlidingDrawer;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -25,6 +27,10 @@ public class MainActivity extends Activity {
 	ImageView startServiceBtn;
 	ImageView stopServiceBtn;
 	RelativeLayout moodReading;
+	RelativeLayout _programGuide;
+	TextView _startTripName;
+	TextView _endTripName;
+	TextView _mapName;
 	View.OnClickListener buttonListener = new MyOnClickListener();
 
 	/** Called when the activity is first created. */
@@ -63,6 +69,11 @@ public class MainActivity extends Activity {
 		stopServiceBtn = (ImageView) findViewById(R.id.stopServiceBtn);
 		stopServiceBtn.setOnClickListener(buttonListener);
 
+		_programGuide = (RelativeLayout) findViewById(R.id.info_layout);
+		_startTripName = (TextView) findViewById(R.id.start_trip_text);
+		_endTripName = (TextView) findViewById(R.id.end_trip_text);
+		_mapName = (TextView) findViewById(R.id.map_text);
+
 		final ImageView mvBtn = (ImageView) findViewById(R.id.mapViewBtn);
 		mvBtn.setOnClickListener(buttonListener);
 	}
@@ -73,11 +84,17 @@ public class MainActivity extends Activity {
 			startServiceBtn.setVisibility(View.GONE);
 			moodReading.setVisibility(RelativeLayout.VISIBLE);
 			stopServiceBtn.setVisibility(View.VISIBLE);
+			_programGuide.setVisibility(TextView.GONE);
+			_startTripName.setVisibility(TextView.GONE);
+			_endTripName.setVisibility(TextView.VISIBLE);
 			break;
 		case TRIP_STATE_NOT_RUNNING:
 			startServiceBtn.setVisibility(View.VISIBLE);
 			moodReading.setVisibility(RelativeLayout.GONE);
 			stopServiceBtn.setVisibility(View.GONE);
+			_programGuide.setVisibility(TextView.VISIBLE);
+			_startTripName.setVisibility(TextView.VISIBLE);
+			_endTripName.setVisibility(TextView.GONE);
 		}
 	}
 
