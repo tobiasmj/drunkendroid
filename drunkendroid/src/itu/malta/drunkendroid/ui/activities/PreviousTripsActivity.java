@@ -105,7 +105,7 @@ public class PreviousTripsActivity extends ListActivity {
 	private Runnable uploadFailedJob = new Runnable() {
 		public void run() {
 			_progressDialog.dismiss();
-			new AlertDialog.Builder(PreviousTripsActivity.this).setTitle(
+			AlertDialog alert = new AlertDialog.Builder(PreviousTripsActivity.this).setTitle(
 					"Upload failed. Please try again later.").setPositiveButton("Ok",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
@@ -113,6 +113,7 @@ public class PreviousTripsActivity extends ListActivity {
 									
 								}
 							}).create();
+			alert.show();
 		}
 	};
 

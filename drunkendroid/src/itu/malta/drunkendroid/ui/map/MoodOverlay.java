@@ -28,9 +28,6 @@ public class MoodOverlay extends Overlay
     private MapView _mapView;
     private Context _context;
     
-    // Used for connection issues
-    private boolean _isTrying = true;
-    
     // Used to check updates on map
     private GeoPoint _mapCenter;
     private Integer _zoomLevel;
@@ -196,31 +193,22 @@ public class MoodOverlay extends Overlay
 		Log.i("DrunkDroid","MapView LR: " + lrLat + "x" + lrLong);
 		
 		List<ReadingEvent> data = null;
-		
-		while(_isTrying)
-		{
-			try {
-				data = _dataFacade.getReadingEvents(
-						(long)130773960,
-						(long)131027900,
-						(double)ulLat,
-						(double)ulLong,
-						(double)lrLat,
-						(double)lrLong);
-			} catch (RESTFacadeException e) {
-				new AlertDialog.Builder(_context)
-			      .setMessage("Could not connect to server. Please check your connection or try again.\nTry again?")
-			      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {	
-						
-					}
-				}).setNegativeButton("No", new AlertDialog.OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {
-						_isTrying = false;
-					}
-				}).show();
-			}
-			_isTrying = false;
+
+		try {
+			data = _dataFacade.getReadingEvents(
+					(long)130773960,
+					(long)131027900,
+					(double)ulLat,
+					(double)ulLong,
+					(double)lrLat,
+					(double)lrLong);
+		} catch (RESTFacadeException e) {
+			new AlertDialog.Builder(_context)
+		      .setMessage("Could not connect to server. Please check your connection and try again.")
+		      .setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {	
+					((Activity)_context).finish();
+				}}).show();
 		}
 		
 		if(data != null)
