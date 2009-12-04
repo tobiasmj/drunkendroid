@@ -40,9 +40,10 @@ public class MoodMapActivity extends MapActivity {
         _mapController.animateTo(_gp, new Runnable() {
 	        public void run()
 	        {
-	            // Add overlay
-	            _moodOverlay = new MoodOverlay(MoodMapActivity.this, _mapView);
 	            List<Overlay> overlays = _mapView.getOverlays();
+	            
+	            // Add heatmap overlay
+	            _moodOverlay = new MoodOverlay(MoodMapActivity.this, _mapView);
 	            overlays.add(_moodOverlay);
 	        }
         });

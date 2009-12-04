@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import sun.security.action.GetLongAction;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

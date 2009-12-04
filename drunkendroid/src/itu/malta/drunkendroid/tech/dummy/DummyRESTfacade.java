@@ -2,7 +2,6 @@ package itu.malta.drunkendroid.tech.dummy;
 
 import java.util.List;
 
-import itu.malta.drunkendroid.control.IRemoteDataFacade;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.ReadingEvent;
 import itu.malta.drunkendroid.domain.Trip;

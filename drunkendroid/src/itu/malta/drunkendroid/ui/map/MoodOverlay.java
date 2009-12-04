@@ -15,7 +15,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Paint.Align;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.maps.GeoPoint;
