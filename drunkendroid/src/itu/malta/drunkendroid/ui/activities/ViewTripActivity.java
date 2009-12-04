@@ -68,8 +68,8 @@ public class ViewTripActivity extends MapActivity {
             for(Event e : events)
             {
             	// Set the min and max latitude and longitude
-            	if(e.latitude != null && e.longitude != null
-            			|| e.latitude != 0 && e.longitude != 0)
+            	if((e.latitude != null && e.longitude != null)
+            			|| (e.latitude != 0 && e.longitude != 0))
             	{
             		int latitude = (int)(e.latitude * 1E6);
                     int longitude = (int)(e.longitude * 1E6); 
