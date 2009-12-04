@@ -1,4 +1,4 @@
-package itu.malta.drunkendroid.handlers;
+package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.control.services.DrunkenService;
 import itu.malta.drunkendroid.domain.*;

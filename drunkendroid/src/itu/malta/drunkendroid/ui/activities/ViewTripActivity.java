@@ -68,32 +68,27 @@ public class ViewTripActivity extends MapActivity {
             for(Event e : events)
             {
             	// Set the min and max latitude and longitude
-            	if((e.latitude != null && e.longitude != null)
-            			|| (e.latitude != 0 && e.longitude != 0))
-            	{
-            		int latitude = (int)(e.latitude * 1E6);
-                    int longitude = (int)(e.longitude * 1E6); 
-            		
-            		if(minLat > latitude) minLat = latitude;
-            		else if(maxLat < latitude) maxLat = latitude;
-            		
-            		if(minLong > longitude) minLong = longitude;
-            		else if(maxLong < longitude) maxLong = longitude;
-                	
-                	// Add events to appropriate arraylist
-                	if(LocationEvent.class.isInstance(e))
-                		_locationEvents.add((LocationEvent)e);
-                	else if(ReadingEvent.class.isInstance(e))
-                		_moodEvents.add((ReadingEvent)e);
-                	else if(CallEvent.class.isInstance(e))
-                		_callEvents.add((CallEvent)e);
-                	else if(SMSEvent.class.isInstance(e))
-                		_smsEvents.add((SMSEvent)e);
-                    else 
-                		_otherEvents.add(e);
-            	}
+        		int latitude = (int)(e.latitude * 1E6);
+                int longitude = (int)(e.longitude * 1E6); 
+        		
+        		if(minLat > latitude) minLat = latitude;
+        		else if(maxLat < latitude) maxLat = latitude;
+        		
+        		if(minLong > longitude) minLong = longitude;
+        		else if(maxLong < longitude) maxLong = longitude;
+            	
+            	// Add events to appropriate arraylist
+            	if(LocationEvent.class.isInstance(e))
+            		_locationEvents.add((LocationEvent)e);
+            	else if(ReadingEvent.class.isInstance(e))
+            		_moodEvents.add((ReadingEvent)e);
+            	else if(CallEvent.class.isInstance(e))
+            		_callEvents.add((CallEvent)e);
+            	else if(SMSEvent.class.isInstance(e))
+            		_smsEvents.add((SMSEvent)e);
+                else 
+            		_otherEvents.add(e);
             }
-            
             // Zoom to span from the list of points
             _mapController.zoomToSpan(
                       (maxLat - minLat),

@@ -1,8 +1,8 @@
 package itu.malta.drunkendroid.control.services;
 
 import itu.malta.drunkendroid.R;
+import itu.malta.drunkendroid.control.EventReceiver;
 import itu.malta.drunkendroid.control.TripRepository;
-import itu.malta.drunkendroid.handlers.EventReceiver;
 import itu.malta.drunkendroid.ui.activities.MoodReadActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
