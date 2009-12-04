@@ -1,6 +1,7 @@
 package itu.malta.drunkendroid.tech;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -104,7 +105,7 @@ public class RESTCache implements IRESTCache {
 		values.put("online", String.valueOf(1)); //set to online
 		try{
 			db.beginTransaction();
-			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
+			db.update(DBHelper.TABLE_EVENT, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
 		finally{
@@ -168,27 +169,77 @@ public class RESTCache implements IRESTCache {
 		}
 		
 		//Fill !online events into each trip.
-		//Just get the trip as usual, then filter it later on.
+		//Just get the trip as usual, remove processed events
+		//then filter it later on.
 		//This is to fight redundant SQL code.
-		for(Trip t : candidateTrips){
+		for(int i=0; i < candidateTrips.size(); i++)
+		{
+			Trip t = candidateTrips.get(i);
 			t = _localSqlFacade.getTrip(t.startDate);
+			t = removeProcessedEvents(t);
 			//Filter it.
 			//The discarded events should also be set online, to show they have been processed
 			TreeSet<Event> filteredOutEvents = new TreeSet<Event>();
 			filteredOutEvents.addAll(t.events);
-			
-			t.events = Trip.filterEvents(t.events, uploadTripFilter);
+			List<Event> filtered = Trip.filterEvents(t.events, uploadTripFilter);
+			t.events = filtered;
 			//Now remove the ones which will be processed.
 			filteredOutEvents.removeAll(t.events);
 			//Mark the rest as processed.
 			for(Event e : filteredOutEvents){
 				setEventProcessed(e);
 			}
+			//Needed to replace the object in the array.
+			candidateTrips.set(i, t);
 		}
 		
 		return candidateTrips;
 	}
 
+	synchronized private Trip removeProcessedEvents(Trip t){
+		Trip resultTrip = new Trip();
+		//Clone
+		resultTrip.events.addAll(t.events);
+		resultTrip.startDate = t.startDate;
+		resultTrip.localId = t.localId;
+		resultTrip.remoteId = t.remoteId;
+		//Collect id's of processed events for the trip
+		Set<Integer> processedEvents = getProcessedEventIDs(t);
+		
+		//If the event has an id in the list of processed events
+		//remove the event from the result
+		for(Event e : t.events){
+			for(Integer i : processedEvents){
+				if(i.intValue() == e.id){
+					resultTrip.events.remove(e);
+				}
+			}
+		}
+		
+		return resultTrip;
+	}
+	
+	private Set<Integer> getProcessedEventIDs(Trip t){
+		SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
+		final String[] columns = {"id"};
+		final String whereClause = "online = 1 AND trip = ?";
+		final String[] whereArgs = {String.valueOf(t.localId)};
+		Set<Integer> result = new HashSet<Integer>();
+		
+		dbInstance.beginTransaction();
+		Cursor cursor = dbInstance.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
+		try{
+			while(cursor.moveToNext()){
+				result.add(cursor.getInt(0));
+			}
+		}
+		finally{
+			dbInstance.endTransaction();
+			cursor.close();
+		}
+		return result;
+	}
+	
 	/**
 	 * If a trip has not been uploaded before,
 	 * none of it's events have been uploaded either.

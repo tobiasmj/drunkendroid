@@ -252,7 +252,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		String expectedXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>"
 				+ "<events>"
 				+ "<event>"
-				+ "<eventType>reading</eventType>"
+				+ "<eventType>mood</eventType>"
 				+ "<dateTime>"
 				+ String.valueOf(e1.dateTime)
 				+ "</dateTime>"
@@ -303,17 +303,10 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		try {
 			// Build up the test
 			final String content1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-					+ "<MoodMap>"
-					+ "<MoodMapReading>"
-					+ "<MoodMapValue>140</MoodMapValue>"
-					+ "<MoodMapLongitude>14.487617755003868</MoodMapLongitude>"
-					+ "<MoodMapLatitude>35.9232054039299</MoodMapLatitude>"
-					+ "</MoodMapReading>"
-					+ "<MoodMapReading>"
-					+ "<MoodMapValue>130</MoodMapValue>"
-					+ "<MoodMapLongitude>14.487617755003868</MoodMapLongitude>"
-					+ "<MoodMapLatitude>35.92350484235794</MoodMapLatitude>"
-					+ "</MoodMapReading>" + "</MoodMap>";
+					+ "<points>"
+					+ "<p value=\"140\" long=\"14.487617755003868\" lat=\"35.9232054039299\" />"
+					+ "<p value=\"130\" long=\"14.487617755003868\" lat=\"35.92350484235794\" />"
+					+ "</points>";
 			// Build an inputStream from to provide the mock object with.
 			ByteArrayInputStream bstream1 = new ByteArrayInputStream(content1
 					.getBytes());

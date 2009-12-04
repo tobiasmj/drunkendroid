@@ -183,6 +183,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 	public Trip getTrip(Long startTime) {
 		Trip loadedTrip = new Trip();
 		SQLiteDatabase db = dbHelper.getDBInstance();
+		db.beginTransaction();
 		
 		String[] selectedColumns = {"id", "foreignId"};
 		String[] whereDateTimeEQ = {String.valueOf(startTime)};
@@ -251,7 +252,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			loadedTrip.events.add(e);
 		}
 		selectionOfReadings.close();
-		
+		db.setTransactionSuccessful();
+		db.endTransaction();
 		return loadedTrip;
 	}
 
@@ -260,11 +262,12 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		
 		//Find the events which will be updated.
 		final String[] columns = {"dateTime", "mood", "sender", "receiver", "message", "id"}; //the location is not known silly.
-		final String selection = " longitude IS NULL AND latitude IS NULL";
+		final String whereClause = " longitude IS NULL AND latitude IS NULL AND trip = ?";
+		final String[] whereArgs = {String.valueOf(t.localId)};
 		List<Event> events = new ArrayList<Event>();
 		
 		db.beginTransaction();
-		Cursor cursor = db.query(DBHelper.TABLE_EVENT, columns, selection, null, null, null, null);
+		Cursor cursor = db.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
 		try{
 			if(cursor.moveToFirst()){
 				do {
@@ -287,6 +290,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 					}
 					if(e != null){
 						e.id = cursor.getInt(5);
+						events.add(e);
 					}
 					
 				} while (cursor.moveToNext());
@@ -300,9 +304,6 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		
 		//Now do the update
 		ContentValues values = new ContentValues(2);
-		final String whereClause = " longitude IS NULL AND latitude IS NULL AND trip = ?";
-		final String[] whereArgs = {String.valueOf(t.localId)};
-		
 		values.put("longitude", String.valueOf(longitude));
 		values.put("latitude",  String.valueOf(latitude));
 		
