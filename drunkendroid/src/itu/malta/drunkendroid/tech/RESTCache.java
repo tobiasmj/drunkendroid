@@ -175,6 +175,7 @@ public class RESTCache implements IRESTCache {
 		{
 			Trip t = candidateTrips.get(i);
 			t = _localSqlFacade.getTrip(t.startDate);
+			//TODO We might want to check whether a trip was found.
 			t = removeProcessedEvents(t);
 			//Filter it.
 			//The discarded events should also be set online, to show they have been processed

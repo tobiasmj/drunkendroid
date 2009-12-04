@@ -7,9 +7,9 @@
     <string name="activity_previous_trips">DrunkDroid : Previous Trips</string>
     <string name="txt_first_time_use">Please configure DrunkDroid for first-time use</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_previous_trips">Prev. Trips</string> 
+    <string name="menu_previous_trips">Previous Trips</string> 
     <string name="menu_upload">Upload</string>
-    <string name="mood_read_interval_spinner_prompt">Select how often to read your mood</string>
+    <string name="mood_read_interval_spinner_prompt">Select how often DrunkDroid should read your mood</string>
     <string name="mood_read_interval">Interval for Mood Reading (Minutes)</string>
     <string name="save_settings_button">Save changes</string>
     <string name="discard_settings_button">Discard changes</string>
