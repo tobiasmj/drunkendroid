@@ -18,7 +18,6 @@ import itu.malta.drunkendroid.ui.map.CallEventsOverlay;
 import itu.malta.drunkendroid.ui.map.SMSEventsOverlay;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
