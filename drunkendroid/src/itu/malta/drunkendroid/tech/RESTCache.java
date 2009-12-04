@@ -373,7 +373,7 @@ public class RESTCache implements IRESTCache {
 			long sleepTime = 60000; //a minute
 			ConnectivityManager connMgr = (ConnectivityManager)_context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			
-			while(!connMgr.getActiveNetworkInfo().isConnected()){
+			while(connMgr.getActiveNetworkInfo() != null && !connMgr.getActiveNetworkInfo().isConnected()){
 				try {
 					Log.i(LOGTAG, "Going to sleep, waiting for network connectivity");
 					Thread.sleep(sleepTime);
