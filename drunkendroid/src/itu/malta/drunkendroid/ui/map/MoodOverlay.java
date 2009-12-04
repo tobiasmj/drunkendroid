@@ -220,6 +220,8 @@ public class MoodOverlay extends Overlay
 
 		if(mapView.getZoomLevel() < 15)
 			_isHeatmapAvailable = false;
+		else
+			_isHeatmapAvailable = true;
 	}
 	
 	/**
