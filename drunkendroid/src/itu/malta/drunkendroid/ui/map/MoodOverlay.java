@@ -31,12 +31,16 @@ public class MoodOverlay extends Overlay
     // Used to check updates on map
     private GeoPoint _mapCenter;
     private Integer _zoomLevel;
-    private Point _startPoint = new Point(0,0);
-    private boolean _changed = false;
+    private Point _startPoint;
+    private boolean _changed;
+    private GeoPoint _projectionCheck;
     
     public MoodOverlay(Context context, MapView mapView) {
     	_context = context;
     	_mapView = mapView;
+    	_changed = false;
+    	_startPoint = new Point(0,0);
+    	_projectionCheck = new GeoPoint(0,0);
     }
     
     public void clicked()
@@ -51,7 +55,15 @@ public class MoodOverlay extends Overlay
 		{
 			mapView.getController().stopAnimation(true);
 			mapView.getController().stopPanning();
-			MapActivity mapActivity = (MapActivity)mapView.getContext();
+			
+			GeoPoint currentProjection = mapView.getProjection().fromPixels(0, 0);
+			
+			if(_projectionCheck.getLatitudeE6() != currentProjection.getLatitudeE6() ||
+					_projectionCheck.getLongitudeE6() != currentProjection.getLongitudeE6())
+			{
+				Log.i("DrunkDroid","Projection has changed!!!");
+				_changed = true;
+			}
 			
 			// Create heatmap for the first time
 			if(_heatmap.getHeatmap() == null)
@@ -105,6 +117,7 @@ public class MoodOverlay extends Overlay
 			// Update mapCenter and zoomlevel
 			_mapCenter = mapView.getMapCenter();
 			_zoomLevel = mapView.getZoomLevel();
+			_projectionCheck = mapView.getProjection().fromPixels(0, 0);
 		}
 	}
 	
