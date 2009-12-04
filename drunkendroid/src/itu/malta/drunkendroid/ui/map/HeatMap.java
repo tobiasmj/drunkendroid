@@ -11,11 +11,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RadialGradient;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Bitmap.Config;
+import android.graphics.Paint.Align;
 import android.graphics.Shader.TileMode;
-import android.util.Log;
-import android.view.MotionEvent;
 
 public class HeatMap{
 
@@ -70,26 +70,21 @@ public class HeatMap{
 	 */
 	public Bitmap createHeatmap(MapView mapView)
 	{
-		Log.i("DrunkDroid", "Create heatmap");
 		Projection projection = mapView.getProjection();
 		Bitmap bitmap = Bitmap.createBitmap(mapView.getWidth(), mapView.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		
 		if(mapView.getZoomLevel() != _zoomLevel)
 			_zoomLevel = mapView.getZoomLevel();
-
-		Log.i("DrunkDroid", "Draw points (" + _moods.size() + ")");
 		// Drawing MoodMapPoints
         for(MoodMapPoint mp : _moods)
         	canvas = drawCircle(canvas, projection, mp);
-		Log.i("DrunkDroid", "Points drawn");
 
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         
         int[] pixels = new int[width*height];
         
-        Log.i("DrunkDroid", "Color bitmap");
         bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
         
         // Change alpha value to the appropriate color from the color table
@@ -101,11 +96,9 @@ public class HeatMap{
         }
         
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-        Log.i("DrunkDroid", "Bitmap colored");
-        
+		
         _bitmap = bitmap;
 
-		Log.i("DrunkDroid", "Heatmap created");
         return _bitmap;
 	}
 	
@@ -117,10 +110,12 @@ public class HeatMap{
 	{
 		switch(_zoomLevel)
 		{
-			case 19: return 200;
-			case 18: return 100;
-			case 17: return 50;
-			default: return 25;
+			case 19: return 100;
+			case 18: return 80;
+			case 17: return 60;
+			case 16: return 50;
+			case 15: return 40;
+			default: return 30;
 		}
 	}
 	
