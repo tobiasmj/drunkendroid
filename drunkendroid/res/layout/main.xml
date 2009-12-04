@@ -29,11 +29,11 @@
 	<TableLayout android:gravity="fill_horizontal" android:layout_gravity="center_horizontal"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<TableRow android:layout_width="fill_parent">
-		<ImageView android:layout_gravity="center" android:src="@drawable/start_trip_button" android:id="@+id/startServiceBtn"
+		<ImageView android:layout_gravity="right" android:src="@drawable/start_trip_button" android:id="@+id/startServiceBtn"
 		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
-		<ImageView android:layout_gravity="center" android:src="@drawable/end_trip_button" android:id="@+id/stopServiceBtn"
+		<ImageView android:layout_gravity="right" android:src="@drawable/end_trip_button" android:id="@+id/stopServiceBtn"
 		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
-		<ImageView android:layout_gravity="center" android:src="@drawable/map_button" android:id="@+id/mapViewBtn"
+		<ImageView android:layout_gravity="left" android:src="@drawable/map_button" android:id="@+id/mapViewBtn"
 		android:layout_width="0px" android:layout_height="wrap_content" android:layout_weight="1"/>
 		</TableRow>
 	</TableLayout>	
