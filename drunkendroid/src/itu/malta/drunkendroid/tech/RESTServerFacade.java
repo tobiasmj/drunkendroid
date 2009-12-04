@@ -115,6 +115,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	        	//Try to connect a few times more.
 	        	int tries = 0;
 	        	while(responseCode > 400 && tries++ < 3){
+	        		Log.e(LOGTAG, "Post call, got responseCode " + responseCode + ". This is try " + tries);
 		        	try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e1) {

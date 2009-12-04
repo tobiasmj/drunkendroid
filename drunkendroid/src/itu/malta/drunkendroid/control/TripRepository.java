@@ -38,11 +38,17 @@ public class TripRepository {
 	private void refreshActiveTrip(){
 		if(activeTrip != null){
 			if(activeTrip.remoteId == null){
-				activeTrip = data.startTrip();
+				activeTrip = data.getActiveTrip();
 			}
 		}
 		else{
-			activeTrip = data.startTrip();
+			Trip potentialTrip = data.getActiveTrip();
+			if(potentialTrip == null){
+				activeTrip = data.startTrip();
+			}
+			else{
+				activeTrip = potentialTrip;
+			}
 		}
 	}
 

@@ -25,11 +25,10 @@ public class RESTCache implements IRESTCache {
 	private final int UPLOADCALL = 2;
 	private final String LOGTAG = "RESTCache";
 	private Set<String> uploadTripFilter = null;
-	
-	DBHelper _dbHelper;
-	LocalDataFacadeForSQLite _localSqlFacade;
-	RESTServerFacade _server;
-	Context _context;
+	private DBHelper _dbHelper;
+	private LocalDataFacadeForSQLite _localSqlFacade;
+	private RESTServerFacade _server;
+	private Context _context;
 	static QueueLooper _queueLooper = null;
 	
 	public RESTCache(Context context, IWebserviceConnection conn){
@@ -307,7 +306,6 @@ public class RESTCache implements IRESTCache {
 					switch (msg.what) {
 					case UPDATECALL:
 						Log.i(LOGTAG, "Handling an update call");
-						//TODO: Implement
 						List<Trip> updateTrips = getUpdateCandidates();
 						//Try to update each Trip
 						for(Trip t : updateTrips){
@@ -386,5 +384,6 @@ public class RESTCache implements IRESTCache {
 	public void closeCache() {
 		//Remember to close the QueueLooper Thread.
 		_queueLooper.mHandler.getLooper().quit();
+		_queueLooper = null;
 	}
 }
