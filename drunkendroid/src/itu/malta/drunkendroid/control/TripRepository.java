@@ -15,7 +15,6 @@ public class TripRepository {
 
 	public TripRepository(Context context) {
 		data = new DataFacade(context);
-
 		activeTrip = data.getActiveTrip();
 	}
 
@@ -29,11 +28,26 @@ public class TripRepository {
 		else 
 			return true;
 	}
-
-	public void addEvent(Event e) {
-		if (activeTrip == null) {
+	
+	/*
+	 * This is to solve an issue where a trip is updated with a remoteId in
+	 * the cache, but the this repo' actie trip will not get updated, since
+	 * the reference cannot be passed on, serialized into a message and 
+	 * deserialized again.
+	 */
+	private void refreshActiveTrip(){
+		if(activeTrip != null){
+			if(activeTrip.remoteId == null){
+				activeTrip = data.startTrip();
+			}
+		}
+		else{
 			activeTrip = data.startTrip();
 		}
+	}
+
+	public void addEvent(Event e) {
+		refreshActiveTrip();
 		data.addEvent(activeTrip, e);
 	}
 
@@ -72,13 +86,9 @@ public class TripRepository {
 	}
 
 	public void updateEventsWithoutLocation(Location location) {
-		if (activeTrip == null) {
-			data.getActiveTrip();
-		}
-		if (activeTrip != null) {
-			data.updateEventsWithoutLocation(activeTrip,
-					location.getLatitude(), location.getLongitude());
-		}
+		refreshActiveTrip();
+		data.updateEventsWithoutLocation(activeTrip,
+			location.getLatitude(), location.getLongitude());
 	}
 
 	public void uploadTrip(Long startTime, Set<String> uploadTypes) throws RESTFacadeException {
