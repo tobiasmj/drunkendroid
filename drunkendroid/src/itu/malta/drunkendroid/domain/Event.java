@@ -12,8 +12,8 @@ public abstract class Event implements Comparable<Event> {
 	
 	public Event(Location location) {
 		this.dateTime = Calendar.getInstance().getTimeInMillis();
-		/* TODO: Needs to be handled correctly */
-		if(location.getExtras() == null)
+		//If the GPS hasn't got a location, don't set it, or it'll be set to 0.0
+		if(location != null)
 		{
 			this.latitude = location.getLatitude();
 			this.longitude = location.getLongitude();

@@ -38,6 +38,10 @@ public class DataFacade implements IDataFacade {
 		//The event is persisted.
 		_local.addEvent(t, e);
 		
+		if(e.latitude != null && e.latitude == 0){
+			Log.d("addEvent", "Found one of Jeppes 0.0 events");
+		}
+		
 		//The server is being updated
 		if(e.latitude != null && e.longitude != null){
 			//also upload to the server, if the location is known.

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.AndroidRuntimeException;
 import android.util.Log;
 
 public class LocalDataFacadeForSQLite implements ILocalDataFacade {
@@ -206,54 +207,61 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
-			Event e = null;
-			Long date = selectionOfReadings.getLong(0);
-			Double longitude = selectionOfReadings.getDouble(1);
-			Double latitude = selectionOfReadings.getDouble(2);
-			
-			if(selectionOfReadings.isNull(3)){
-				if(selectionOfReadings.isNull(6)) {
-					//This is either a call or a LocationEvent since there is no mood or message
-					if(selectionOfReadings.isNull(5)) {
-						if(selectionOfReadings.isNull(4)) {
-							//This is just a Location event, since there is no sender, receiver or message.
-							e = (new LocationEvent(date, latitude, longitude));
-						} else {
-						//This is an incoming call, since there is a sender
-						e = new IncomingCallEvent(date, latitude, longitude, selectionOfReadings.getString(4));
+			if(!selectionOfReadings.isNull(1) || !selectionOfReadings.isNull(2)){
+				Event e = null;
+				Long date = selectionOfReadings.getLong(0);
+				Double longitude = selectionOfReadings.getDouble(1);
+				Double latitude = selectionOfReadings.getDouble(2);
+				if(longitude == 0L){
+					Log.e(LOGTAG, "Found an event with 0.0");
+				}
+				
+				if(selectionOfReadings.isNull(3)){
+					if(selectionOfReadings.isNull(6)) {
+						//This is either a call or a LocationEvent since there is no mood or message
+						if(selectionOfReadings.isNull(5)) {
+							if(selectionOfReadings.isNull(4)) {
+								//This is just a Location event, since there is no sender, receiver or message.
+								e = (new LocationEvent(date, latitude, longitude));
+							} else {
+							//This is an incoming call, since there is a sender
+							e = new IncomingCallEvent(date, latitude, longitude, selectionOfReadings.getString(4));
+							}
+						} 
+						else {
+							//This is and outgoing call, since there is a receiver
+							e = new OutgoingCallEvent(date, latitude, longitude, selectionOfReadings.getString(5));
 						}
-					} 
+					}
 					else {
-						//This is and outgoing call, since there is a receiver
-						e = new OutgoingCallEvent(date, latitude, longitude, selectionOfReadings.getString(5));
+						//This is an SMS, since there is a message
+						if(selectionOfReadings.isNull(5)) {
+							//This is an incoming sms, since there is no receiver
+							e = new IncomingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
+						} else {
+							//This is and outgoing sms, since there is a receiver
+							e = new OutgoingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
+						}
 					}
 				}
 				else {
-					//This is an SMS, since there is a message
-					if(selectionOfReadings.isNull(5)) {
-						//This is an incoming sms, since there is no receiver
-						e = new IncomingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
-					} else {
-						//This is and outgoing sms, since there is a receiver
-						e = new OutgoingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
-					}
+					//This is a reading event, since there is a mood
+					e = new ReadingEvent(date, 
+							latitude, 
+							longitude, 
+							selectionOfReadings.getInt(3)); //Add mood
 				}
+				//Add an id to the event
+				e.id = selectionOfReadings.getInt(7);
+				//Add the event to the trip
+				loadedTrip.events.add(e);
 			}
-			else {
-				//This is a reading event, since there is a mood
-				e = new ReadingEvent(date, 
-						latitude, 
-						longitude, 
-						selectionOfReadings.getInt(3)); //Add mood
-			}
-			//Add an id to the event
-			e.id = selectionOfReadings.getInt(7);
-			//Add the event to the trip
-			loadedTrip.events.add(e);
 		}
+		
 		selectionOfReadings.close();
 		db.setTransactionSuccessful();
 		db.endTransaction();
+		
 		return loadedTrip;
 	}
 

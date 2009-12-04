@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import sun.security.action.GetLongAction;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -384,9 +385,9 @@ public class RESTCache implements IRESTCache {
 	}
 
 	public void closeCache() {
-		//Remember to close the QueueLooper Thread.
+		/*//Remember to close the QueueLooper Thread.
 		if(_queueLooper != null)
 			_queueLooper.mHandler.getLooper().quit();
-		_queueLooper = null;
+		_queueLooper = null;*/
 	}
 }
