@@ -3,7 +3,8 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
 	<SeekBar style="@style/ImageSeekbar" android:id="@+id/SeekBar01"
-		android:max="256" android:layout_width="310px" android:paddingLeft="5px"
-		android:paddingRight="5px" android:layout_height="100px"
-		android:progressDrawable="@drawable/seekbar_horizontal" />
+		android:max="256" android:layout_width="304px" android:paddingLeft="10px"
+		android:paddingRight="10px" android:layout_height="100px"
+		android:progressDrawable="@drawable/seekbar_horizontal"
+		android:thumbOffset="10px" />
 </merge>

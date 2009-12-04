@@ -24,6 +24,5 @@
         <item name="android:minHeight">20dip</item>
         <item name="android:maxHeight">100dip</item>
         <item name="android:thumb">@drawable/seekbar_thumb</item>
-        <item name="android:thumbOffset">5px</item>
     </style> 
 </resources>
