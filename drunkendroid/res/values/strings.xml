@@ -9,8 +9,10 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_previous_trips">Previous Trips</string> 
     <string name="menu_upload">Upload</string>
-    <string name="mood_read_interval_spinner_prompt">Select how often DrunkDroid should read your mood</string>
+    <string name="mood_read_interval_spinner_prompt">How often to read your mood?</string>
+    <string name="gps_accuracy_spinner_prompt">Select GPS accuracy when recording locations</string>
     <string name="mood_read_interval">Interval for Mood Reading (Minutes)</string>
+    <string name="gps_accuracy">GPS Accuracy for location updates (Meters)</string>
     <string name="save_settings_button">Save changes</string>
     <string name="discard_settings_button">Discard changes</string>
     <string name="restore_settings_button">Restore defaults</string>
@@ -26,6 +28,14 @@
     	<item>60</item>
     	<item>120</item>
     	<item>Never</item>
+    </string-array>
+    
+    <string-array name="gps_accuracy_options">
+    	<item>20</item>
+    	<item>30</item>
+    	<item>50</item>
+    	<item>100</item>
+    	<item>200</item>
     </string-array>
     
     <string-array name="possible_upload_types">

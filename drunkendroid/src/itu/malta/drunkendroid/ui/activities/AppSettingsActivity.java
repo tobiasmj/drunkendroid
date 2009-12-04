@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class AppSettingsActivity extends Activity {
 	
 	private Spinner moodReadSpinner;
+	private Spinner GPSAccuracySpinner;
 	private static final int SAVE_SETTINGS = Menu.FIRST;
 	private static final int RESTORE_SETTINGS = Menu.FIRST+1;
 	private static final int DISCARD_SETTINGS = Menu.FIRST+2;
@@ -28,17 +29,24 @@ public class AppSettingsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.appsettings);
 
+		OnItemSelectedListener selectedListener = new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+			    view.setBackgroundColor(android.R.color.transparent);
+			}
+			public void onNothingSelected(AdapterView<?> parent) {}
+		};
+		
 		moodReadSpinner = (Spinner)this.findViewById(R.id.MoodReadIntervalSpinner);
 		ArrayAdapter<CharSequence> moodReadAdapter = ArrayAdapter.createFromResource(this, R.array.mood_read_intervals, R.layout.custom_bright_spinner);
 		moodReadAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		moodReadSpinner.setAdapter(moodReadAdapter);
-		moodReadSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-			    view.setBackgroundColor(android.R.color.transparent);
-			  }
-			  public void onNothingSelected(AdapterView<?> parent) {}
-			}
-		); 
+		moodReadSpinner.setOnItemSelectedListener(selectedListener);
+		
+		GPSAccuracySpinner = (Spinner)this.findViewById(R.id.GPSAccuracySpinner);
+		ArrayAdapter<CharSequence> GPSAccuracyAdapter = ArrayAdapter.createFromResource(this, R.array.gps_accuracy_options, R.layout.custom_bright_spinner);
+		GPSAccuracyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		GPSAccuracySpinner.setAdapter(GPSAccuracyAdapter);
+		GPSAccuracySpinner.setOnItemSelectedListener(selectedListener);
 		
 		Button saveButton = (Button)this.findViewById(R.id.SaveSettingsButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -98,12 +106,14 @@ public class AppSettingsActivity extends Activity {
 			firstTimeLayer.setVisibility(View.VISIBLE);
 		
 		moodReadSpinner.setSelection(prefs.getInt("moodReadInterval", 0));
+		GPSAccuracySpinner.setSelection(prefs.getInt("GPSAccuracy", 2));
 	}
 	
 	private void SaveChanges() 
 	{
 		SharedPreferences.Editor prefsEditor = getSharedPrefs().edit();
 		prefsEditor.putInt("moodReadInterval", (int)moodReadSpinner.getSelectedItemId());
+		prefsEditor.putInt("GPSAccuracy", (int)GPSAccuracySpinner.getSelectedItemId());
 		prefsEditor.putBoolean("isConfigured", true);
 		prefsEditor.commit();
 	}
@@ -115,6 +125,7 @@ public class AppSettingsActivity extends Activity {
 	      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				moodReadSpinner.setSelection(0);
+				GPSAccuracySpinner.setSelection(2);
 			}
 		}).setNegativeButton("Cancel", new AlertDialog.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {

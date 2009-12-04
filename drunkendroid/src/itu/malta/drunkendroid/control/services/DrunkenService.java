@@ -216,6 +216,8 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 *            SharedPreferences containing the mood reading interval.
 	 */
 	private void StartReadingTimer(final SharedPreferences sp) {
+		final Intent moodIntent = new Intent(DrunkenService.this,
+				MoodReadActivity.class);
 		String[] intervalArray = getResources().getStringArray(
 				R.array.mood_read_intervals);
 		int selectedIndex = sp.getInt("moodReadInterval", 0);
@@ -228,19 +230,17 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 							+ _readingInterval);
 					_moodHandler.postDelayed(this, _readingInterval * 60000);
 					Notification not = new Notification(R.drawable.icon,
-							"Time for a new Mood Reading", System
+							"Time for a new Mood Reading!", System
 									.currentTimeMillis());
 					not.flags = Notification.FLAG_AUTO_CANCEL;
 					not.defaults |= Notification.DEFAULT_SOUND;
 					not.vibrate = new long[] { 0, 1000, 2000, 3000 };
-					PendingIntent p = PendingIntent.getActivity(
-							DrunkenService.this, 0,
-							new Intent(DrunkenService.this,
-									MoodReadActivity.class), 0);
 					not.setLatestEventInfo(DrunkenService.this,
-							"DrunkDroid is running",
-							"Click here to make a new Mood Reading!", p);
+							"How are you feeling?",
+							"Click here to make a new Mood Reading!", PendingIntent.getActivity(DrunkenService.this, 0,
+									moodIntent, 0));
 					_notificationManager.notify(1, not);
+					
 				}
 			};
 			_moodHandler.removeMessages(0);
@@ -288,6 +288,9 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * Interface method called by ILocationAdapter if registered to such.
 	 */
 	public void OnLocationChange(Location location) {
+		Toast t = Toast.makeText(DrunkenService.getInstance(), "GPS update 2, Accuracy:" + location.getAccuracy(), 8);
+		t.show();
+		
 		Intent i = new Intent("itu.malta.drunkendroid.NEW_LOCATION_CHANGE");
 		i.putExtra("location", location);
 		sendBroadcast(i);

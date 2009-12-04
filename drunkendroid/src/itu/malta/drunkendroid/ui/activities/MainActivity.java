@@ -19,6 +19,8 @@ public class MainActivity extends Activity {
 
 	private static final int MENU_SETTINGS = Menu.FIRST;
 	private static final int MENU_PREVIOUS_TRIPS = Menu.FIRST + 1;
+	private static final int TRIP_STATE_RUNNING = 10;
+	private static final int TRIP_STATE_NOT_RUNNING = 11;
 	SlidingDrawer slider;
 	ImageView startServiceBtn;
 	ImageView stopServiceBtn;
@@ -31,6 +33,16 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		Setup();
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		if(DrunkenService.getInstance() == null)
+			setTripState(TRIP_STATE_NOT_RUNNING);
+		else
+			setTripState(TRIP_STATE_RUNNING);
 	}
 
 	private void Setup() {
@@ -53,26 +65,19 @@ public class MainActivity extends Activity {
 
 		final ImageView mvBtn = (ImageView) findViewById(R.id.mapViewBtn);
 		mvBtn.setOnClickListener(buttonListener);
-
-		ToggleServiceButtons();
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		ToggleServiceButtons();
 	}
 	
-	private void ToggleServiceButtons() {
-		if (DrunkenService.getInstance() == null) {
-			stopServiceBtn.setVisibility(View.GONE);
-			moodReading.setVisibility(RelativeLayout.GONE);
-			startServiceBtn.setVisibility(View.VISIBLE);
-		} else {
+	private void setTripState(int mode) {
+		switch (mode) {
+		case TRIP_STATE_RUNNING:
 			startServiceBtn.setVisibility(View.GONE);
 			moodReading.setVisibility(RelativeLayout.VISIBLE);
 			stopServiceBtn.setVisibility(View.VISIBLE);
+			break;
+		case TRIP_STATE_NOT_RUNNING:
+			startServiceBtn.setVisibility(View.VISIBLE);
+			moodReading.setVisibility(RelativeLayout.GONE);
+			stopServiceBtn.setVisibility(View.GONE);
 		}
 	}
 
@@ -144,10 +149,7 @@ public class MainActivity extends Activity {
 							itu.malta.drunkendroid.control.services.DrunkenService.class);
 					i.putExtra("command", DrunkenService.SERVICE_COMMAND_START_TRIP);
 					startService(i);
-					
-					stopServiceBtn.setVisibility(View.VISIBLE);
-					moodReading.setVisibility(RelativeLayout.VISIBLE);
-					startServiceBtn.setVisibility(View.GONE);
+					setTripState(TRIP_STATE_RUNNING);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
@@ -157,9 +159,7 @@ public class MainActivity extends Activity {
 					Intent i = new Intent(MainActivity.this, itu.malta.drunkendroid.control.services.DrunkenService.class);
 					i.putExtra("command", DrunkenService.SERVICE_COMMAND_END_TRIP);
 					startService(i);
-					stopServiceBtn.setVisibility(View.GONE);
-					moodReading.setVisibility(RelativeLayout.GONE);
-					startServiceBtn.setVisibility(View.VISIBLE);
+					setTripState(TRIP_STATE_NOT_RUNNING);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}

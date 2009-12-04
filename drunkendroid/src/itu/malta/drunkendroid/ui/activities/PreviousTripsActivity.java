@@ -81,6 +81,7 @@ public class PreviousTripsActivity extends ListActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		_repo.closeRepository();
+		_repo = null;
 	}
 
 	@Override

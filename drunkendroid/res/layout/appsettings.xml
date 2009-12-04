@@ -29,6 +29,19 @@
 		android:layout_height="wrap_content"
 		android:colorForeground="@android:color/transparent">
 	</Spinner>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="#ffffff"
+		android:text="@string/gps_accuracy">
+	</TextView>
+	<Spinner android:id="@+id/GPSAccuracySpinner"
+	    android:prompt="@string/gps_accuracy_spinner_prompt"
+		android:drawSelectorOnTop="true"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:colorForeground="@android:color/transparent">
+	</Spinner>
 	<LinearLayout android:orientation="horizontal"
 		android:layout_marginTop="15px"
 		android:layout_width="wrap_content"
