@@ -85,11 +85,11 @@ public class EventReceiver extends BroadcastReceiver {
 		}
 
 		private void handleMoodReading(Intent i) {
-			if (i.getExtras() != null && i.getShortExtra("mood", (short)0) != 0) {
+			if (i.getExtras() != null) {
 				Log.i("DrunkDroid", "Incoming MoodReading");
 				Location location = DrunkenService.getInstance()
 						.getLastKnownLocation();
-				ReadingEvent readingEvent = new ReadingEvent(location, i.getShortExtra("mood", (short)0));
+				MoodEventEvent readingEvent = new MoodEventEvent(location, i.getShortExtra("mood", (short)0));
 				DrunkenService.getInstance().getRepository().addEvent(
 						readingEvent);
 			} else {

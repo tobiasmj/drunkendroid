@@ -1,7 +1,7 @@
 package itu.malta.drunkendroid.ui.map;
 
 import itu.malta.drunkendroid.domain.Event;
-import itu.malta.drunkendroid.domain.ReadingEvent;
+import itu.malta.drunkendroid.domain.MoodEventEvent;
 
 import java.util.ArrayList;
 
@@ -16,10 +16,10 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
 public class MoodEventsOverlay extends Overlay {
-	private ArrayList<ReadingEvent> _events;
+	private ArrayList<MoodEventEvent> _events;
 	private Projection _projection;
 	
-	public MoodEventsOverlay(ArrayList<ReadingEvent> events)
+	public MoodEventsOverlay(ArrayList<MoodEventEvent> events)
 	{
 		_events = events;
 	}

@@ -3,7 +3,7 @@ package itu.malta.drunkendroid.tech.dummy;
 import java.util.List;
 
 import itu.malta.drunkendroid.domain.Event;
-import itu.malta.drunkendroid.domain.ReadingEvent;
+import itu.malta.drunkendroid.domain.MoodEventEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IRESTCache;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
@@ -15,7 +15,7 @@ import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
  */
 public class DummyRESTfacade implements IRESTCache {
 
-	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime,
+	public List<MoodEventEvent> getReadingEvents(Long starTime, Long endTime,
 			Double ulLatitude, Double ulLongitude, Double lrLatitude,
 			Double lrLongitude) throws RESTFacadeException {
 		// TODO Auto-generated method stub

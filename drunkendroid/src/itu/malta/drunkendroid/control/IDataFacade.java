@@ -17,7 +17,7 @@ public interface IDataFacade {
 	public void closeTrip(Trip t);
 	public void updateFilteredTrip(Trip t) throws RESTFacadeException;
 	
-	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+	public List<MoodEventEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException;
 	
 	public void closeFacade();

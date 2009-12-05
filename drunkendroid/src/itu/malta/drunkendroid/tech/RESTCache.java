@@ -18,7 +18,7 @@ import android.os.Message;
 import android.util.Log;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.LocationEvent;
-import itu.malta.drunkendroid.domain.ReadingEvent;
+import itu.malta.drunkendroid.domain.MoodEventEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 
@@ -41,7 +41,7 @@ public class RESTCache implements IRESTCache {
 		//The Looper
 		//Build the uploadTripFilter
 		uploadTripFilter = new TreeSet<String>();	
-		uploadTripFilter.add(ReadingEvent.class.getName());
+		uploadTripFilter.add(MoodEventEvent.class.getName());
 		uploadTripFilter.add(LocationEvent.class.getName());
 		//A little bit of thread safety.
 		if(_queueLooper == null){
@@ -56,7 +56,7 @@ public class RESTCache implements IRESTCache {
 	 * Blocking call
 	 * @throws RESTFacadeException which needs to be shown to the user
 	 */
-	public List<ReadingEvent> getReadingEvents(Long starTime, Long endTime,
+	public List<MoodEventEvent> getReadingEvents(Long starTime, Long endTime,
 			Double ulLatitude, Double ulLongitude, Double lrLatitude,
 			Double lrLongitude) throws RESTFacadeException {
 		return _server.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
