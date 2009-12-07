@@ -78,7 +78,7 @@ public class TripRepository {
 		return data.getAllTrips();
 	}
 
-	public List<MoodEventEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
+	public List<MoodEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
 		return data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}

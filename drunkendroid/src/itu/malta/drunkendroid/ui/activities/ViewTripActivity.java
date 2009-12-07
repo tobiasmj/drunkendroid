@@ -8,7 +8,7 @@ import itu.malta.drunkendroid.control.TripRepository;
 import itu.malta.drunkendroid.domain.CallEvent;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.LocationEvent;
-import itu.malta.drunkendroid.domain.MoodEventEvent;
+import itu.malta.drunkendroid.domain.MoodEvent;
 import itu.malta.drunkendroid.domain.SMSEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.ui.map.LocationEventsOverlay;
@@ -31,7 +31,7 @@ public class ViewTripActivity extends MapActivity {
 	MoodOverlay _moodOverlay;
 	GeoPoint _gp;
     ArrayList<LocationEvent> _locationEvents = new ArrayList<LocationEvent>();
-    ArrayList<MoodEventEvent> _moodEvents = new ArrayList<MoodEventEvent>();
+    ArrayList<MoodEvent> _moodEvents = new ArrayList<MoodEvent>();
     ArrayList<CallEvent> _callEvents = new ArrayList<CallEvent>();
     ArrayList<SMSEvent> _smsEvents = new ArrayList<SMSEvent>();
 	ArrayList<Event> _otherEvents = new ArrayList<Event>();
@@ -80,8 +80,8 @@ public class ViewTripActivity extends MapActivity {
             	// Add events to appropriate arraylist
             	if(LocationEvent.class.isInstance(e))
             		_locationEvents.add((LocationEvent)e);
-            	else if(MoodEventEvent.class.isInstance(e))
-            		_moodEvents.add((MoodEventEvent)e);
+            	else if(MoodEvent.class.isInstance(e))
+            		_moodEvents.add((MoodEvent)e);
             	else if(CallEvent.class.isInstance(e))
             		_callEvents.add((CallEvent)e);
             	else if(SMSEvent.class.isInstance(e))

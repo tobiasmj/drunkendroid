@@ -89,7 +89,7 @@ public class EventReceiver extends BroadcastReceiver {
 				Log.i("DrunkDroid", "Incoming MoodReading");
 				Location location = DrunkenService.getInstance()
 						.getLastKnownLocation();
-				MoodEventEvent readingEvent = new MoodEventEvent(location, i.getShortExtra("mood", (short)0));
+				MoodEvent readingEvent = new MoodEvent(location, i.getShortExtra("mood", (short)0));
 				DrunkenService.getInstance().getRepository().addEvent(
 						readingEvent);
 			} else {

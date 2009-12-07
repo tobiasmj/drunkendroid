@@ -3,7 +3,7 @@ package itu.malta.drunkendroid.ui.map;
 import java.util.List;
 
 import itu.malta.drunkendroid.control.DataFacade;
-import itu.malta.drunkendroid.domain.MoodEventEvent;
+import itu.malta.drunkendroid.domain.MoodEvent;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -281,7 +281,7 @@ public class MoodOverlay extends Overlay
 		double lrLat = _mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan * 1.25) / 2)/1E6;
 		double lrLong = _mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan * 1.25) / 2)/1E6;
 		
-		List<MoodEventEvent> data = null;
+		List<MoodEvent> data = null;
 
 		try {
 			data = _dataFacade.getReadingEvents(
@@ -304,7 +304,7 @@ public class MoodOverlay extends Overlay
 		{
 			_heatmap.clearMoodMapPoints();
 			
-			for(MoodEventEvent event : data)
+			for(MoodEvent event : data)
 			{
 				GeoPoint gp = new GeoPoint((int)(event.latitude*1E6), (int)(event.longitude*1E6));
 				MoodMapPoint mp = new MoodMapPoint(gp, event.mood);

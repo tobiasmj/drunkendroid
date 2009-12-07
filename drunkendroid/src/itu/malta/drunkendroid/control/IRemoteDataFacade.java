@@ -16,7 +16,7 @@ public interface IRemoteDataFacade {
 	 * @return A synthesized Trip which contains events returned by the query.
 	 * @throws RESTFacadeException which needs to be shown to the user.
 	 */
-	public List<MoodEventEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+	public List<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException;
 	
 	/**

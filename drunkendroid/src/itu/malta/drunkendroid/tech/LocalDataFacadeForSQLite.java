@@ -35,8 +35,8 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			readingValues.put("latitude", e.latitude);
 			
 			//Handle other type of Events here
-			if(MoodEventEvent.class.isInstance(e))
-				readingValues.put("mood", ((MoodEventEvent)e).mood);
+			if(MoodEvent.class.isInstance(e))
+				readingValues.put("mood", ((MoodEvent)e).mood);
 			else if(IncomingCallEvent.class.isInstance(e))
 				readingValues.put("sender", ((CallEvent)e).getPhonenumber());
 			else if(OutgoingCallEvent.class.isInstance(e))
@@ -246,7 +246,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				}
 				else {
 					//This is a reading event, since there is a mood
-					e = new MoodEventEvent(date, 
+					e = new MoodEvent(date, 
 							latitude, 
 							longitude, 
 							selectionOfReadings.getInt(3)); //Add mood
@@ -293,7 +293,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 							//Yes
 							//This is a ReadingEvent
 							int mood = cursor.getInt(1);
-							e = new MoodEventEvent(date, latitude, longitude, mood);
+							e = new MoodEvent(date, latitude, longitude, mood);
 						}
 					}
 					if(e != null){

@@ -47,10 +47,10 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * If errors occur an empty map is returned.
 	 * @return currently only returns events with moods. Used to generate a moodmap.
 	 */
-	public List<MoodEventEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+	public List<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException{
 		
-		List<MoodEventEvent> resultingTrip = null;
+		List<MoodEvent> resultingTrip = null;
 		//Call the server
 		HttpResponse response = conn.get(MOODMAP +"/"+
 				 String.valueOf(starTime) +"/"+ 
@@ -237,7 +237,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @throws IOException If the provided response has no content.
 	 * @throws IllegalStateException  If the provided response is in an illegal state(it might have been read before)
 	 */
-	private List<MoodEventEvent> consumeXmlFromMoodMap(HttpResponse response) throws IllegalStateException, IOException {
+	private List<MoodEvent> consumeXmlFromMoodMap(HttpResponse response) throws IllegalStateException, IOException {
 		final String POINT = "p";
 		final String MOOD = "value";
 		final String LONGITUDE = "long";
@@ -251,7 +251,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
         
         	if(response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300){
 	        	//Everything works build the events.
-        		List<MoodEventEvent> events = new ArrayList<MoodEventEvent>();
+        		List<MoodEvent> events = new ArrayList<MoodEvent>();
         		Long currentTime = Calendar.getInstance().getTimeInMillis();
         		
         		NodeList nodes = xmlDoc.getElementsByTagName(POINT);
@@ -280,7 +280,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
         			}
         			//adding the result.
         			//insert the current time, since no time is supplied by the map from the server.
-        			events.add(new MoodEventEvent(currentTime, latitude, longitude, mood));
+        			events.add(new MoodEvent(currentTime, latitude, longitude, mood));
         		}
         		
         		return events;

@@ -43,7 +43,7 @@ public final class XMLBuilder {
         return writer.toString();
 	}
 
-	protected static void addReadingXml(XmlSerializer serializer, MoodEventEvent r)
+	protected static void addReadingXml(XmlSerializer serializer, MoodEvent r)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		serializer.startTag("", MOOD);
 		serializer.text(String.valueOf(r.mood));
@@ -90,7 +90,7 @@ public final class XMLBuilder {
 		// Type specific
 		if (LocationEvent.class.isInstance(e))
 			serializer.text("event");
-		else if (MoodEventEvent.class.isInstance(e))
+		else if (MoodEvent.class.isInstance(e))
 			serializer.text("mood");
 		else if (CallEvent.class.isInstance(e))
 			serializer.text("call");
@@ -109,8 +109,8 @@ public final class XMLBuilder {
 		serializer.endTag("", LATITUDE);
 		serializer.startTag("", DATA);
 		// Type specific
-		if (MoodEventEvent.class.isInstance(e))
-			addReadingXml(serializer, (MoodEventEvent) e);
+		if (MoodEvent.class.isInstance(e))
+			addReadingXml(serializer, (MoodEvent) e);
 		else if (IncomingCallEvent.class.isInstance(e))
 			addIncomingCallXml(serializer, (IncomingCallEvent) e);
 		else if (OutgoingCallEvent.class.isInstance(e))
