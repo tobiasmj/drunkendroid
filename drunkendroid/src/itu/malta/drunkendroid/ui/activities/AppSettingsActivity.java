@@ -20,9 +20,8 @@ public class AppSettingsActivity extends Activity {
 	
 	private Spinner moodReadSpinner;
 	private Spinner GPSAccuracySpinner;
-	private static final int SAVE_SETTINGS = Menu.FIRST;
+	private static final int CHANGES_DONE = Menu.FIRST;
 	private static final int RESTORE_SETTINGS = Menu.FIRST+1;
-	private static final int DISCARD_SETTINGS = Menu.FIRST+2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,29 +47,46 @@ public class AppSettingsActivity extends Activity {
 		GPSAccuracySpinner.setAdapter(GPSAccuracyAdapter);
 		GPSAccuracySpinner.setOnItemSelectedListener(selectedListener);
 		
-		Button saveButton = (Button)this.findViewById(R.id.SaveSettingsButton);
+		Button saveButton = (Button)this.findViewById(R.id.ChangesDoneButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				SaveChanges();
 				finish();
 			}
 		});
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		TextView firstTimeLayer = (TextView)this.findViewById(R.id.FirstTimeUseLayout);
 		
-		Button discardButton = (Button)this.findViewById(R.id.DiscardSettingsButton);
-		discardButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				finish();
-			}
-		});
+		SharedPreferences prefs = getPreferences(0);
 		
-		Setup();
+		//Gets sharedpreferences showing whether the application has been configured or not.
+		if(prefs.getBoolean("isConfigured", false))
+			firstTimeLayer.setVisibility(View.GONE);
+		else 	
+			firstTimeLayer.setVisibility(View.VISIBLE);
+		
+		moodReadSpinner.setSelection(prefs.getInt("moodReadInterval", 1));
+		GPSAccuracySpinner.setSelection(prefs.getInt("GPSAccuracy", 2));
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		
+		SharedPreferences.Editor prefsEditor = getPreferences(0).edit();
+		prefsEditor.putInt("moodReadInterval", (int)moodReadSpinner.getSelectedItemId());
+		prefsEditor.putInt("GPSAccuracy", (int)GPSAccuracySpinner.getSelectedItemId());
+		prefsEditor.putBoolean("isConfigured", true);
+		prefsEditor.commit();
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, AppSettingsActivity.SAVE_SETTINGS, 0, R.string.save_settings_button).setIcon(android.R.drawable.ic_menu_save);
-		menu.add(0, AppSettingsActivity.DISCARD_SETTINGS, 0, R.string.discard_settings_button).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+		menu.add(0, AppSettingsActivity.CHANGES_DONE, 0, R.string.done_changing_settings_button).setIcon(android.R.drawable.ic_menu_save);
 		menu.add(0, AppSettingsActivity.RESTORE_SETTINGS, 0, R.string.restore_settings_button).setIcon(android.R.drawable.ic_menu_delete);
 		return true;
 	}
@@ -78,11 +94,7 @@ public class AppSettingsActivity extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {		
 		switch(item.getItemId()) {
-			case AppSettingsActivity.SAVE_SETTINGS:
-				SaveChanges();
-				finish();
-				break;
-			case AppSettingsActivity.DISCARD_SETTINGS:
+			case AppSettingsActivity.CHANGES_DONE:
 				finish();
 				break;
 			case AppSettingsActivity.RESTORE_SETTINGS:
@@ -93,48 +105,18 @@ public class AppSettingsActivity extends Activity {
 		return super.onMenuItemSelected(featureId, item);
 	}
 	
-	private void Setup()
-	{
-		TextView firstTimeLayer = (TextView)this.findViewById(R.id.FirstTimeUseLayout);
-		
-		SharedPreferences prefs = getSharedPrefs();
-		
-		//Gets sharedpreferences showing whether the application has been configured or not.
-		if(prefs.getBoolean("isConfigured", false))
-			firstTimeLayer.setVisibility(View.GONE);
-		else 	
-			firstTimeLayer.setVisibility(View.VISIBLE);
-		
-		moodReadSpinner.setSelection(prefs.getInt("moodReadInterval", 0));
-		GPSAccuracySpinner.setSelection(prefs.getInt("GPSAccuracy", 2));
-	}
-	
-	private void SaveChanges() 
-	{
-		SharedPreferences.Editor prefsEditor = getSharedPrefs().edit();
-		prefsEditor.putInt("moodReadInterval", (int)moodReadSpinner.getSelectedItemId());
-		prefsEditor.putInt("GPSAccuracy", (int)GPSAccuracySpinner.getSelectedItemId());
-		prefsEditor.putBoolean("isConfigured", true);
-		prefsEditor.commit();
-	}
-	
 	private void RestoreDefaults() 
 	{
 	    new AlertDialog.Builder(this)
 	      .setMessage("Restore defaults?")
 	      .setPositiveButton("Yes", new AlertDialog.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
-				moodReadSpinner.setSelection(0);
+				moodReadSpinner.setSelection(1);
 				GPSAccuracySpinner.setSelection(2);
 			}
 		}).setNegativeButton("Cancel", new AlertDialog.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 			}
 		}).show();
-	}
-	
-	private SharedPreferences getSharedPrefs()
-	{
-		return this.getSharedPreferences("prefs_config", MODE_PRIVATE);
 	}
 }

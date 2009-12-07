@@ -48,14 +48,9 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
 		>
-		<Button android:id="@+id/SaveSettingsButton"
-			android:text="@string/save_settings_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-		</Button>
-		<Button android:id="@+id/DiscardSettingsButton"
-			android:text="@string/discard_settings_button"
-			android:layout_width="wrap_content"
+		<Button android:id="@+id/ChangesDoneButton"
+			android:text="@string/done_changing_settings_button"
+			android:layout_width="100px"
 			android:layout_height="wrap_content">
 		</Button>
 	</LinearLayout>
