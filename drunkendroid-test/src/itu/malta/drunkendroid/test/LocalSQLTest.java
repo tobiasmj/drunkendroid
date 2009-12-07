@@ -29,24 +29,24 @@ public class LocalSQLTest extends AndroidTestCase {
 
 	private void insertTestData() {
 		Trip t = _dbh.startTrip();
-		// ReadingEvent 1
-		ReadingEvent r1 = new ReadingEvent(new Long(1255816133),
+		// MoodEvent 1
+		MoodEvent r1 = new MoodEvent(new Long(1255816133),
 				(Double) 35.908422, (Double) 14.502362, 110);
-		// ReadingEvent 2
-		ReadingEvent r2 = new ReadingEvent(new Long(1255816433),
+		// MoodEvent 2
+		MoodEvent r2 = new MoodEvent(new Long(1255816433),
 				(Double) 35.909141, (Double) 14.503580, 95);
-		// ReadingEvent 3
-		ReadingEvent r3 = new ReadingEvent(new Long(1255816733),
+		// MoodEvent 3
+		MoodEvent r3 = new MoodEvent(new Long(1255816733),
 				(Double) 35.909275, (Double) 14.502825, 62);
 		_dbh.addEvent(t, r1);
 		_dbh.addEvent(t, r2);
 		_dbh.addEvent(t, r3);
 		// dbh.closeTrip(t);
 
-		// ReadingEvent 1
+		// MoodEvent 1
 		Trip t2 = _dbh.startTrip();
 		t2.startDate = 1255816733L;
-		ReadingEvent r2_1 = new ReadingEvent(new Long(1255816733),
+		MoodEvent r2_1 = new MoodEvent(new Long(1255816733),
 				(Double) 35.908422, (Double) 14.502362, 270);
 		_dbh.addEvent(t2, r2_1);
 	}
@@ -201,7 +201,7 @@ public class LocalSQLTest extends AndroidTestCase {
 			// Create a few events without locations
 			Long currentTime1 = Calendar.getInstance().getTimeInMillis();
 			Long currentTime2 = currentTime1 + 10;
-			Event e1 = new ReadingEvent(currentTime1, null, null, 60);
+			Event e1 = new MoodEvent(currentTime1, null, null, 60);
 			Event e2 = new LocationEvent(currentTime2, null, null);
 			// Add them
 			_dbh.addEvent(testTrip, e1);

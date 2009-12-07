@@ -15,7 +15,7 @@ import java.util.List;
 import itu.malta.drunkendroid.control.IRemoteDataFacade;
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.LocationEvent;
-import itu.malta.drunkendroid.domain.ReadingEvent;
+import itu.malta.drunkendroid.domain.MoodEvent;
 import itu.malta.drunkendroid.domain.Trip;
 import itu.malta.drunkendroid.tech.IWebserviceConnection;
 import itu.malta.drunkendroid.tech.RESTServerFacade;
@@ -230,12 +230,12 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		assertEquals(expectedXML, xmlContent.getValue());
 	}
 
-	public void testBuildXMLFromStandAloneReadingEvent()
+	public void testBuildXMLFromStandAloneMoodEvent()
 			throws RESTFacadeException {
 		Trip t = this.generateTrip();
 		t.remoteId = 42L; // just a random test number
 		int mood = 90;
-		ReadingEvent e1 = new ReadingEvent(Calendar.getInstance()
+		MoodEvent e1 = new MoodEvent(Calendar.getInstance()
 				.getTimeInMillis(), (Double) 34.123456, (Double) 14.123456,
 				mood);
 		// Expected results
@@ -298,7 +298,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		assertEquals(expectedXML, xmlContent.getValue());
 	}
 
-	public void testGetReadingEvents() throws IllegalStateException,
+	public void testGetMoodEvents() throws IllegalStateException,
 			IOException, RESTFacadeException {
 		try {
 			// Build up the test
@@ -343,12 +343,12 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 			Double ulLongitude = 0D;
 			Double lrLatitude = 0D;
 			Double lrLongitude = 0D;
-			List<ReadingEvent> result = rest.getReadingEvents(starTime,
+			List<MoodEvent> result = rest.getReadingEvents(starTime,
 					endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 
 			// verify
-			ReadingEvent r1 = result.get(0);
-			ReadingEvent r2 = result.get(1);
+			MoodEvent r1 = result.get(0);
+			MoodEvent r2 = result.get(1);
 			// Assert moods
 			assertEquals(r1.mood, 140);
 			assertEquals(r2.mood, 130);
@@ -365,14 +365,14 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 
 	private Trip generateTrip() {
 		Trip t = new Trip();
-		// ReadingEvent 1
-		ReadingEvent r1 = new ReadingEvent(new Long(1255816133),
+		// MoodEvent 1
+		MoodEvent r1 = new MoodEvent(new Long(1255816133),
 				(Double) 35.908422, (Double) 14.502362, 110);
-		// ReadingEvent 2
-		ReadingEvent r2 = new ReadingEvent(new Long(1255816433),
+		// MoodEvent 2
+		MoodEvent r2 = new MoodEvent(new Long(1255816433),
 				(Double) 35.909141, (Double) 14.503580, 95);
-		// ReadingEvent 3
-		ReadingEvent r3 = new ReadingEvent(new Long(1255816733),
+		// MoodEvent 3
+		MoodEvent r3 = new MoodEvent(new Long(1255816733),
 				(Double) 35.909275, (Double) 14.502825, 62);
 		t.events.add(r1);
 		t.events.add(r2);
