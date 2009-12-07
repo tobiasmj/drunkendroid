@@ -87,8 +87,13 @@ public class TripRepository {
 		return data.getTrip(startTime);
 	}
 
-	public void deleteTrip(Long startTime) {
-		data.deleteTrip(startTime);
+	public void deleteTrip(Long startDate) {
+		if(activeTrip != null && startDate.equals(activeTrip.startDate)){
+			throw new IllegalArgumentException("You cannot delete an ongoing trip. Please stop it first.");
+		}
+		else{
+			data.deleteTrip(startDate);
+		}
 	}
 
 	public void updateEventsWithoutLocation(Location location) {

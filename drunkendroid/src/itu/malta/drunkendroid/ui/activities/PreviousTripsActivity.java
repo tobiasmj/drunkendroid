@@ -17,6 +17,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -165,9 +166,9 @@ public class PreviousTripsActivity extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, VIEW_TRIP, 0, "View trip on map");
-		menu.add(0, UPLOAD_TRIP, 0, "Upload trip");
-		menu.add(0, DELETE_TRIP, 0, "Delete trip");
+		menu.add(0, VIEW_TRIP, 1, "View trip on map");
+		menu.add(0, UPLOAD_TRIP, 2, "Upload trip");
+		menu.add(0, DELETE_TRIP, 3, "Delete trip");
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
@@ -190,21 +191,38 @@ public class PreviousTripsActivity extends ListActivity {
 	}
 
 	private void DeleteTrip(final int id) {
-		Log.i(this.getString(R.string.log_tag), "Deleting trip with id: " + id);
+		Log.i(this.getString(R.string.log_tag), "Deleting trip with local id " + id);
 		_progressDialog = ProgressDialog.show(PreviousTripsActivity.this,
 				"Please wait...", "Deleting trip...", true);
-		Runnable job = new Runnable() {
-
+		
+		OnClickListener clickListener = new OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		};
+		//Tell the user that this isn't possible.
+		final AlertDialog please = new AlertDialog.Builder(PreviousTripsActivity.this)
+		.setPositiveButton("OK", clickListener)
+		.create();
+		
+		final Runnable alertRunnable = new Runnable() {
+			public void run() {
+				please.show();
+			}
+		};
+		
+		Thread thread = new Thread("DeleteTripThread"){
 			public void run() {
 				try {
 					_repo.deleteTrip(_trips.get(id).startDate);
-				} catch (Exception e) {
-					e.printStackTrace();
+					getPreviousTrips();
+				}catch (IllegalArgumentException e) {
+					please.setMessage(e.getMessage());
+					runOnUiThread(alertRunnable);
 				}
-				getPreviousTrips();
-			}
+				_progressDialog.dismiss();
+			}	
 		};
-		Thread thread = new Thread(null, job, "DeleteTripThread");
 		thread.start();
 	}
 
