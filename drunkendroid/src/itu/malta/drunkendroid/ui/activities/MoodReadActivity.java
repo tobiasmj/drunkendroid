@@ -10,6 +10,9 @@ import android.widget.SeekBar;
 
 public class MoodReadActivity extends Activity {
 
+	/**
+	 * Called when the activity is created.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -37,6 +40,7 @@ public class MoodReadActivity extends Activity {
 		});
 	}
 
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

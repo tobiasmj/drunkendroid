@@ -28,7 +28,9 @@ public class MainActivity extends Activity {
 	RelativeLayout _programGuide;
 	View.OnClickListener buttonListener = new MyOnClickListener();
 
-	/** Called when the activity is first created. */
+	/**
+	 *  Called when the activity is created. 
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,6 +38,9 @@ public class MainActivity extends Activity {
 		Setup();
 	}
 	
+	/**
+	 *  Called when the activity is brought back on the screen.
+	 */
 	@Override
 	public void onResume()
 	{
@@ -46,6 +51,9 @@ public class MainActivity extends Activity {
 			setTripState(TRIP_STATE_RUNNING);
 	}
 
+	/**
+	 *  Sets up the activity's buttons and views. 
+	 */
 	private void Setup() {
 		moodReading = (RelativeLayout) this.findViewById(R.id.MoodReadingLayout);
 		
@@ -70,6 +78,9 @@ public class MainActivity extends Activity {
 		mvBtn.setOnClickListener(buttonListener);
 	}
 	
+	/**
+	 * Shows and hides views in the activity if a trip is running or not.
+	 */
 	private void setTripState(int mode) {
 		switch (mode) {
 		case TRIP_STATE_RUNNING:
@@ -86,6 +97,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Called when the Options Menu is created.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -97,6 +111,9 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * Called when an item in the Options Menu is selected.
+	 */
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		Intent intent = null;
@@ -124,6 +141,9 @@ public class MainActivity extends Activity {
 		return super.onMenuItemSelected(featureId, item);
 	}
 
+	/**
+	 * Listener handling the interaction with the Mood Read SeekBar. 
+	 */
 	private class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			System.out.println("Sending Mood Reading!");
@@ -141,6 +161,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Listener handling the various buttons in the activity. 
+	 */
 	private class MyOnClickListener implements View.OnClickListener {
 		public void onClick(View v) {
 			switch (v.getId()) {

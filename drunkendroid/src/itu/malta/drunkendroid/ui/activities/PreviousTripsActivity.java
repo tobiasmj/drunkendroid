@@ -40,6 +40,9 @@ public class PreviousTripsActivity extends ListActivity {
 	private final int UPLOAD_TRIP = Menu.FIRST + 1;
 	private final int DELETE_TRIP = Menu.FIRST + 2;
 
+	/**
+	 * Called when the activity is created.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +53,10 @@ public class PreviousTripsActivity extends ListActivity {
 		registerForContextMenu(getListView());
 	}
 
+	/**
+	 * Updates the ListActivity. Spawns a new thread to collect the data, and in
+	 * the meantime shows a ProgressDialog.
+	 */
 	private void UpdateList() {
 		Runnable job = new Runnable() {
 			public void run() {
@@ -62,12 +69,21 @@ public class PreviousTripsActivity extends ListActivity {
 				"Please wait...", "Retrieving list of trips ...", true);
 	}
 
+	/**
+	 * Called when an item in the ListActivity is selected.
+	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		ShowTrip(position);
 	}
 
+	/**
+	 * Fires an intent to show the selected trip in a new activity.
+	 * 
+	 * @param position
+	 *            Position of the trip in the list of trips.
+	 */
 	private void ShowTrip(int position) {
 		if (_trips.size() > 0) {
 			Intent i = new Intent("itu.malta.drunkendroid.VIEW_TRIP");
@@ -76,6 +92,9 @@ public class PreviousTripsActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * Called by the Android framework when the activity is to be destroyed.
+	 */
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -83,12 +102,19 @@ public class PreviousTripsActivity extends ListActivity {
 		_repo = null;
 	}
 
+	/**
+	 * Called when the activity is brought back on the screen.
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
 		UpdateList();
 	}
 
+	/**
+	 * Runnable that removes the ProgressDialog and updates the ListActivity
+	 * when the list of trips has been updated.
+	 */
 	private Runnable returnRes = new Runnable() {
 		public void run() {
 			_adapter.clear();
@@ -101,22 +127,30 @@ public class PreviousTripsActivity extends ListActivity {
 			_adapter.notifyDataSetChanged();
 		}
 	};
-	
+
+	/**
+	 * Runnable that shows a notification dialog when an upload has failed.
+	 */
 	private Runnable uploadFailedJob = new Runnable() {
 		public void run() {
 			_progressDialog.dismiss();
-			AlertDialog alert = new AlertDialog.Builder(PreviousTripsActivity.this).setTitle(
-					"Upload failed. Please try again later.").setPositiveButton("Ok",
+			AlertDialog alert = new AlertDialog.Builder(
+					PreviousTripsActivity.this).setTitle(
+					"Upload failed. Please try again later.")
+					.setPositiveButton("Ok",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
-									
+
 								}
 							}).create();
 			alert.show();
 		}
 	};
 
+	/**
+	 * Updates the list of trips.
+	 */
 	private void getPreviousTrips() {
 		try {
 			_trips = _repo.getAllTrips();
@@ -128,6 +162,13 @@ public class PreviousTripsActivity extends ListActivity {
 		runOnUiThread(returnRes);
 	}
 
+	/**
+	 * Adapter for the ListActivity in order to show list of trips in a custom
+	 * layout.
+	 * 
+	 * @author Jeppe
+	 * 
+	 */
 	private class TripAdapter extends ArrayAdapter<Trip> {
 
 		private ArrayList<Trip> items;
@@ -138,6 +179,10 @@ public class PreviousTripsActivity extends ListActivity {
 			this.items = items;
 		}
 
+		/*
+		 * @see android.widget.ArrayAdapter#getView(int, android.view.View,
+		 * android.view.ViewGroup)
+		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
@@ -161,6 +206,9 @@ public class PreviousTripsActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * Called when the a Context Menu is created.
+	 */
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -169,6 +217,9 @@ public class PreviousTripsActivity extends ListActivity {
 		menu.add(0, DELETE_TRIP, 3, "Delete trip");
 	}
 
+	/**
+	 * Called when an item in the Context Menu is selected.
+	 */
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -188,42 +239,51 @@ public class PreviousTripsActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * Spawns a new thread that deletes the selected trip. If the selected trip
+	 * is still ongoing, the user is presented with a dialog stating that the deletion cannot be executed.
+	 * @param id The ID of the trip to be deleted.
+	 */
 	private void DeleteTrip(final int id) {
-		Log.i(this.getString(R.string.log_tag), "Deleting trip with local id " + id);
+		Log.i(this.getString(R.string.log_tag), "Deleting trip with local id "
+				+ id);
 		_progressDialog = ProgressDialog.show(PreviousTripsActivity.this,
 				"Please wait...", "Deleting trip...", true);
-		
+
 		OnClickListener clickListener = new OnClickListener() {
-			
+
 			public void onClick(DialogInterface dialog, int which) {
 			}
 		};
-		//Tell the user that this isn't possible.
-		final AlertDialog please = new AlertDialog.Builder(PreviousTripsActivity.this)
-		.setPositiveButton("OK", clickListener)
-		.create();
-		
+		// Tell the user that this isn't possible.
+		final AlertDialog please = new AlertDialog.Builder(
+				PreviousTripsActivity.this).setPositiveButton("OK",
+				clickListener).create();
+
 		final Runnable alertRunnable = new Runnable() {
 			public void run() {
 				please.show();
 			}
 		};
-		
-		Thread thread = new Thread("DeleteTripThread"){
+
+		Thread thread = new Thread("DeleteTripThread") {
 			public void run() {
 				try {
 					_repo.deleteTrip(_trips.get(id).getStartDate());
 					getPreviousTrips();
-				}catch (IllegalArgumentException e) {
+				} catch (IllegalArgumentException e) {
 					please.setMessage(e.getMessage());
 					runOnUiThread(alertRunnable);
 				}
 				_progressDialog.dismiss();
-			}	
+			}
 		};
 		thread.start();
 	}
 
+	/**
+	 * Called when the showDialog() is called.
+	 */
 	@Override
 	protected Dialog onCreateDialog(final int id) {
 
@@ -243,10 +303,10 @@ public class PreviousTripsActivity extends ListActivity {
 										"Uploading trip", "Please wait..");
 								Thread t = new Thread(new Runnable() {
 									public void run() {
-										
+
 										try {
-											_repo.uploadTrip(
-													(_trips.get(id)).getStartDate(),
+											_repo.uploadTrip((_trips.get(id))
+													.getStartDate(),
 													listener._choices);
 										} catch (RESTFacadeException e) {
 											runOnUiThread(uploadFailedJob);
@@ -257,8 +317,9 @@ public class PreviousTripsActivity extends ListActivity {
 								});
 								t.start();
 								// TODO upload implementation here!
-								Log.i("DrunkDroid", "Uploading trip with filter: "
-										+ listener._choices.toString());
+								Log.i("DrunkDroid",
+										"Uploading trip with filter: "
+												+ listener._choices.toString());
 							}
 						}).setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
@@ -269,6 +330,9 @@ public class PreviousTripsActivity extends ListActivity {
 						}).create();
 	}
 
+	/**
+	 * Listener used for selecting which Events should be uploaded along a trip.
+	 */
 	class MultiChoiceListener implements OnMultiChoiceClickListener {
 
 		public ArrayList<String> _possibleChoices = new ArrayList<String>();

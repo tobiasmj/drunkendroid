@@ -25,6 +25,9 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+/**
+ * Shows a map of a trip and related events.
+ */
 public class ViewTripActivity extends MapActivity {
 	MapView _mapView;
 	MapController _mapController;

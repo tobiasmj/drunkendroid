@@ -19,7 +19,7 @@ public class MoodMapActivity extends MapActivity {
 	MoodOverlay _moodOverlay;
 	GeoPoint _gp;
 	
-    /** Called when the activity is first created. */
+    /** Called when the activity is created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

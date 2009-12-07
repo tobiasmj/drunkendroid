@@ -23,6 +23,9 @@ public class AppSettingsActivity extends Activity {
 	private static final int CHANGES_DONE = Menu.FIRST;
 	private static final int RESTORE_SETTINGS = Menu.FIRST+1;
 	
+	/**
+	 * Called when the activity is created.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +58,9 @@ public class AppSettingsActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * Called when an activity is bought back on the screen.
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -72,6 +78,9 @@ public class AppSettingsActivity extends Activity {
 		GPSAccuracySpinner.setSelection(prefs.getInt("GPSAccuracy", 2));
 	}
 	
+	/**
+	 * Called when the Activity is put in the background.
+	 */
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -83,6 +92,9 @@ public class AppSettingsActivity extends Activity {
 		prefsEditor.commit();
 	}
 	
+	/**
+	 * Called when the Options Menu is created.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -91,6 +103,9 @@ public class AppSettingsActivity extends Activity {
 		return true;
 	}
 	
+	/**
+	 * Called when an item in the Options Menu is selected.
+	 */
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {		
 		switch(item.getItemId()) {
@@ -105,6 +120,9 @@ public class AppSettingsActivity extends Activity {
 		return super.onMenuItemSelected(featureId, item);
 	}
 	
+	/**
+	 * Restores the settings to the original state. Causes a confirmation dialog to be shown.
+	 */
 	private void RestoreDefaults() 
 	{
 	    new AlertDialog.Builder(this)
