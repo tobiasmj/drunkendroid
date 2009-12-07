@@ -5,31 +5,64 @@ import java.util.Calendar;
 import android.location.Location;
 
 public abstract class Event implements Comparable<Event> {
-	public Long dateTime;
-	public Double latitude;
-	public Double longitude;
-	public int id;
+	private Long _dateTime;
+	private Double _latitude;
+	private Double _longitude;
+	private int _id;
+	
+	public Long getDateTime() {
+		return _dateTime;
+	}
+
+	public void setDateTime(Long dateTime) {
+		this._dateTime = dateTime;
+	}
+
+	public Double getLatitude() {
+		return _latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this._latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return _longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this._longitude = longitude;
+	}
+
+	public int getId() {
+		return _id;
+	}
+
+	public void setId(int id) {
+		this._id = id;
+	}
+
 	
 	public Event(Location location) {
-		this.dateTime = Calendar.getInstance().getTimeInMillis();
+		this._dateTime = Calendar.getInstance().getTimeInMillis();
 		//If the GPS hasn't got a location, don't set it, or it'll be set to 0.0
 		if(location != null)
 		{
-			this.latitude = location.getLatitude();
-			this.longitude = location.getLongitude();
+			this._latitude = location.getLatitude();
+			this._longitude = location.getLongitude();
 		}
 	}
 	
 	public Event(Long datetime, Double latitude, Double longitude) {
-		this.dateTime = datetime;
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this._dateTime = datetime;
+		this._latitude = latitude;
+		this._longitude = longitude;
 	}
 	
 	public int compareTo(Event event) {
-		if(this.dateTime < event.dateTime)
+		if(this._dateTime < event.getDateTime())
 			return -1;
-		else if(this.dateTime > event.dateTime)
+		else if(this._dateTime > event.getDateTime())
 			return 1;
 		else
 			return 0;

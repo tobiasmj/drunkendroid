@@ -46,7 +46,7 @@ public final class XMLBuilder {
 	protected static void addReadingXml(XmlSerializer serializer, MoodEvent r)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		serializer.startTag("", MOOD);
-		serializer.text(String.valueOf(r.mood));
+		serializer.text(String.valueOf(r.getMood()));
 		serializer.endTag("", MOOD);
 	}
 
@@ -99,13 +99,13 @@ public final class XMLBuilder {
 
 		serializer.endTag("", EVENTTYPE);
 		serializer.startTag("", DATETIME);
-		serializer.text(String.valueOf(e.dateTime));
+		serializer.text(String.valueOf(e.getDateTime()));
 		serializer.endTag("", DATETIME);
 		serializer.startTag("", LONGITUDE);
-		serializer.text(String.valueOf(e.longitude));
+		serializer.text(String.valueOf(e.getLongitude()));
 		serializer.endTag("", LONGITUDE);
 		serializer.startTag("", LATITUDE);
-		serializer.text(String.valueOf(e.latitude));
+		serializer.text(String.valueOf(e.getLatitude()));
 		serializer.endTag("", LATITUDE);
 		serializer.startTag("", DATA);
 		// Type specific
@@ -132,12 +132,12 @@ public final class XMLBuilder {
 		serializer.startDocument("UTF-8", true);
 		serializer.startTag("", TRIP);
 		serializer.startTag("", EVENTS);
-		for (Event e : t.events) {
+		for (Event e : t.getEvents()) {
 			addEventXml(serializer, e);
 		}
 		serializer.endTag("", EVENTS);
 		serializer.startTag("", STARTDATETIME);
-		serializer.text(String.valueOf(t.startDate));
+		serializer.text(String.valueOf(t.getStartDate()));
 		serializer.endTag("", STARTDATETIME);
 		serializer.startTag("", TRIP_NAME);
 		//TODO Implement Trip Name

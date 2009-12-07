@@ -43,13 +43,13 @@ public class LocationEventsOverlay extends Overlay {
 
 				if(previous == null)
 				{
-					Point p = _projection.toPixels(new GeoPoint((int)(e.latitude*1E6),(int)(e.longitude*1E6)), null);
+					Point p = _projection.toPixels(new GeoPoint((int)(e.getLatitude()*1E6),(int)(e.getLongitude()*1E6)), null);
 					canvas.drawCircle(p.x, p.y, 5, paint);
 					previous = p;
 				}
 				else
 				{
-					Point p = _projection.toPixels(new GeoPoint((int)(e.latitude*1E6),(int)(e.longitude*1E6)), null);
+					Point p = _projection.toPixels(new GeoPoint((int)(e.getLatitude()*1E6),(int)(e.getLongitude()*1E6)), null);
 					canvas.drawLine(previous.x, previous.y, p.x, p.y, paint);
 					canvas.drawCircle(p.x, p.y, 5, paint);
 					previous = p;

@@ -38,14 +38,14 @@ public class DataFacade implements IDataFacade {
 		//The event is persisted.
 		_local.addEvent(t, e);
 		
-		if(e.latitude != null && e.latitude == 0){
+		if(e.getLatitude() != null && e.getLatitude() == 0){
 			Log.d("addEvent", "Found one of Jeppes 0.0 events");
 		}
 		
 		//The server is being updated
-		if(e.latitude != null && e.longitude != null){
+		if(e.getLatitude() != null && e.getLongitude() != null){
 			//also upload to the server, if the location is known.
-			if(t.remoteId == null){
+			if(t.getRemoteId() == null){
 				_remote.uploadTrip(t);
 			}
 			else{
@@ -75,7 +75,7 @@ public class DataFacade implements IDataFacade {
 	/**
 	 * @return All trips belonging to the user.
 	 */
-	public List<Trip> getAllTrips() {
+	public ArrayList<Trip> getAllTrips() {
 		return _local.getAllTrips();
 	}
 
@@ -87,7 +87,7 @@ public class DataFacade implements IDataFacade {
 	 * @param longitude longitude of the center of the area of interest.
 	 * @throws RESTFacadeException with a message for the user.
 	 */
-	public List<MoodEvent> getReadingEvents(Long startTime, Long endTime, Double ulLatitude,
+	public ArrayList<MoodEvent> getReadingEvents(Long startTime, Long endTime, Double ulLatitude,
 			Double ulLongitude, Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
 		return _remote.getReadingEvents(startTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
@@ -111,7 +111,7 @@ public class DataFacade implements IDataFacade {
 	public void updateEventsWithoutLocation(Trip t, Double latitude,
 			Double longitude) {
 
-		Log.i(_LOGTAG, "Trying to update events witouth location in the trip with id " + t.localId);
+		Log.i(_LOGTAG, "Trying to update events witouth location in the trip with id " + t.getLocalId());
 		List<Event> updatedEvents = _local.updateEventsWithoutLocation(t, latitude, longitude);
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		//now update the trip on the server.
@@ -121,7 +121,7 @@ public class DataFacade implements IDataFacade {
 		}
 		
 		//If trip has no RemoteId, upload trip and get it.
-		if(t.remoteId == null)
+		if(t.getRemoteId() == null)
 			_remote.uploadTrip(t);
 		else
 			_remote.updateTrip(t, eventList);
@@ -166,6 +166,6 @@ public class DataFacade implements IDataFacade {
 	}
 	
 	public void updateFilteredTrip(Trip t) throws RESTFacadeException {
-		_remote.updateFilteredTrip(t, t.events);		
+		_remote.updateFilteredTrip(t, t.getEvents());		
 	}
 }

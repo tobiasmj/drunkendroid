@@ -2,12 +2,11 @@ package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.domain.Event;
 import itu.malta.drunkendroid.domain.Trip;
-
-import java.util.List;
+import java.util.ArrayList;
 
 public interface ILocalDataFacade {
 	public void addEvent(Trip t, Event e);
-	public List<Event> updateEventsWithoutLocation(Trip t, Double latitude, Double longitude);
+	public ArrayList<Event> updateEventsWithoutLocation(Trip t, Double latitude, Double longitude);
 
 	/**
 	 * 
@@ -15,14 +14,14 @@ public interface ILocalDataFacade {
 	 * @return The number of Events registered for t
 	 */
 	public int getEventCount(Trip t);
-	public List<Trip> getAllTrips();
+	public ArrayList<Trip> getAllTrips();
 	/**
 	 * 
 	 * @param startTime
 	 * @return a Trip full of associated Event
 	 */
 	public Trip getTrip(Long startTime);
-	public List<Trip> getActiveTrips();
+	public ArrayList<Trip> getActiveTrips();
 	public Trip startTrip();
 	public void deleteTrip(Long startTime);
 	public void addRemoteIdToTrip(Trip t);

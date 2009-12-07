@@ -306,8 +306,8 @@ public class MoodOverlay extends Overlay
 			
 			for(MoodEvent event : data)
 			{
-				GeoPoint gp = new GeoPoint((int)(event.latitude*1E6), (int)(event.longitude*1E6));
-				MoodMapPoint mp = new MoodMapPoint(gp, event.mood);
+				GeoPoint gp = new GeoPoint((int)(event.getLatitude()*1E6), (int)(event.getLongitude()*1E6));
+				MoodMapPoint mp = new MoodMapPoint(gp, event.getMood());
 				_heatmap.addMoodMapPoint(mp);
 			}
 		}

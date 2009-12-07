@@ -2,9 +2,8 @@ package itu.malta.drunkendroid.control;
 
 import itu.malta.drunkendroid.domain.*;
 import itu.malta.drunkendroid.tech.exception.RESTFacadeException;
-
-import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import android.content.Context;
 import android.location.Location;
@@ -37,7 +36,7 @@ public class TripRepository {
 	 */
 	private void refreshActiveTrip(){
 		if(activeTrip != null){
-			if(activeTrip.remoteId == null){
+			if(activeTrip.getRemoteId() == null){
 				activeTrip = data.getActiveTrip();
 			}
 		}
@@ -74,11 +73,11 @@ public class TripRepository {
 		activeTrip = null;
 	}
 
-	public List<Trip> getAllTrips() {
+	public ArrayList<Trip> getAllTrips() {
 		return data.getAllTrips();
 	}
 
-	public List<MoodEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
+	public ArrayList<MoodEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
 		return data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
@@ -88,7 +87,7 @@ public class TripRepository {
 	}
 
 	public void deleteTrip(Long startDate) {
-		if(activeTrip != null && startDate.equals(activeTrip.startDate)){
+		if(activeTrip != null && startDate.equals(activeTrip.getStartDate())){
 			throw new IllegalArgumentException("You cannot delete an ongoing trip. Please stop it first.");
 		}
 		else{
@@ -102,10 +101,10 @@ public class TripRepository {
 			location.getLatitude(), location.getLongitude());
 	}
 
-	public void uploadTrip(Long startTime, Set<String> uploadTypes) throws RESTFacadeException {
+	public void uploadTrip(Long startTime, HashSet<String> uploadTypes) throws RESTFacadeException {
 		Trip t = data.getTrip(startTime);
-		t.events = Trip.filterEvents(t.events, uploadTypes);
-		if(t.events.size() > 0)
+		t.setEvents(Trip.filterEvents(t.getEvents(), uploadTypes));
+		if(t.getEvents().size() > 0)
 			data.updateFilteredTrip(t);
 	}
 }

@@ -33,7 +33,7 @@ public class SMSEventsOverlay extends Overlay {
 			
 			for(Event e : _events)
 			{
-				Point p = _projection.toPixels(new GeoPoint((int)(e.latitude*1E6),(int)(e.longitude*1E6)), null);
+				Point p = _projection.toPixels(new GeoPoint((int)(e.getLatitude()*1E6),(int)(e.getLongitude()*1E6)), null);
 				Paint paint = new Paint();
 				paint.setColor(Color.RED);
 				canvas.drawCircle(p.x, p.y, 5, paint);

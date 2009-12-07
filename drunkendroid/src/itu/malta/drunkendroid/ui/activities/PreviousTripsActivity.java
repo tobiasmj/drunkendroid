@@ -8,8 +8,6 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -36,7 +34,7 @@ public class PreviousTripsActivity extends ListActivity {
 
 	private TripRepository _repo;
 	private ProgressDialog _progressDialog = null;
-	private List<Trip> _trips = new ArrayList<Trip>();
+	private ArrayList<Trip> _trips = new ArrayList<Trip>();
 	private TripAdapter _adapter;
 	private final int VIEW_TRIP = Menu.FIRST;
 	private final int UPLOAD_TRIP = Menu.FIRST + 1;
@@ -73,7 +71,7 @@ public class PreviousTripsActivity extends ListActivity {
 	private void ShowTrip(int position) {
 		if (_trips.size() > 0) {
 			Intent i = new Intent("itu.malta.drunkendroid.VIEW_TRIP");
-			i.putExtra("startTime", _trips.get(position).startDate);
+			i.putExtra("startTime", _trips.get(position).getStartDate());
 			startActivity(i);
 		}
 	}
@@ -132,10 +130,10 @@ public class PreviousTripsActivity extends ListActivity {
 
 	private class TripAdapter extends ArrayAdapter<Trip> {
 
-		private List<Trip> items;
+		private ArrayList<Trip> items;
 
 		public TripAdapter(Context context, int textViewResourceId,
-				List<Trip> items) {
+				ArrayList<Trip> items) {
 			super(context, textViewResourceId, items);
 			this.items = items;
 		}
@@ -153,7 +151,7 @@ public class PreviousTripsActivity extends ListActivity {
 				TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 				if (tt != null) {
 					tt.setText("Date: "
-							+ new Date(t.startDate).toLocaleString());
+							+ new Date(t.getStartDate()).toLocaleString());
 				}
 				if (bt != null) {
 					bt.setText("Events: " + _repo.getEventCount(t));
@@ -214,7 +212,7 @@ public class PreviousTripsActivity extends ListActivity {
 		Thread thread = new Thread("DeleteTripThread"){
 			public void run() {
 				try {
-					_repo.deleteTrip(_trips.get(id).startDate);
+					_repo.deleteTrip(_trips.get(id).getStartDate());
 					getPreviousTrips();
 				}catch (IllegalArgumentException e) {
 					please.setMessage(e.getMessage());
@@ -248,7 +246,7 @@ public class PreviousTripsActivity extends ListActivity {
 										
 										try {
 											_repo.uploadTrip(
-													(_trips.get(id)).startDate,
+													(_trips.get(id)).getStartDate(),
 													listener._choices);
 										} catch (RESTFacadeException e) {
 											runOnUiThread(uploadFailedJob);
@@ -273,8 +271,8 @@ public class PreviousTripsActivity extends ListActivity {
 
 	class MultiChoiceListener implements OnMultiChoiceClickListener {
 
-		public List<String> _possibleChoices = new ArrayList<String>();
-		public Set<String> _choices = new HashSet<String>();
+		public ArrayList<String> _possibleChoices = new ArrayList<String>();
+		public HashSet<String> _choices = new HashSet<String>();
 
 		public MultiChoiceListener() {
 			_possibleChoices.add(IncomingCallEvent.class.getName());

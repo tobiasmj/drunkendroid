@@ -3,7 +3,6 @@ package itu.malta.drunkendroid.tech;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,10 +46,10 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * If errors occur an empty map is returned.
 	 * @return currently only returns events with moods. Used to generate a moodmap.
 	 */
-	public List<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
+	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException{
 		
-		List<MoodEvent> resultingTrip = null;
+		ArrayList<MoodEvent> resultingTrip = null;
 		//Call the server
 		HttpResponse response = conn.get(MOODMAP +"/"+
 				 String.valueOf(starTime) +"/"+ 
@@ -89,8 +88,8 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * To obtain a remoteId call the upload function.
 	 * @throws RESTFacadeException to indicate failure which could not be handled.
 	 */
-	synchronized public void updateTrip(Trip t, List<Event> events) throws RESTFacadeException {
-		if(t.remoteId == null){
+	synchronized public void updateTrip(Trip t, ArrayList<Event> events) throws RESTFacadeException {
+		if(t.getRemoteId() == null){
 			String cause = "Tried to update a trip which has no remoteId";
 			throw new RESTFacadeException(LOGTAG, cause);
 		}
@@ -101,12 +100,12 @@ public class RESTServerFacade implements IRemoteDataFacade {
 			xml = XMLBuilder.buildXmlFromEvents(events);
 			//Now try to send it
 	        HttpResponse response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
-	        		String.valueOf(t.remoteId), xml);
+	        		String.valueOf(t.getRemoteId()), xml);
 	        
 	        int responseCode = response.getStatusLine().getStatusCode();
 	        if(responseCode >= 400 && responseCode < 500){
 	        	//This is in the 400: We have done something wrong.
-	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.startDate + ", the server returned malformed xml");
+	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.getStartDate() + ", the server returned malformed xml");
 	        	throw new RESTFacadeException(LOGTAG, "Got a reponse code in the 400 series");
 	        }
 	        else if(responseCode >= 500 && responseCode < 600){
@@ -122,7 +121,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 						//Got an interrupt. No problem. Just proceed.
 					}
 		        	response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
-			        		String.valueOf(t.remoteId), xml);
+			        		String.valueOf(t.getRemoteId()), xml);
 		        	responseCode = response.getStatusLine().getStatusCode();
 		      	}
 	        } 
@@ -166,11 +165,11 @@ public class RESTServerFacade implements IRemoteDataFacade {
         				tries += 1;
         			} 
         		}
-        		t.remoteId = resultId;
+        		t.setRemoteId(resultId);
         	}
 	        //Everything is fine
         	else{
-        		t.remoteId = resultId;
+        		t.setRemoteId(resultId);
         	}
 	    }
 	    catch(Exception e){
@@ -237,7 +236,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @throws IOException If the provided response has no content.
 	 * @throws IllegalStateException  If the provided response is in an illegal state(it might have been read before)
 	 */
-	private List<MoodEvent> consumeXmlFromMoodMap(HttpResponse response) throws IllegalStateException, IOException {
+	private ArrayList<MoodEvent> consumeXmlFromMoodMap(HttpResponse response) throws IllegalStateException, IOException {
 		final String POINT = "p";
 		final String MOOD = "value";
 		final String LONGITUDE = "long";
@@ -251,7 +250,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
         
         	if(response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300){
 	        	//Everything works build the events.
-        		List<MoodEvent> events = new ArrayList<MoodEvent>();
+        		ArrayList<MoodEvent> events = new ArrayList<MoodEvent>();
         		Long currentTime = Calendar.getInstance().getTimeInMillis();
         		
         		NodeList nodes = xmlDoc.getElementsByTagName(POINT);

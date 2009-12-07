@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,7 +24,7 @@ public class RESTCache implements IRESTCache {
 	private final int UPDATECALL = 1;
 	private final int UPLOADCALL = 2;
 	private final String LOGTAG = "RESTCache";
-	private Set<String> uploadTripFilter = null;
+	private HashSet<String> uploadTripFilter = null;
 	private DBHelper _dbHelper;
 	private LocalDataFacadeForSQLite _localSqlFacade;
 	private RESTServerFacade _server;
@@ -39,7 +38,7 @@ public class RESTCache implements IRESTCache {
 		_server = new RESTServerFacade(this._context, conn);
 		//The Looper
 		//Build the uploadTripFilter
-		uploadTripFilter = new TreeSet<String>();	
+		uploadTripFilter = new HashSet<String>();	
 		uploadTripFilter.add(MoodEvent.class.getName());
 		uploadTripFilter.add(LocationEvent.class.getName());
 		//A little bit of thread safety.
@@ -55,7 +54,7 @@ public class RESTCache implements IRESTCache {
 	 * Blocking call
 	 * @throws RESTFacadeException which needs to be shown to the user
 	 */
-	public List<MoodEvent> getReadingEvents(Long starTime, Long endTime,
+	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime,
 			Double ulLatitude, Double ulLongitude, Double lrLatitude,
 			Double lrLongitude) throws RESTFacadeException {
 		return _server.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
@@ -65,15 +64,15 @@ public class RESTCache implements IRESTCache {
 	 * The parameters are already persisted in the db.
 	 * So we will discover ourselves what needs to be updated.
 	 */
-	public void updateTrip(Trip t, List<Event> eventList) {
+	public void updateTrip(Trip t, ArrayList<Event> eventList) {
 		Message m = new Message();
 		m.what = UPDATECALL;
 		_queueLooper.mHandler.sendMessage(m);
 	}
 	
-	public void updateFilteredTrip(Trip t, List<Event> eventList) throws RESTFacadeException {
+	public void updateFilteredTrip(Trip t, ArrayList<Event> eventList) throws RESTFacadeException {
 		try {
-			if(t.remoteId == null) {
+			if(t.getRemoteId() == null) {
 				uploadTrip(t);
 				throw new RESTFacadeException(LOGTAG,"Tried to upload a trip without Remote ID");
 			}
@@ -100,7 +99,7 @@ public class RESTCache implements IRESTCache {
 		SQLiteDatabase db = _dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
-		final String[] whereArgs = {String.valueOf(e.id)};
+		final String[] whereArgs = {String.valueOf(e.getId())};
 		
 		values.put("online", String.valueOf(1)); //set to online
 		try{
@@ -117,9 +116,9 @@ public class RESTCache implements IRESTCache {
 		SQLiteDatabase db = _dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
-		final String[] whereArgs = {String.valueOf(t.localId)};
+		final String[] whereArgs = {String.valueOf(t.getLocalId())};
 		
-		values.put("foreignId", String.valueOf(t.remoteId));
+		values.put("foreignId", String.valueOf(t.getRemoteId()));
 		values.put("online", String.valueOf(1)); //set to online
 		try{
 			db.beginTransaction();
@@ -142,7 +141,7 @@ public class RESTCache implements IRESTCache {
 	 * @return Trips filled with events belonging to them, which have not
 	 * 		   been processed.
 	 */
-	synchronized private List<Trip> getUpdateCandidates() {
+	synchronized private ArrayList<Trip> getUpdateCandidates() {
 		//The trip must have been uploaded (set online)
 		//and the trip must have events which have not been set online.
 		SQLiteDatabase db = _dbHelper.getDBInstance();
@@ -151,14 +150,14 @@ public class RESTCache implements IRESTCache {
 			"GROUP BY t.id";
 		
 		//Find Trips with !online events
-		List<Trip> candidateTrips = new ArrayList<Trip>();
+		ArrayList<Trip> candidateTrips = new ArrayList<Trip>();
 		db.beginTransaction();
 		Cursor cursor = db.rawQuery(tripQuery, null);
 		try{
 			while(cursor.moveToNext()){
 				Trip t = new Trip();
-				t.localId = cursor.getLong(0);
-				t.startDate = cursor.getLong(1);
+				t.setLocalId(cursor.getLong(0));
+				t.setStartDate(cursor.getLong(1));
 				candidateTrips.add(t);
 			}
 			db.setTransactionSuccessful();
@@ -175,17 +174,17 @@ public class RESTCache implements IRESTCache {
 		for(int i=0; i < candidateTrips.size(); i++)
 		{
 			Trip t = candidateTrips.get(i);
-			t = _localSqlFacade.getTrip(t.startDate);
+			t = _localSqlFacade.getTrip(t.getStartDate());
 			//TODO We might want to check whether a trip was found.
 			t = removeProcessedEvents(t);
 			//Filter it.
 			//The discarded events should also be set online, to show they have been processed
-			TreeSet<Event> filteredOutEvents = new TreeSet<Event>();
-			filteredOutEvents.addAll(t.events);
-			List<Event> filtered = Trip.filterEvents(t.events, uploadTripFilter);
-			t.events = filtered;
+			HashSet<Event> filteredOutEvents = new HashSet<Event>();
+			filteredOutEvents.addAll(t.getEvents());
+			ArrayList<Event> filtered = Trip.filterEvents(t.getEvents(), uploadTripFilter);
+			t.setEvents(filtered);
 			//Now remove the ones which will be processed.
-			filteredOutEvents.removeAll(t.events);
+			filteredOutEvents.removeAll(t.getEvents());
 			//Mark the rest as processed.
 			for(Event e : filteredOutEvents){
 				setEventProcessed(e);
@@ -200,19 +199,19 @@ public class RESTCache implements IRESTCache {
 	synchronized private Trip removeProcessedEvents(Trip t){
 		Trip resultTrip = new Trip();
 		//Clone
-		resultTrip.events.addAll(t.events);
-		resultTrip.startDate = t.startDate;
-		resultTrip.localId = t.localId;
-		resultTrip.remoteId = t.remoteId;
+		resultTrip.getEvents().addAll(t.getEvents());
+		resultTrip.setStartDate(t.getStartDate());
+		resultTrip.setLocalId(t.getLocalId());
+		resultTrip.setRemoteId(t.getRemoteId());
 		//Collect id's of processed events for the trip
 		Set<Integer> processedEvents = getProcessedEventIDs(t);
 		
 		//If the event has an id in the list of processed events
 		//remove the event from the result
-		for(Event e : t.events){
+		for(Event e : t.getEvents()){
 			for(Integer i : processedEvents){
-				if(i.intValue() == e.id){
-					resultTrip.events.remove(e);
+				if(i.intValue() == e.getId()){
+					resultTrip.getEvents().remove(e);
 				}
 			}
 		}
@@ -224,8 +223,8 @@ public class RESTCache implements IRESTCache {
 		SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
 		final String[] columns = {"id"};
 		final String whereClause = "online = 1 AND trip = ?";
-		final String[] whereArgs = {String.valueOf(t.localId)};
-		Set<Integer> result = new HashSet<Integer>();
+		final String[] whereArgs = {String.valueOf(t.getLocalId())};
+		HashSet<Integer> result = new HashSet<Integer>();
 		
 		dbInstance.beginTransaction();
 		Cursor cursor = dbInstance.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
@@ -247,11 +246,11 @@ public class RESTCache implements IRESTCache {
 	 * So gather everything together. And filter it before returning.
 	 * @return
 	 */
-	synchronized private List<Trip> getUploadCandidates() {
+	synchronized private ArrayList<Trip> getUploadCandidates() {
 		SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
 		final String[] columns = {"startDateTime"};
 		final String selection = " online IS NULL AND foreignId IS NULL";;
-		List<Trip> trips = new ArrayList<Trip>();
+		ArrayList<Trip> trips = new ArrayList<Trip>();
 		
 		dbInstance.beginTransaction();
 		Cursor cursor = dbInstance.query(DBHelper.TABLE_TRIP, columns, selection, null, null, null, null);
@@ -275,11 +274,11 @@ public class RESTCache implements IRESTCache {
 			//Filter it.
 			//The discarded events should also be set online, to show they have been processed
 			TreeSet<Event> filteredOutEvents = new TreeSet<Event>();
-			filteredOutEvents.addAll(t.events);
+			filteredOutEvents.addAll(t.getEvents());
 			
-			t.events = Trip.filterEvents(t.events, uploadTripFilter);
+			t.setEvents(Trip.filterEvents(t.getEvents(), uploadTripFilter));
 			//Now remove the ones which will be processed.
-			filteredOutEvents.removeAll(t.events);
+			filteredOutEvents.removeAll(t.getEvents());
 			//Mark the rest as processed.
 			for(Event e : filteredOutEvents){
 				setEventProcessed(e);
@@ -313,8 +312,8 @@ public class RESTCache implements IRESTCache {
 						for(Trip t : updateTrips){
 							//The server should throw exceptions all the way here.
 							try{
-								_server.updateTrip(t, t.events);
-								for(Event e : t.events){
+								_server.updateTrip(t, t.getEvents());
+								for(Event e : t.getEvents()){
 									//The trip is already set to online.
 									setEventProcessed(e);
 								}
@@ -336,7 +335,7 @@ public class RESTCache implements IRESTCache {
 								//and the trip is now online.
 								setTripProcessedAndUpdateForeignId(t);
 								//set the events online
-								for(Event e : t.events){
+								for(Event e : t.getEvents()){
 									/*
 									 * All events will be set online.
 									 * also events which have been filtered by 
@@ -366,7 +365,7 @@ public class RESTCache implements IRESTCache {
 		}
 		
 		/**
-		 * Blocking the thread untill connectivity is obtained.
+		 * Blocking the thread until connectivity is obtained.
 		 */
 		private void waitForConnectivity(){
 			long sleepTime = 60000; //a minute

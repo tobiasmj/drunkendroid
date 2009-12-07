@@ -63,13 +63,13 @@ public class ViewTripActivity extends MapActivity {
             int minLong = (int)(+181 * 1E6);
             int maxLong = (int)(-181 * 1E6);
             
-        	List<Event> events = trip.events;
+        	ArrayList<Event> events = trip.getEvents();
         	
             for(Event e : events)
             {
             	// Set the min and max latitude and longitude
-        		int latitude = (int)(e.latitude * 1E6);
-                int longitude = (int)(e.longitude * 1E6); 
+        		int latitude = (int)(e.getLatitude() * 1E6);
+                int longitude = (int)(e.getLongitude() * 1E6); 
         		
         		if(minLat > latitude) minLat = latitude;
         		else if(maxLat < latitude) maxLat = latitude;
@@ -100,7 +100,7 @@ public class ViewTripActivity extends MapActivity {
             _mapController.animateTo(gp, new Runnable() {
     	        public void run()
     	        {
-    	            List<Overlay> overlays = _mapView.getOverlays();
+    	        	List<Overlay> overlays = _mapView.getOverlays();
 
     	            // Add overlay for callEvents
     	            CallEventsOverlay callOverlay = new CallEventsOverlay(_callEvents);
