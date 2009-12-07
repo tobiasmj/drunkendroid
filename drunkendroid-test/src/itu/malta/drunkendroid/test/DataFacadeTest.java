@@ -39,7 +39,7 @@ public class DataFacadeTest extends AndroidTestCase {
 			Trip nullTrip = data.getActiveTrip();
 			// Verify
 			assertNull(nullTrip);
-			assertTrue(testTrip1.startDate != testTrip2.startDate);
+			assertTrue(testTrip1.getStartDate() != testTrip2.getStartDate());
 		} finally {
 			this.flushDB();
 		}
@@ -68,7 +68,7 @@ public class DataFacadeTest extends AndroidTestCase {
 
 		// MoodEvent 1
 		Trip t2 = dbh.startTrip();
-		t2.startDate = 1255816733L;
+		t2.setStartDate(1255816733L);
 		MoodEvent r2_1 = new MoodEvent(new Long(1255816733),
 				(Double) 35.908422, (Double) 14.502362, 270);
 		dbh.addEvent(t2, r2_1);

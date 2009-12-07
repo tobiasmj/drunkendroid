@@ -110,7 +110,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		// Verify
 		rest.uploadTrip(t);
 		// Don't know how to do these assertions right yet.
-		assertNull(t.remoteId);
+		assertNull(t.getRemoteId());
 	}
 
 	public void testConsumePostWithServerError() throws IllegalStateException,
@@ -162,7 +162,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		rest = new RESTServerFacade(this.getContext(), conn);
 		// Verify
 		rest.uploadTrip(t);
-		Long tripIdResult = t.remoteId;
+		Long tripIdResult = t.getRemoteId();
 		verify(conn);
 		// Don't know how to do these assertions right yet.
 		assertEquals(2343456, tripIdResult.intValue());
@@ -171,7 +171,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 
 	public void testBuildXMLFromStandAloneEvent() throws RESTFacadeException {
 		Trip t = this.generateTrip();
-		t.remoteId = 42L; // just a random test number
+		t.setRemoteId(42L); // just a random test number
 		Event e1 = new LocationEvent(Calendar.getInstance().getTimeInMillis(),
 				(Double) 34.123456, (Double) 14.123456);
 		// Expected results
@@ -190,13 +190,13 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 				+ "<event>"
 				+ "<eventType>event</eventType>"
 				+ "<dateTime>"
-				+ String.valueOf(e1.dateTime)
+				+ String.valueOf(e1.getDateTime())
 				+ "</dateTime>"
 				+ "<longitude>"
-				+ String.valueOf(e1.longitude)
+				+ String.valueOf(e1.getLongitude())
 				+ "</longitude>"
 				+ "<latitude>"
-				+ String.valueOf(e1.latitude)
+				+ String.valueOf(e1.getLatitude())
 				+ "</latitude>"
 				+ "<data />" + "</event>" + "</events>";
 
@@ -233,7 +233,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 	public void testBuildXMLFromStandAloneMoodEvent()
 			throws RESTFacadeException {
 		Trip t = this.generateTrip();
-		t.remoteId = 42L; // just a random test number
+		t.setRemoteId(42L); // just a random test number
 		int mood = 90;
 		MoodEvent e1 = new MoodEvent(Calendar.getInstance()
 				.getTimeInMillis(), (Double) 34.123456, (Double) 14.123456,
@@ -254,17 +254,17 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 				+ "<event>"
 				+ "<eventType>mood</eventType>"
 				+ "<dateTime>"
-				+ String.valueOf(e1.dateTime)
+				+ String.valueOf(e1.getDateTime())
 				+ "</dateTime>"
 				+ "<longitude>"
-				+ String.valueOf(e1.longitude)
+				+ String.valueOf(e1.getLongitude())
 				+ "</longitude>"
 				+ "<latitude>"
-				+ String.valueOf(e1.latitude)
+				+ String.valueOf(e1.getLatitude())
 				+ "</latitude>"
 				+ "<data>"
 				+ "<mood>"
-				+ String.valueOf(e1.mood)
+				+ String.valueOf(e1.getMood())
 				+ "</mood>"
 				+ "</data>" + "</event>" + "</events>";
 
@@ -350,14 +350,14 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 			MoodEvent r1 = result.get(0);
 			MoodEvent r2 = result.get(1);
 			// Assert moods
-			assertEquals(r1.mood, 140);
-			assertEquals(r2.mood, 130);
+			assertEquals(r1.getMood(), 140);
+			assertEquals(r2.getMood(), 130);
 			// Assert latitudes
-			assertEquals(35.9232054039299D, r1.latitude);
-			assertEquals(35.92350484235794D, r2.latitude);
+			assertEquals(35.9232054039299D, r1.getLatitude());
+			assertEquals(35.92350484235794D, r2.getLatitude());
 			// Assert longitudes
-			assertEquals(14.487617755003868D, r1.longitude);
-			assertEquals(14.487617755003868D, r2.longitude);
+			assertEquals(14.487617755003868D, r1.getLongitude());
+			assertEquals(14.487617755003868D, r2.getLongitude());
 		} finally {
 			// do nothing really.
 		}
@@ -374,10 +374,10 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		// MoodEvent 3
 		MoodEvent r3 = new MoodEvent(new Long(1255816733),
 				(Double) 35.909275, (Double) 14.502825, 62);
-		t.events.add(r1);
-		t.events.add(r2);
-		t.events.add(r3);
-		t.startDate = 1255816133L;
+		t.getEvents().add(r1);
+		t.getEvents().add(r2);
+		t.getEvents().add(r3);
+		t.setStartDate(1255816133L);
 		return t;
 	}
 }

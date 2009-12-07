@@ -57,7 +57,7 @@ public class RESTCacheTest extends AndroidTestCase {
 
 		// MoodEvent 1
 		Trip t2 = _dbh.startTrip();
-		t2.startDate = 1255816733L;
+		t2.setStartDate(1255816733L);
 		MoodEvent r2_1 = new MoodEvent(new Long(1255816733),
 				(Double) 35.908422, (Double) 14.502362, 270);
 		_dbh.addEvent(t2, r2_1);
@@ -86,7 +86,7 @@ public class RESTCacheTest extends AndroidTestCase {
 			assertEquals(2, candidates.size());
 			//Build
 			//Get a trip.
-			Trip t =_dbh.getTrip(candidates.get(0).startDate);
+			Trip t =_dbh.getTrip(candidates.get(0).getStartDate());
 			
 			//Execute
 			setTripProcessed.invoke(cache, t);
@@ -137,13 +137,13 @@ public class RESTCacheTest extends AndroidTestCase {
 			//These trips should be set to online
 			List<Trip> candiTrips = (List<Trip>) getUpdateCandidates.invoke(cache, null);
 			Trip t_real = candiTrips.get(0);
-			int originalSize = t_real.events.size();
-			Event e = t_real.events.get(0);
+			int originalSize = t_real.getEvents().size();
+			Event e = t_real.getEvents().get(0);
 			setEventProcessed.invoke(cache, e);
 			
 			candiTrips = (List<Trip>) getUpdateCandidates.invoke(cache, null);
 			t_real = candiTrips.get(0);
-			int newSize = t_real.events.size();
+			int newSize = t_real.getEvents().size();
 			
 			//verify
 			assertEquals(originalSize, newSize+1);
