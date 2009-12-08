@@ -7,7 +7,16 @@ public class Trip {
 	private Long _startDate = null;
 	private Long _localId = null;
 	private Long _remoteId = null;
+	private String _name = null;
 	
+	public String getName() {
+		return _name;
+	}
+
+	public void setName(String name) {
+		_name = name;
+	}
+
 	public ArrayList<Event> getEvents() {
 		return events;
 	}

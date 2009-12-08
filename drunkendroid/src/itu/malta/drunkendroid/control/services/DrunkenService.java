@@ -49,7 +49,6 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
 		Log.i(this.getString(R.string.log_tag), "Service started");
 		_notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		DrunkenService._service = this;
@@ -57,8 +56,6 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
 		_locationManager = new GPSLocationAdapter(this);
 		_locationManager.RegisterLocationUpdates(this);
-
-		_repo = new TripRepository(this);
 	}
 
 	/**
@@ -72,6 +69,8 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * Returns the TripRepository attached to the service.
 	 */
 	public TripRepository getRepository() {
+		if(_service != null && _repo == null)
+			_repo = new TripRepository(this);
 		return _repo;
 	}
 
@@ -94,7 +93,9 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			Toast toast;
 			switch (intent.getExtras().getInt("command")) {
 			case SERVICE_COMMAND_START_TRIP:
-				if (_repo.hasActiveTrip()) {
+				String name = intent.getExtras().getString("name");
+				_repo = new TripRepository(this, name);
+				if (getRepository().hasActiveTrip()) {
 					toast = Toast.makeText(this, "Continuing old trip!", 7);
 					toast.show();
 				} else {
@@ -103,7 +104,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 				}
 				break;
 			case SERVICE_COMMAND_END_TRIP:
-				_repo.endTrip();
+				getRepository().endTrip();
 				toast = Toast.makeText(this, "Trip ended!", 5);
 				toast.show();
 				stopSelf();
@@ -111,10 +112,9 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 			}
 		} else {
 			// No arguments, assume that service has been restarted by the
-			// Android
-			// framework.
+			// Android framework.
 		}
-	}
+	}	
 
 	/**
 	 * Method called if a client tries to bind itself to the service.
@@ -135,7 +135,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		super.onDestroy();
 		Log.i(this.getString(R.string.log_tag), "Service stopped");
 		UnregisterReceivers();
-		_repo.closeRepository();
+		getRepository().closeRepository();
 		_locationManager.UnregisterLocationUpdates(this);
 		_moodHandler.removeMessages(0);
 		DrunkenService._service = null;

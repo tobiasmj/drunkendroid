@@ -140,8 +140,7 @@ public final class XMLBuilder {
 		serializer.text(String.valueOf(t.getStartDate()));
 		serializer.endTag("", STARTDATETIME);
 		serializer.startTag("", TRIP_NAME);
-		//TODO Implement Trip Name
-		serializer.text("Gin Saturdays");
+		serializer.text(t.getName());
 		serializer.endTag("", TRIP_NAME);
 		serializer.endTag("", TRIP);
 		serializer.endDocument();

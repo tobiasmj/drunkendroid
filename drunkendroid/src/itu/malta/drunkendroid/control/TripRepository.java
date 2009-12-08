@@ -9,12 +9,19 @@ import android.content.Context;
 import android.location.Location;
 
 public class TripRepository {
-	private Trip activeTrip = null;
-	private IDataFacade data;
+	private Trip _activeTrip = null;
+	private IDataFacade _data;
+	private String _name = "N/A";
 
 	public TripRepository(Context context) {
-		data = new DataFacade(context);
-		activeTrip = data.getActiveTrip();
+		_data = new DataFacade(context);
+		_activeTrip = _data.getActiveTrip();
+	}
+	
+	public TripRepository(Context context, String tripName) {
+		_data = new DataFacade(context);
+		_activeTrip = _data.getActiveTrip();
+		_name = tripName;		
 	}
 
 	/**
@@ -22,7 +29,7 @@ public class TripRepository {
 	 * existing active trip when launching new trip.
 	 */
 	public boolean hasActiveTrip() {
-		if(activeTrip == null)
+		if(_activeTrip == null)
 			return false;
 		else 
 			return true;
@@ -35,76 +42,76 @@ public class TripRepository {
 	 * deserialized again.
 	 */
 	private void refreshActiveTrip(){
-		if(activeTrip != null){
-			if(activeTrip.getRemoteId() == null){
-				activeTrip = data.getActiveTrip();
+		if(_activeTrip != null){
+			if(_activeTrip.getRemoteId() == null){
+				_activeTrip = _data.getActiveTrip();
 			}
 		}
 		else{
-			Trip potentialTrip = data.getActiveTrip();
+			Trip potentialTrip = _data.getActiveTrip();
 			if(potentialTrip == null){
-				activeTrip = data.startTrip();
+				_activeTrip = _data.startTrip(_name);
 			}
 			else{
-				activeTrip = potentialTrip;
+				_activeTrip = potentialTrip;
 			}
 		}
 	}
 
 	public void addEvent(Event e) {
 		refreshActiveTrip();
-		data.addEvent(activeTrip, e);
+		_data.addEvent(_activeTrip, e);
 	}
 
 	public int getEventCount(Trip t) {
-		return data.getEventCount(t);
+		return _data.getEventCount(t);
 	}
 
 	public void closeRepository() {
-		if (data != null) {
-			data.closeFacade();
+		if (_data != null) {
+			_data.closeFacade();
 		}
 	}
 
 	public void endTrip() {
-		if (activeTrip != null) {
-			data.closeTrip(activeTrip);
+		if (_activeTrip != null) {
+			_data.closeTrip(_activeTrip);
 		}
-		activeTrip = null;
+		_activeTrip = null;
 	}
 
 	public ArrayList<Trip> getAllTrips() {
-		return data.getAllTrips();
+		return _data.getAllTrips();
 	}
 
 	public ArrayList<MoodEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
 			Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
-		return data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
+		return _data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 
 	public Trip getTrip(Long startTime) {
-		return data.getTrip(startTime);
+		return _data.getTrip(startTime);
 	}
 
 	public void deleteTrip(Long startDate) {
-		if(activeTrip != null && startDate.equals(activeTrip.getStartDate())){
+		if(_activeTrip != null && startDate.equals(_activeTrip.getStartDate())){
 			throw new IllegalArgumentException("You cannot delete an ongoing trip. Please stop it first.");
 		}
 		else{
-			data.deleteTrip(startDate);
+			_data.deleteTrip(startDate);
 		}
 	}
 
 	public void updateEventsWithoutLocation(Location location) {
 		refreshActiveTrip();
-		data.updateEventsWithoutLocation(activeTrip,
+		_data.updateEventsWithoutLocation(_activeTrip,
 			location.getLatitude(), location.getLongitude());
 	}
 
 	public void uploadTrip(Long startTime, HashSet<String> uploadTypes) throws RESTFacadeException {
-		Trip t = data.getTrip(startTime);
+		Trip t = _data.getTrip(startTime);
 		t.setEvents(Trip.filterEvents(t.getEvents(), uploadTypes));
 		if(t.getEvents().size() > 0)
-			data.updateFilteredTrip(t);
+			_data.updateFilteredTrip(t);
 	}
 }

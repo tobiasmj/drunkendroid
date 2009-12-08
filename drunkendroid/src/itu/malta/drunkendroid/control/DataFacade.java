@@ -38,10 +38,6 @@ public class DataFacade implements IDataFacade {
 		//The event is persisted.
 		_local.addEvent(t, e);
 		
-		if(e.getLatitude() != null && e.getLatitude() == 0){
-			Log.d("addEvent", "Found one of Jeppes 0.0 events");
-		}
-		
 		//The server is being updated
 		if(e.getLatitude() != null && e.getLongitude() != null){
 			//also upload to the server, if the location is known.
@@ -60,8 +56,8 @@ public class DataFacade implements IDataFacade {
 	 * Begin a new empty trip.
 	 * @return a Trip with no events, but a unique localId.
 	 */
-	public Trip startTrip(){
-		return _local.startTrip();
+	public Trip startTrip(String name){
+		return _local.startTrip(name);
 	}
 	
 	/**

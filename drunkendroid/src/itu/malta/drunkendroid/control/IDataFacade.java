@@ -11,7 +11,7 @@ public interface IDataFacade {
 	public void updateEventsWithoutLocation(Trip t, Double latitude, Double longitude);
 	public ArrayList<Trip> getAllTrips();
 	public Trip getTrip(Long startTime);
-	public Trip startTrip();
+	public Trip startTrip(String name);
 	public void deleteTrip(Long startTime);
 	public Trip getActiveTrip();
 	public void closeTrip(Trip t);

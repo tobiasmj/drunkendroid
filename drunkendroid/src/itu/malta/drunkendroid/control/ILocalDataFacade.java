@@ -22,7 +22,7 @@ public interface ILocalDataFacade {
 	 */
 	public Trip getTrip(Long startTime);
 	public ArrayList<Trip> getActiveTrips();
-	public Trip startTrip();
+	public Trip startTrip(String name);
 	public void deleteTrip(Long startTime);
 	public void addRemoteIdToTrip(Trip t);
 	public void closeTrip(Trip t);

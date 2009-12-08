@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -179,10 +180,6 @@ public class PreviousTripsActivity extends ListActivity {
 			this.items = items;
 		}
 
-		/*
-		 * @see android.widget.ArrayAdapter#getView(int, android.view.View,
-		 * android.view.ViewGroup)
-		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
@@ -193,10 +190,15 @@ public class PreviousTripsActivity extends ListActivity {
 			Trip t = items.get(position);
 			if (t != null) {
 				TextView tt = (TextView) v.findViewById(R.id.toptext);
+				TextView mt = (TextView) v.findViewById(R.id.middletext);
 				TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 				if (tt != null) {
-					tt.setText("Date: "
-							+ new Date(t.getStartDate()).toLocaleString());
+					tt.setText("Name: "
+							+ t.getName());
+				}
+				if (mt != null) {
+					mt.setText("Date: "
+							+ DateFormat.getLongDateFormat(getApplicationContext()).format(new Date(t.getStartDate())));
 				}
 				if (bt != null) {
 					bt.setText("Events: " + _repo.getEventCount(t));

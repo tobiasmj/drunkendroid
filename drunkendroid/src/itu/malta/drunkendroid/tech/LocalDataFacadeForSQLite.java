@@ -57,13 +57,14 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			db.endTransaction();
 		}
 	}
-	public Trip startTrip(){
+	public Trip startTrip(String name){
 		SQLiteDatabase db = dbHelper.getDBInstance();
 
         ContentValues values = new ContentValues();
         Long currentTime = Calendar.getInstance().getTimeInMillis();
         values.put("startDateTime", currentTime);
         values.put("active", 1); //1 == true in sqlite3
+        values.put("name", name);
         // Add a value for the active state to the real sql table.
 
         Long tripId = db.insertOrThrow(DBHelper.TABLE_TRIP, null, values);
@@ -74,6 +75,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 	    Trip newTrip = new Trip();
 	    newTrip.setStartDate(currentTime);
 	    newTrip.setLocalId(tripId);
+	    newTrip.setName(name);
 	    return newTrip;
 	}
 	
@@ -100,7 +102,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 
 	public ArrayList<Trip> getAllTrips() {
 		ArrayList<Trip> trips = new ArrayList<Trip>();
-		String[] selectedTripColumns = {"startDateTime", "id" , "foreignId"};
+		String[] selectedTripColumns = {"startDateTime", "id" , "foreignId", "name"};
 		Cursor returnedTrips = null;
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		
@@ -118,12 +120,14 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 			while(returnedTrips.moveToNext()){
 				long startDateTime = returnedTrips.getLong(0);
 				long localId = returnedTrips.getLong(1);
+				String name = returnedTrips.getString(3);
 				Trip trip = new Trip();
 				trip.setStartDate(startDateTime);
 				trip.setLocalId(localId);
 				if(!returnedTrips.isNull(2)){
 					trip.setRemoteId(returnedTrips.getLong(2));
 				}
+				trip.setName(name);
 				
 				trips.add(trip);
 			}
@@ -141,7 +145,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		ArrayList<Trip> resultList = new ArrayList<Trip>();
 		
 		try{
-			final String[] returnColumns = {"id", "foreignId", "startDateTime"};
+			final String[] returnColumns = {"id", "foreignId", "startDateTime", "name"};
 			final String whereClause = "active = ?";
 			final String[] whereArgs = {"1"}; //1 == true in SQLite3
 			db.beginTransaction();
@@ -153,8 +157,10 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 				
 				long tripId = result.getLong(0);
 				long startTime = result.getLong(2);
+				String name = result.getString(3);
 				trip.setLocalId(tripId);
 				trip.setStartDate(startTime);
+				trip.setName(name);
 				
 				//If we just set it, it'll get a default value instead of retaining null.
 				if(!result.isNull(1)){
@@ -184,7 +190,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		SQLiteDatabase db = dbHelper.getDBInstance();
 		db.beginTransaction();
 		
-		String[] selectedColumns = {"id", "foreignId"};
+		String[] selectedColumns = {"id", "foreignId", "name"};
 		String[] whereDateTimeEQ = {String.valueOf(startTime)};
 		Cursor selectionCursor = db.query(DBHelper.TABLE_TRIP, selectedColumns, "startDateTime = ?", whereDateTimeEQ, null, null, null);
 		//Find the TripId
@@ -194,6 +200,7 @@ public class LocalDataFacadeForSQLite implements ILocalDataFacade {
 		loadedTrip.setStartDate(startTime);
 		Long tripId = selectionCursor.getLong(0);
 		loadedTrip.setLocalId(tripId);
+		loadedTrip.setName(selectionCursor.getString(2));
 		if(!selectionCursor.isNull(1)){
 			loadedTrip.setRemoteId(selectionCursor.getLong(1));
 		}

@@ -145,7 +145,7 @@ public class RESTCache implements IRESTCache {
 		//The trip must have been uploaded (set online)
 		//and the trip must have events which have not been set online.
 		SQLiteDatabase db = _dbHelper.getDBInstance();
-		final String tripQuery = "SELECT t.id, t.startDateTime FROM Trip t, Event e WHERE " +
+		final String tripQuery = "SELECT t.id, t.startDateTime, t.name FROM Trip t, Event e WHERE " +
 			"e.online IS NULL AND t.online = 1 AND e.trip = t.id " +
 			"GROUP BY t.id";
 		
@@ -158,6 +158,7 @@ public class RESTCache implements IRESTCache {
 				Trip t = new Trip();
 				t.setLocalId(cursor.getLong(0));
 				t.setStartDate(cursor.getLong(1));
+				t.setName(cursor.getString(2));
 				candidateTrips.add(t);
 			}
 			db.setTransactionSuccessful();
@@ -203,6 +204,7 @@ public class RESTCache implements IRESTCache {
 		resultTrip.setStartDate(t.getStartDate());
 		resultTrip.setLocalId(t.getLocalId());
 		resultTrip.setRemoteId(t.getRemoteId());
+		resultTrip.setName(t.getName());
 		//Collect id's of processed events for the trip
 		Set<Integer> processedEvents = getProcessedEventIDs(t);
 		
