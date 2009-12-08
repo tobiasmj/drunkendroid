@@ -19,6 +19,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.util.TimeFormatException;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -198,7 +199,8 @@ public class PreviousTripsActivity extends ListActivity {
 				}
 				if (mt != null) {
 					mt.setText("Date: "
-							+ DateFormat.getLongDateFormat(getApplicationContext()).format(new Date(t.getStartDate())));
+							+ DateFormat.getMediumDateFormat(getApplicationContext()).format(new Date(t.getStartDate()))
+							+ ", " + DateFormat.getTimeFormat(getApplicationContext()).format(new Date(t.getStartDate())));
 				}
 				if (bt != null) {
 					bt.setText("Events: " + _repo.getEventCount(t));
