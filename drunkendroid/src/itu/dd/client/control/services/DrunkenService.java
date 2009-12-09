@@ -229,7 +229,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 					System.out.println("MoodRead Intervallet sat til "
 							+ _readingInterval);
 					_moodHandler.postDelayed(this, _readingInterval * 60000);
-					Notification not = new Notification(R.drawable.icon,
+					Notification not = new Notification(R.drawable.notification_icon,
 							"Time for a new Mood Reading!", System
 									.currentTimeMillis());
 					not.flags = Notification.FLAG_AUTO_CANCEL;
