@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/easymock-2.5.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/drunkendroid"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DrunkDroid"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
