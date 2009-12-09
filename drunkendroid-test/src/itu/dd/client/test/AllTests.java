@@ -1,4 +1,4 @@
-package itu.dd.test;
+package itu.dd.client.test;
 
 import android.test.suitebuilder.TestSuiteBuilder;
 import junit.framework.Test;

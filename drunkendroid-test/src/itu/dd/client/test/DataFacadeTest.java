@@ -1,4 +1,4 @@
-package itu.dd.test;
+package itu.dd.client.test;
 
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.control.IDataFacade;

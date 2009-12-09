@@ -1,4 +1,4 @@
-package itu.dd.test;
+package itu.dd.client.test;
 
 import java.util.Calendar;
 import java.util.List;

@@ -1,4 +1,4 @@
-package itu.dd.test;
+package itu.dd.client.test;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
