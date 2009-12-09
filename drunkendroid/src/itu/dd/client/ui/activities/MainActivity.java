@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
 		menu.add(0, MainActivity.MENU_SETTINGS, 0, R.string.menu_settings)
 				.setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(0, MainActivity.MENU_PREVIOUS_TRIPS, 0,
-				R.string.menu_previous_trips).setIcon(
+				R.string.menu_trips).setIcon(
 				android.R.drawable.ic_menu_mapmode);
 		return true;
 	}

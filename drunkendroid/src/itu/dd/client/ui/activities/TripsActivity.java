@@ -31,7 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class PreviousTripsActivity extends ListActivity {
+public class TripsActivity extends ListActivity {
 
 	private TripRepository _repo;
 	private ProgressDialog _progressDialog = null;
@@ -66,7 +66,7 @@ public class PreviousTripsActivity extends ListActivity {
 		};
 		Thread thread = new Thread(null, job, "PreviousTripsThread");
 		thread.start();
-		_progressDialog = ProgressDialog.show(PreviousTripsActivity.this,
+		_progressDialog = ProgressDialog.show(TripsActivity.this,
 				"Please wait...", "Retrieving list of trips ...", true);
 	}
 
@@ -136,7 +136,7 @@ public class PreviousTripsActivity extends ListActivity {
 		public void run() {
 			_progressDialog.dismiss();
 			AlertDialog alert = new AlertDialog.Builder(
-					PreviousTripsActivity.this).setTitle(
+					TripsActivity.this).setTitle(
 					"Upload failed. Please try again later.")
 					.setPositiveButton("Ok",
 							new DialogInterface.OnClickListener() {
@@ -250,7 +250,7 @@ public class PreviousTripsActivity extends ListActivity {
 	private void DeleteTrip(final int id) {
 		Log.i(this.getString(R.string.log_tag), "Deleting trip with local id "
 				+ id);
-		_progressDialog = ProgressDialog.show(PreviousTripsActivity.this,
+		_progressDialog = ProgressDialog.show(TripsActivity.this,
 				"Please wait...", "Deleting trip...", true);
 
 		OnClickListener clickListener = new OnClickListener() {
@@ -260,7 +260,7 @@ public class PreviousTripsActivity extends ListActivity {
 		};
 		// Tell the user that this isn't possible.
 		final AlertDialog please = new AlertDialog.Builder(
-				PreviousTripsActivity.this).setPositiveButton("OK",
+				TripsActivity.this).setPositiveButton("OK",
 				clickListener).create();
 
 		final Runnable alertRunnable = new Runnable() {
@@ -294,7 +294,7 @@ public class PreviousTripsActivity extends ListActivity {
 				R.array.possible_upload_types);
 		final MultiChoiceListener listener = new MultiChoiceListener();
 
-		return new AlertDialog.Builder(PreviousTripsActivity.this).setTitle(
+		return new AlertDialog.Builder(TripsActivity.this).setTitle(
 				R.string.upload_choice).setMultiChoiceItems(items,
 				new boolean[] { true, true, true, true }, listener)
 				.setPositiveButton("Upload",
@@ -302,7 +302,7 @@ public class PreviousTripsActivity extends ListActivity {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								_progressDialog = ProgressDialog.show(
-										PreviousTripsActivity.this,
+										TripsActivity.this,
 										"Uploading trip", "Please wait..");
 								Thread t = new Thread(new Runnable() {
 									public void run() {
