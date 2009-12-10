@@ -83,7 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			db.beginTransaction();
 			db.execSQL("CREATE TABLE " + DBHelper.TABLE_TRIP + " (id INTEGER PRIMARY KEY AUTOINCREMENT, startDateTime LONG NOT NULL, active BOOLEAN NOT NULL, foreignId LONG, online BOOLEAN, name VARCHAR);");
 			db.execSQL("CREATE TABLE " + DBHelper.TABLE_EVENT + " (id INTEGER PRIMARY KEY AUTOINCREMENT, trip INTEGER NOT NULL, dateTime LONG NOT NULL, longitude DOUBLE, latitude DOUBLE, altitude LONG, mood SMALLINT, sender VARCHAR, receiver VARCHAR, message VARCHAR, online BOOLEAN);");
-			db.execSQL("CREATE INDEX TripReading on " + DBHelper.TABLE_EVENT + " (trip DESC, id ASC);");
+			db.execSQL("CREATE INDEX TripEvent on " + DBHelper.TABLE_EVENT + " (trip DESC, id ASC);");
 			db.setTransactionSuccessful();
 		}
 		catch (SQLException e) {
