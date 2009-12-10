@@ -47,7 +47,7 @@ public class EventReceiver extends BroadcastReceiver {
 		t.start();
 	}
 
-	private class EventHandler extends Thread {
+	protected class EventHandler extends Thread {
 		Message _msg;
 
 		public EventHandler(Message msg) {

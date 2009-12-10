@@ -170,7 +170,7 @@ public class TripsActivity extends ListActivity {
 	 * @author Jeppe
 	 * 
 	 */
-	private class TripAdapter extends ArrayAdapter<Trip> {
+	protected class TripAdapter extends ArrayAdapter<Trip> {
 
 		private ArrayList<Trip> items;
 
@@ -336,7 +336,7 @@ public class TripsActivity extends ListActivity {
 	/**
 	 * Listener used for selecting which Events should be uploaded along a trip.
 	 */
-	class MultiChoiceListener implements OnMultiChoiceClickListener {
+	protected class MultiChoiceListener implements OnMultiChoiceClickListener {
 
 		public ArrayList<String> _possibleChoices = new ArrayList<String>();
 		public HashSet<String> _choices = new HashSet<String>();

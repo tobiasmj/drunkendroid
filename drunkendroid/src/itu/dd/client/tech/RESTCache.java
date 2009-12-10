@@ -298,8 +298,8 @@ public class RESTCache implements IRESTCache {
 	 * @author ExxKA
 	 *
 	 */
-	private class QueueLooper extends Thread{
-		private final String LOGTAG ="QueueHandler";
+	protected class QueueLooper extends Thread{
+		private final String LOGTAG ="RestRequestLooper";
 		public Handler mHandler;
 		
 		public void run() {

@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Listener handling the interaction with the Mood Read SeekBar.
 	 */
-	private class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
+	protected class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			System.out.println("Sending Mood Reading!");
 			Intent i = new Intent("itu.malta.drunkendroid.NEW_MOOD_READING");
@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Listener handling the various buttons in the activity.
 	 */
-	private class MyOnClickListener implements View.OnClickListener {
+	protected class MyOnClickListener implements View.OnClickListener {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.NewReadingBtn:

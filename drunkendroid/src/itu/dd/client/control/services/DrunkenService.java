@@ -252,7 +252,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * Content observer for listening to changes in the SMS directory. Fires a
 	 * NEW_OUTGOING_SMS intent on changes.
 	 */
-	private class SMSObserver extends ContentObserver {
+	protected class SMSObserver extends ContentObserver {
 
 		public SMSObserver(Handler handler) {
 			super(handler);
@@ -269,7 +269,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * PhoneStateListener for listening to changes in phone state. Fires a
 	 * NEW_INCOMING_CALL intent on phone state change.
 	 */
-	private class CallListener extends PhoneStateListener {
+	protected class CallListener extends PhoneStateListener {
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
