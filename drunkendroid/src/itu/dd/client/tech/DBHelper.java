@@ -9,11 +9,10 @@ import android.util.Log;
 import itu.dd.client.R;
 
 /**
- * This class is heavily inspired by the helper class DBHelper described in 
+ * This class is inspired by the helper class DBHelper described in 
  * "Unlocking Android 2009", by W. Frank Ableson, Charlie Collins, Robi Sen.
  * <br>
  * The class takes care of the technical communication with the sqlite3 database
- * @author ExxKA
  */
 public class DBHelper extends SQLiteOpenHelper {
 	public static final String DB_NAME = "drunkendroid";
