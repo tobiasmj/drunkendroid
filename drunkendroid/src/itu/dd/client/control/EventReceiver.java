@@ -47,7 +47,7 @@ public class EventReceiver extends BroadcastReceiver {
 		t.start();
 	}
 
-	protected class EventHandler extends Thread {
+	private class EventHandler extends Thread {
 		Message _msg;
 
 		public EventHandler(Message msg) {
@@ -161,5 +161,4 @@ public class EventReceiver extends BroadcastReceiver {
 					.addEvent(locationEvent);
 		}
 	}
-
 }

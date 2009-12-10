@@ -33,7 +33,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class TripsActivity extends ListActivity {
 
-	private TripRepository _repo;
+	protected TripRepository _repo;
 	private ProgressDialog _progressDialog = null;
 	private ArrayList<Trip> _trips = new ArrayList<Trip>();
 	private TripAdapter _adapter;
@@ -165,12 +165,9 @@ public class TripsActivity extends ListActivity {
 
 	/**
 	 * Adapter for the ListActivity in order to show list of trips in a custom
-	 * layout.
-	 * 
-	 * @author Jeppe
-	 * 
+	 * layout. 
 	 */
-	protected class TripAdapter extends ArrayAdapter<Trip> {
+	private class TripAdapter extends ArrayAdapter<Trip> {
 
 		private ArrayList<Trip> items;
 
@@ -336,7 +333,7 @@ public class TripsActivity extends ListActivity {
 	/**
 	 * Listener used for selecting which Events should be uploaded along a trip.
 	 */
-	protected class MultiChoiceListener implements OnMultiChoiceClickListener {
+	private class MultiChoiceListener implements OnMultiChoiceClickListener {
 
 		public ArrayList<String> _possibleChoices = new ArrayList<String>();
 		public HashSet<String> _choices = new HashSet<String>();

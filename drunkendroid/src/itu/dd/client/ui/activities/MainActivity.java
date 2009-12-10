@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 	private static final int MENU_PREVIOUS_TRIPS = Menu.FIRST + 1;
 	private static final int TRIP_STATE_RUNNING = 10;
 	private static final int TRIP_STATE_NOT_RUNNING = 11;
-	SlidingDrawer slider;
+	protected SlidingDrawer slider;
 	ImageView startServiceBtn;
 	ImageView stopServiceBtn;
 	RelativeLayout moodReading;
@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Listener handling the interaction with the Mood Read SeekBar.
 	 */
-	protected class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
+	private class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			System.out.println("Sending Mood Reading!");
 			Intent i = new Intent("itu.malta.drunkendroid.NEW_MOOD_READING");
@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Listener handling the various buttons in the activity.
 	 */
-	protected class MyOnClickListener implements View.OnClickListener {
+	private class MyOnClickListener implements View.OnClickListener {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.NewReadingBtn:
@@ -201,7 +201,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void StartTrip() {
+	protected void StartTrip() {
 		TripRepository repo = new TripRepository(this);
 		if (repo.hasActiveTrip()) {
 			Intent i = new Intent(
@@ -243,7 +243,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void stopTrip() {
+	protected void stopTrip() {
 		AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
 				.setTitle("Are you sure that you want to end the trip?")
 				.setPositiveButton("Yes",

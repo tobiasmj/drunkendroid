@@ -2,7 +2,6 @@ package itu.dd.client.tech;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import android.content.ContentValues;
@@ -27,7 +26,7 @@ public class RESTCache implements IRESTCache {
 	private HashSet<String> uploadTripFilter = null;
 	private DBHelper _dbHelper;
 	private LocalDataFacadeForSQLite _localSqlFacade;
-	private RESTServerFacade _server;
+	protected RESTServerFacade _server;
 	private Context _context;
 	static QueueLooper _queueLooper = null;
 	
@@ -95,7 +94,7 @@ public class RESTCache implements IRESTCache {
 		_queueLooper.mHandler.sendMessage(m);
 	}
 	
-	synchronized private void setEventProcessed(Event e){
+	synchronized protected void setEventProcessed(Event e){
 		SQLiteDatabase db = _dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
@@ -112,7 +111,7 @@ public class RESTCache implements IRESTCache {
 		}
 	}
 	
-	synchronized private void setTripProcessedAndUpdateForeignId(Trip t){
+	synchronized protected void setTripProcessedAndUpdateForeignId(Trip t){
 		SQLiteDatabase db = _dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
@@ -248,7 +247,7 @@ public class RESTCache implements IRESTCache {
 	 * So gather everything together. And filter it before returning.
 	 * @return
 	 */
-	synchronized private ArrayList<Trip> getUploadCandidates() {
+	synchronized protected ArrayList<Trip> getUploadCandidates() {
 		SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
 		final String[] columns = {"startDateTime"};
 		final String selection = " online IS NULL AND foreignId IS NULL";;
@@ -298,7 +297,7 @@ public class RESTCache implements IRESTCache {
 	 * @author ExxKA
 	 *
 	 */
-	protected class QueueLooper extends Thread{
+	private class QueueLooper extends Thread{
 		private final String LOGTAG ="RestRequestLooper";
 		public Handler mHandler;
 		
