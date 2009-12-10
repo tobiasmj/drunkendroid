@@ -75,8 +75,9 @@ public class HeatMap{
 		if(mapView.getZoomLevel() != _zoomLevel)
 			_zoomLevel = mapView.getZoomLevel();
 		// Drawing MoodMapPoints
-        for(MoodMapPoint mp : _moods)
-        	canvas = drawCircle(canvas, projection, mp);
+		int length = _moods.size();
+		for(int i = 0; i < length; i++)
+        	canvas = drawCircle(canvas, projection, _moods.get(i));
 
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();

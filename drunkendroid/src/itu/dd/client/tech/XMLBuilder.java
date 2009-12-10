@@ -35,9 +35,9 @@ public final class XMLBuilder {
 
         serializer.startDocument("UTF-8", true);
         serializer.startTag("", EVENTS);
-        for(Event e : eventList){
-        	XMLBuilder.addEventXml(serializer, e);
-        }
+        int length = eventList.size();
+        for(int i = 0; i < length; i++)
+        	XMLBuilder.addEventXml(serializer, eventList.get(i));
         serializer.endTag("", EVENTS);
         serializer.endDocument();
        

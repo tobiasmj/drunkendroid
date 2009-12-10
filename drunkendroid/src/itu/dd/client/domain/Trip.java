@@ -54,12 +54,12 @@ public class Trip {
 	public static ArrayList<Event> filterEvents(ArrayList<Event> events,HashSet<String> filter) {
 		ArrayList<Event> filteredEvents = new ArrayList<Event>();
 		
-		for(Event e : events) {
-			if(filter.contains(e.getClass().getName())) {
-				filteredEvents.add(e);
+		int length = events.size();
+		for(int i = 0; i < length; i++) {
+			if(filter.contains(events.get(i).getClass().getName())) {
+				filteredEvents.add(events.get(i));
 			}
-		}
-		
+		}	
 		return filteredEvents;
 	}
 }

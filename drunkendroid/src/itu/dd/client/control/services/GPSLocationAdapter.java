@@ -54,10 +54,6 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	 * @param location The newly changed location.
 	 */
 	private void receiveUpdate(Location location) {
-		Toast t = Toast.makeText(DrunkenService.getInstance(),
-				"GPS update, Accuracy:" + location.getAccuracy(), 8);
-		t.show();
-
 		// Set the accuracy of the GPS to the amount set in the application
 		// settings.
 		String[] GPSArray = _context.getResources().getStringArray(
@@ -68,8 +64,10 @@ public class GPSLocationAdapter implements ILocationAdapter {
 
 		_lastKnownLocation = location;
 		if (location.getAccuracy() < Integer.parseInt(GPSArray[selectedIndex])) {
-			for (ILocationAdapterListener i : _listeners)
-				i.OnLocationChange(_lastKnownLocation);
+			Location l = _lastKnownLocation;
+			int length = _listeners.size();
+			for(int i = 0; i < length; i++)
+				_listeners.get(i).OnLocationChange(l);
 		}
 	}
 
@@ -119,8 +117,9 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	 */
 	public void RegisterLocationUpdates(ILocationAdapterListener interest) {
 		boolean found = false;
-		for (ILocationAdapterListener i : _listeners) {
-			if (i == interest) {
+		int length = _listeners.size();
+		for(int i = 0; i < length; i++) {
+			if (_listeners.get(i) == interest) {
 				found = true;
 				break;
 			}

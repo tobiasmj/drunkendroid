@@ -1,5 +1,6 @@
 package itu.dd.client.ui.map;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import itu.dd.client.control.DataFacade;
@@ -281,7 +282,7 @@ public class MoodOverlay extends Overlay
 		double lrLat = _mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan * 1.25) / 2)/1E6;
 		double lrLong = _mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan * 1.25) / 2)/1E6;
 		
-		List<MoodEvent> data = null;
+		ArrayList<MoodEvent> data = null;
 
 		try {
 			data = _dataFacade.getReadingEvents(
@@ -304,8 +305,11 @@ public class MoodOverlay extends Overlay
 		{
 			_heatmap.clearMoodMapPoints();
 			
-			for(MoodEvent event : data)
+			int length = data.size();
+			MoodEvent event;
+			for(int i = 0; i < length; i++)
 			{
+				event = data.get(i);
 				GeoPoint gp = new GeoPoint((int)(event.getLatitude()*1E6), (int)(event.getLongitude()*1E6));
 				MoodMapPoint mp = new MoodMapPoint(gp, event.getMood());
 				_heatmap.addMoodMapPoint(mp);

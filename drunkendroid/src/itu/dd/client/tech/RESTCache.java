@@ -77,9 +77,9 @@ public class RESTCache implements IRESTCache {
 				throw new RESTFacadeException(LOGTAG,"Tried to upload a trip without Remote ID");
 			}
 			_server.updateTrip(t, eventList);
-			for(Event e : eventList) {
-				setEventProcessed(e);
-			}
+			int length = eventList.size();
+			for(int i = 0; i < length; i++)
+				setEventProcessed(eventList.get(i));
 		} catch (RESTFacadeException e) {
 			throw e;
 		}
@@ -272,7 +272,10 @@ public class RESTCache implements IRESTCache {
 		}
 		
 		//Filter the trips
-		for(Trip t : trips){
+		int length = trips.size();
+		Trip t;
+		for(int i = 0; i < length; i++) {
+			t = trips.get(i);
 			//Filter it.
 			//The discarded events should also be set online, to show they have been processed
 			TreeSet<Event> filteredOutEvents = new TreeSet<Event>();
@@ -309,15 +312,19 @@ public class RESTCache implements IRESTCache {
 					switch (msg.what) {
 					case UPDATECALL:
 						Log.i(LOGTAG, "Handling an update call");
-						List<Trip> updateTrips = getUpdateCandidates();
+						ArrayList<Trip> updateTrips = getUpdateCandidates();
 						//Try to update each Trip
-						for(Trip t : updateTrips){
+						int length = updateTrips.size();
+						Trip trip;
+						for(int i = 0; i < length; i++) {
+							trip = updateTrips.get(i);
 							//The server should throw exceptions all the way here.
 							try{
-								_server.updateTrip(t, t.getEvents());
-								for(Event e : t.getEvents()){
+								_server.updateTrip(updateTrips.get(i), trip.getEvents());
+								int len = trip.getEvents().size();
+								for(int j = 0; j < len; j++) {
 									//The trip is already set to online.
-									setEventProcessed(e);
+									setEventProcessed(trip.getEvents().get(j));
 								}
 							} catch (RESTFacadeException e) {
 								//don't care it will be picked up later.
@@ -327,17 +334,20 @@ public class RESTCache implements IRESTCache {
 						break;
 					case UPLOADCALL:
 						Log.i(LOGTAG, "Handling an upload call");
-						//TODO: Implement
-						List<Trip> uploadTrips = getUploadCandidates();
+						ArrayList<Trip> uploadTrips = getUploadCandidates();
 						try{
-							for(Trip t : uploadTrips){
+							int len = uploadTrips.size();
+							Trip t;
+							for(int i = 0; i < len; i++) {
+								t = uploadTrips.get(i);
 								_server.uploadTrip(t);
 								//Persist changes
 								//a remoteId has been obtained.
 								//and the trip is now online.
 								setTripProcessedAndUpdateForeignId(t);
 								//set the events online
-								for(Event e : t.getEvents()){
+								int l = t.getEvents().size();
+								for(int j = 0; i < l; j++) {
 									/*
 									 * All events will be set online.
 									 * also events which have been filtered by 
@@ -347,7 +357,7 @@ public class RESTCache implements IRESTCache {
 									 * Filtered: Personal event which should not
 									 * be uploaded unless the user has consented.
 									 */
-									setEventProcessed(e);
+									setEventProcessed(t.getEvents().get(j));
 									}
 								}
 							}

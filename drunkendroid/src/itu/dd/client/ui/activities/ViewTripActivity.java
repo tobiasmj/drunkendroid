@@ -82,8 +82,10 @@ public class ViewTripActivity extends MapActivity {
             
         	ArrayList<Event> events = trip.getEvents();
         	
-            for(Event e : events)
-            {
+        	int length = events.size();
+        	Event e;
+        	for(int i = 0; i < length; i++) {
+        		e = events.get(i);
             	// Set the min and max latitude and longitude
         		int latitude = (int)(e.getLatitude() * 1E6);
                 int longitude = (int)(e.getLongitude() * 1E6); 

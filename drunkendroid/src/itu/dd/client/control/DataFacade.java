@@ -111,10 +111,9 @@ public class DataFacade implements IDataFacade {
 		List<Event> updatedEvents = _local.updateEventsWithoutLocation(t, latitude, longitude);
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		//now update the trip on the server.
-		for(Event e : updatedEvents){
-			//TODO This ought to be done in a different thread.
-			eventList.add(e);
-		}
+		int length = updatedEvents.size();
+		for(int i = 0; i < length; i++)
+			eventList.add(updatedEvents.get(i));
 		
 		//If trip has no RemoteId, upload trip and get it.
 		if(t.getRemoteId() == null)

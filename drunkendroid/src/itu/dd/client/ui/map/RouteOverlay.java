@@ -49,8 +49,11 @@ public class RouteOverlay extends Overlay {
 			paint.setAntiAlias(true);
 			paint.setStrokeWidth(5f);
 			
-			for(Event e : _events)
+			int length = _events.size();
+			LocationEvent e;
+			for(int i = 0; i < length; i++)
 			{
+				e = _events.get(i);
 				System.out.print(e.getLatitude() + "x" + e.getLongitude());
 				if(previous == null)
 				{

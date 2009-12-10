@@ -49,13 +49,14 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.i(this.getString(R.string.log_tag), "Service started");
-		_notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		DrunkenService._service = this;
-		RegisterReceivers();
-		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
+		_notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		_locationManager = new GPSLocationAdapter(this);
 		_locationManager.RegisterLocationUpdates(this);
+		RegisterReceivers();
+		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
+		Log.i(this.getString(R.string.log_tag), "Service started");
+
 	}
 
 	/**
@@ -137,16 +138,15 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		UnregisterReceivers();
 		getRepository().closeRepository();
 		_locationManager.UnregisterLocationUpdates(this);
+		_notificationManager.cancel(1);
 		_moodHandler.removeMessages(0);
 		DrunkenService._service = null;
-		_notificationManager.cancel(1);
 	}
 
 	/**
 	 * Start listening for Intents and content changes.
 	 */
 	private void RegisterReceivers() {
-
 		IntentFilter moodReadingFilter = new IntentFilter(
 				"itu.malta.drunkendroid.NEW_MOOD_READING");
 		this.registerReceiver(_eventHandler, moodReadingFilter);
@@ -178,7 +178,6 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 
 					public void onSharedPreferenceChanged(SharedPreferences sp,
 							String key) {
-
 						// if changes are made to the interval, change the timer
 						// of the mood readings.
 						if (key.equals("moodReadInterval"))
@@ -215,15 +214,13 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * @param sp
 	 *            SharedPreferences containing the mood reading interval.
 	 */
-	private void StartReadingTimer(final SharedPreferences sp) {
+	private void StartReadingTimer(SharedPreferences sp) {
 		final Intent moodIntent = new Intent(DrunkenService.this,
 				MoodReadActivity.class);
 		String[] intervalArray = getResources().getStringArray(
 				R.array.mood_read_intervals);
 		int selectedIndex = sp.getInt("moodReadInterval", 0);
 		if (selectedIndex >= 0 && selectedIndex < 5) {
-			_readingInterval = Integer.parseInt(intervalArray[sp.getInt(
-					"moodReadInterval", 0)]);
 			Runnable run = new Runnable() {
 				public void run() {
 					System.out.println("MoodRead Intervallet sat til "
@@ -243,6 +240,9 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 					
 				}
 			};
+			_readingInterval = Integer.parseInt(intervalArray[sp.getInt(
+					"moodReadInterval", 0)]);
+			
 			_moodHandler.removeMessages(0);
 			_moodHandler.postDelayed(run, _readingInterval * 60000);
 		}
@@ -288,9 +288,6 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 * Interface method called by ILocationAdapter if registered to such.
 	 */
 	public void OnLocationChange(Location location) {
-		Toast t = Toast.makeText(DrunkenService.getInstance(), "GPS update 2, Accuracy:" + location.getAccuracy(), 8);
-		t.show();
-		
 		Intent i = new Intent("itu.malta.drunkendroid.NEW_LOCATION_CHANGE");
 		i.putExtra("location", location);
 		sendBroadcast(i);

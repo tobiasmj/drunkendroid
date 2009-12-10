@@ -10,6 +10,22 @@ public abstract class Event implements Comparable<Event> {
 	private Double _longitude;
 	private int _id;
 	
+	public Event(Location location) {
+		this._dateTime = System.currentTimeMillis();
+		//If the GPS haven't got a location, don't set it, or it'll be set to 0.0
+		if(location != null)
+		{
+			this._latitude = location.getLatitude();
+			this._longitude = location.getLongitude();
+		}
+	}
+	
+	public Event(Long datetime, Double latitude, Double longitude) {
+		this._dateTime = datetime;
+		this._latitude = latitude;
+		this._longitude = longitude;
+	}
+	
 	public Long getDateTime() {
 		return _dateTime;
 	}
@@ -40,23 +56,6 @@ public abstract class Event implements Comparable<Event> {
 
 	public void setId(int id) {
 		this._id = id;
-	}
-
-	
-	public Event(Location location) {
-		this._dateTime = Calendar.getInstance().getTimeInMillis();
-		//If the GPS hasn't got a location, don't set it, or it'll be set to 0.0
-		if(location != null)
-		{
-			this._latitude = location.getLatitude();
-			this._longitude = location.getLongitude();
-		}
-	}
-	
-	public Event(Long datetime, Double latitude, Double longitude) {
-		this._dateTime = datetime;
-		this._latitude = latitude;
-		this._longitude = longitude;
 	}
 	
 	public int compareTo(Event event) {
