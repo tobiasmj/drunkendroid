@@ -27,7 +27,7 @@ public final class XMLBuilder {
 	private static final String RECEIVER = "receiver";
 	private static final String MESSAGE = "message";
 
-	protected static String buildXmlFromEvents(List<Event> eventList) throws IOException{
+	static String buildXmlFromEvents(List<Event> eventList) throws IOException{
 		XmlSerializer serializer = Xml.newSerializer();
 		final StringWriter writer = new StringWriter();
 
@@ -44,14 +44,14 @@ public final class XMLBuilder {
         return writer.toString();
 	}
 
-	protected static void addReadingXml(XmlSerializer serializer, MoodEvent r)
+	static void addReadingXml(XmlSerializer serializer, MoodEvent r)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		serializer.startTag("", MOOD);
 		serializer.text(String.valueOf(r.getMood()));
 		serializer.endTag("", MOOD);
 	}
 
-	protected static void addIncomingCallXml(XmlSerializer serializer,
+	static void addIncomingCallXml(XmlSerializer serializer,
 			IncomingCallEvent i) throws IllegalArgumentException,
 			IllegalStateException, IOException {
 		serializer.startTag("", SENDER);
@@ -59,7 +59,7 @@ public final class XMLBuilder {
 		serializer.endTag("", SENDER);
 	}
 
-	protected static void addOutgoingCallXml(XmlSerializer serializer,
+	static void addOutgoingCallXml(XmlSerializer serializer,
 			OutgoingCallEvent o) throws IllegalArgumentException,
 			IllegalStateException, IOException {
 		serializer.startTag("", RECEIVER);
@@ -67,7 +67,7 @@ public final class XMLBuilder {
 		serializer.endTag("", RECEIVER);
 	}
 	
-	protected static void addSMSXml(XmlSerializer serializer,
+	static void addSMSXml(XmlSerializer serializer,
 			SMSEvent e) throws IllegalArgumentException,
 			IllegalStateException, IOException {
 		if(IncomingSMSEvent.class.isInstance(e)) {
@@ -84,7 +84,7 @@ public final class XMLBuilder {
 		serializer.endTag("", MESSAGE);
 	}
 
-	protected static void addEventXml(XmlSerializer serializer, Event e)
+	static void addEventXml(XmlSerializer serializer, Event e)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		serializer.startTag("", EVENT);
 		serializer.startTag("", EVENTTYPE);
@@ -125,7 +125,7 @@ public final class XMLBuilder {
 		serializer.endTag("", EVENT);
 	}
 
-	protected static String buildXmlFromTrip(Trip t) throws IOException {
+	static String buildXmlFromTrip(Trip t) throws IOException {
 		XmlSerializer serializer = Xml.newSerializer();
 		final StringWriter writer = new StringWriter();
 

@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 	private static final int MENU_PREVIOUS_TRIPS = Menu.FIRST + 1;
 	private static final int TRIP_STATE_RUNNING = 10;
 	private static final int TRIP_STATE_NOT_RUNNING = 11;
-	protected SlidingDrawer slider;
+	SlidingDrawer slider;
 	ImageView startServiceBtn;
 	ImageView stopServiceBtn;
 	RelativeLayout moodReading;
@@ -201,7 +201,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	protected void StartTrip() {
+	void StartTrip() {
 		TripRepository repo = new TripRepository(this);
 		if (repo.hasActiveTrip()) {
 			Intent i = new Intent(
@@ -243,7 +243,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	protected void stopTrip() {
+	void stopTrip() {
 		AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
 				.setTitle("Are you sure that you want to end the trip?")
 				.setPositiveButton("Yes",

@@ -26,7 +26,7 @@ public class RESTCache implements IRESTCache {
 	private HashSet<String> uploadTripFilter = null;
 	private DBHelper _dbHelper;
 	private LocalDataFacadeForSQLite _localSqlFacade;
-	protected RESTServerFacade _server;
+	RESTServerFacade _server;
 	private Context _context;
 	static QueueLooper _queueLooper = null;
 	
@@ -94,7 +94,7 @@ public class RESTCache implements IRESTCache {
 		_queueLooper.mHandler.sendMessage(m);
 	}
 	
-	synchronized protected void setEventProcessed(Event e){
+	synchronized void setEventProcessed(Event e){
 		SQLiteDatabase db = _dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
@@ -111,7 +111,7 @@ public class RESTCache implements IRESTCache {
 		}
 	}
 	
-	synchronized protected void setTripProcessedAndUpdateForeignId(Trip t){
+	synchronized void setTripProcessedAndUpdateForeignId(Trip t){
 		SQLiteDatabase db = _dbHelper.getDBInstance();
 		ContentValues values = new ContentValues(1);
 		final String whereClause = "id = ?";
@@ -247,7 +247,7 @@ public class RESTCache implements IRESTCache {
 	 * So gather everything together. And filter it before returning.
 	 * @return
 	 */
-	synchronized protected ArrayList<Trip> getUploadCandidates() {
+	synchronized ArrayList<Trip> getUploadCandidates() {
 		SQLiteDatabase dbInstance = _dbHelper.getDBInstance();
 		final String[] columns = {"startDateTime"};
 		final String selection = " online IS NULL AND foreignId IS NULL";;

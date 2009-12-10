@@ -33,7 +33,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class TripsActivity extends ListActivity {
 
-	protected TripRepository _repo;
+	TripRepository _repo;
 	private ProgressDialog _progressDialog = null;
 	private ArrayList<Trip> _trips = new ArrayList<Trip>();
 	private TripAdapter _adapter;
