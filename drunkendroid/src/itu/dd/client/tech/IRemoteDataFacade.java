@@ -1,9 +1,9 @@
-package itu.dd.client.control;
+package itu.dd.client.tech;
 
 import java.util.ArrayList;
 
 import itu.dd.client.domain.*;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 
 public interface IRemoteDataFacade {
 	/**
@@ -14,10 +14,10 @@ public interface IRemoteDataFacade {
 	 * @param longitude
 	 * @param distance
 	 * @return A synthesized Trip which contains events returned by the query.
-	 * @throws RESTFacadeException which needs to be shown to the user.
+	 * @throws CommunicationException which needs to be shown to the user.
 	 */
 	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
-			Double lrLatitude, Double lrLongitude) throws RESTFacadeException;
+			Double lrLatitude, Double lrLongitude) throws CommunicationException;
 	
 	/**
 	 * Upload a trip to the server
@@ -26,6 +26,6 @@ public interface IRemoteDataFacade {
 	 * 
 	 * If an error occurs the trip is not updated
 	 */
-	public void uploadTrip(Trip t) throws RESTFacadeException;
-	public void updateTrip(Trip t, ArrayList<Event> eventList) throws RESTFacadeException;
+	public void uploadTrip(Trip t) throws CommunicationException;
+	public void updateTrip(Trip t, ArrayList<Event> eventList) throws CommunicationException;
 }

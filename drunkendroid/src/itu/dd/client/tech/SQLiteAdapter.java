@@ -1,6 +1,5 @@
 package itu.dd.client.tech;
 
-import itu.dd.client.control.ILocalDataFacade;
 import itu.dd.client.domain.*;
 
 import java.util.ArrayList;
@@ -12,14 +11,14 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class LocalDataFacadeForSQLite implements ILocalDataFacade {
+public class SQLiteAdapter implements ILocalDataFacade {
 	private static final String LOGTAG = "LocalDB DrunkenDroid";
 	DBHelper dbHelper;
 	
 	//don't use the default constructor
 	@SuppressWarnings("unused")
-	private LocalDataFacadeForSQLite(){};
-	public LocalDataFacadeForSQLite(Context context){
+	private SQLiteAdapter(){};
+	public SQLiteAdapter(Context context){
 		dbHelper = DBHelper.getInstance(context);
 	}
 	

@@ -2,7 +2,7 @@ package itu.dd.client.ui.activities;
 
 import itu.dd.client.control.TripRepository;
 import itu.dd.client.domain.*;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 import itu.dd.client.R;
 import android.os.Bundle;
 import java.util.ArrayList;
@@ -308,7 +308,7 @@ public class TripsActivity extends ListActivity {
 											_repo.uploadTrip((_trips.get(id))
 													.getStartDate(),
 													listener._choices);
-										} catch (RESTFacadeException e) {
+										} catch (CommunicationException e) {
 											runOnUiThread(uploadFailedJob);
 										} finally {
 											_progressDialog.dismiss();

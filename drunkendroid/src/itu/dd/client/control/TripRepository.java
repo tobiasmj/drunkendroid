@@ -1,7 +1,7 @@
 package itu.dd.client.control;
 
 import itu.dd.client.domain.*;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,7 +86,7 @@ public class TripRepository {
 	}
 
 	public ArrayList<MoodEvent> getEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude,
-			Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
+			Double lrLatitude, Double lrLongitude) throws CommunicationException {
 		return _data.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 
@@ -109,7 +109,7 @@ public class TripRepository {
 			location.getLatitude(), location.getLongitude());
 	}
 
-	public void uploadTrip(Long startTime, HashSet<String> uploadTypes) throws RESTFacadeException {
+	public void uploadTrip(Long startTime, HashSet<String> uploadTypes) throws CommunicationException {
 		Trip t = _data.getTrip(startTime);
 		t.setEvents(Trip.filterEvents(t.getEvents(), uploadTypes));
 		if(t.getEvents().size() > 0)

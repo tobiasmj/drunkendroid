@@ -1,4 +1,4 @@
-package itu.dd.client.control;
+package itu.dd.client.tech;
 
 import itu.dd.client.domain.Event;
 import itu.dd.client.domain.Trip;

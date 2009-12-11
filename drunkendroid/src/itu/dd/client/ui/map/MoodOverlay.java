@@ -5,7 +5,7 @@ import java.util.List;
 
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.domain.MoodEvent;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -292,7 +292,7 @@ public class MoodOverlay extends Overlay
 					(double)ulLong,
 					(double)lrLat,
 					(double)lrLong);
-		} catch (RESTFacadeException e) {
+		} catch (CommunicationException e) {
 			new AlertDialog.Builder(_context)
 		      .setMessage("Could not connect to server. Please check your connection and try again.")
 		      .setPositiveButton("Ok", new AlertDialog.OnClickListener() {

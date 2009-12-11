@@ -17,7 +17,7 @@ import itu.dd.client.domain.Event;
 import itu.dd.client.domain.LocationEvent;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 
 public class RESTCache implements IRESTCache {
 	private final int UPDATECALL = 1;
@@ -25,16 +25,16 @@ public class RESTCache implements IRESTCache {
 	private final String LOGTAG = "RESTCache";
 	private HashSet<String> uploadTripFilter = null;
 	private DBHelper _dbHelper;
-	private LocalDataFacadeForSQLite _localSqlFacade;
-	RESTServerFacade _server;
+	private SQLiteAdapter _localSqlFacade;
+	RESTAdapter _server;
 	private Context _context;
 	static QueueLooper _queueLooper = null;
 	
 	public RESTCache(Context context, IWebserviceConnection conn){
 		this._context = context;
 		_dbHelper = DBHelper.getInstance(this._context);
-		_localSqlFacade = new LocalDataFacadeForSQLite(context);
-		_server = new RESTServerFacade(this._context, conn);
+		_localSqlFacade = new SQLiteAdapter(context);
+		_server = new RESTAdapter(this._context, conn);
 		//The Looper
 		//Build the uploadTripFilter
 		uploadTripFilter = new HashSet<String>();	
@@ -51,11 +51,11 @@ public class RESTCache implements IRESTCache {
 
 	/**
 	 * Blocking call
-	 * @throws RESTFacadeException which needs to be shown to the user
+	 * @throws CommunicationException which needs to be shown to the user
 	 */
 	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime,
 			Double ulLatitude, Double ulLongitude, Double lrLatitude,
-			Double lrLongitude) throws RESTFacadeException {
+			Double lrLongitude) throws CommunicationException {
 		return _server.getReadingEvents(starTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 	
@@ -69,17 +69,17 @@ public class RESTCache implements IRESTCache {
 		_queueLooper.mHandler.sendMessage(m);
 	}
 	
-	public void updateFilteredTrip(Trip t, ArrayList<Event> eventList) throws RESTFacadeException {
+	public void updateFilteredTrip(Trip t, ArrayList<Event> eventList) throws CommunicationException {
 		try {
 			if(t.getRemoteId() == null) {
 				uploadTrip(t);
-				throw new RESTFacadeException(LOGTAG,"Tried to upload a trip without Remote ID");
+				throw new CommunicationException(LOGTAG,"Tried to upload a trip without Remote ID");
 			}
 			_server.updateTrip(t, eventList);
 			int length = eventList.size();
 			for(int i = 0; i < length; i++)
 				setEventProcessed(eventList.get(i));
-		} catch (RESTFacadeException e) {
+		} catch (CommunicationException e) {
 			throw e;
 		}
 	}
@@ -325,7 +325,7 @@ public class RESTCache implements IRESTCache {
 									//The trip is already set to online.
 									setEventProcessed(trip.getEvents().get(j));
 								}
-							} catch (RESTFacadeException e) {
+							} catch (CommunicationException e) {
 								//don't care it will be picked up later.
 							}
 						}
@@ -360,7 +360,7 @@ public class RESTCache implements IRESTCache {
 									}
 								}
 							}
-						catch (RESTFacadeException e) {
+						catch (CommunicationException e) {
 							// Just log it.
 							Log.e(LOGTAG, "Tried to execute an uploadcall: " + e.getMessage());
 						}

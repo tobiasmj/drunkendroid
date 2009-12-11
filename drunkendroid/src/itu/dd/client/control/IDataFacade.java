@@ -1,7 +1,7 @@
 package itu.dd.client.control;
 
 import itu.dd.client.domain.*;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 
 import java.util.ArrayList;
 
@@ -15,10 +15,10 @@ public interface IDataFacade {
 	public void deleteTrip(Long startTime);
 	public Trip getActiveTrip();
 	public void closeTrip(Trip t);
-	public void updateFilteredTrip(Trip t) throws RESTFacadeException;
+	public void updateFilteredTrip(Trip t) throws CommunicationException;
 	
 	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
-			Double lrLatitude, Double lrLongitude) throws RESTFacadeException;
+			Double lrLatitude, Double lrLongitude) throws CommunicationException;
 	
 	public void closeFacade();
 }

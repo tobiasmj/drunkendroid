@@ -8,9 +8,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import itu.dd.client.control.IRemoteDataFacade;
 import itu.dd.client.domain.*;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.exception.CommunicationException;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -27,7 +26,7 @@ import org.xml.sax.SAXException;
  * @author ExxKA
  * This class is inspired by the book: Beginning Android and http://www.smnirven.com/?p=15
  */
-public class RESTServerFacade implements IRemoteDataFacade {
+public class RESTAdapter implements IRemoteDataFacade {
 	private static final String _TRIP = "trip";
 	private static final String _TRIPID = "tripId";
 	private static final String EVENT = "event";
@@ -37,7 +36,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	private String _IMEI = "";
 	IWebserviceConnection conn = null;
 	
-	public RESTServerFacade(Context context, IWebserviceConnection conn){
+	public RESTAdapter(Context context, IWebserviceConnection conn){
 		TelephonyManager mgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		_IMEI = mgr.getDeviceId();
 		this.conn = conn;
@@ -48,7 +47,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @return currently only returns events with moods. Used to generate a moodmap.
 	 */
 	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
-			Double lrLatitude, Double lrLongitude) throws RESTFacadeException{
+			Double lrLatitude, Double lrLongitude) throws CommunicationException{
 		
 		ArrayList<MoodEvent> resultingTrip = null;
 		//Call the server
@@ -64,20 +63,20 @@ public class RESTServerFacade implements IRemoteDataFacade {
 			 resultingTrip = consumeXmlFromMoodMap(response);
 			if(resultingTrip == null){
 				Log.i(LOGTAG, "The response could not be consumed correctly");
-				throw new RESTFacadeException(LOGTAG, "The server did not send a map back.");
+				throw new CommunicationException(LOGTAG, "The server did not send a map back.");
 				
 			}
 		} catch (IllegalStateException e) {
 			//Wrong content has been supplied by the server.
 			//Tell the user we cannot show the map.
 			Log.i(LOGTAG, "IllegalStateException, " + e.getMessage() );
-			throw new RESTFacadeException(LOGTAG, "The server has send a map which I cannot understand. Please update the application");
+			throw new CommunicationException(LOGTAG, "The server has send a map which I cannot understand. Please update the application");
 		} catch (IOException e) {
 			//An xml DOM object could not be build from the content in the HttpResponse.
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.i(LOGTAG, "IOException, " + e.getMessage());
-			throw new RESTFacadeException(LOGTAG, "The server did not send a correct map.");
+			throw new CommunicationException(LOGTAG, "The server did not send a correct map.");
 		}
 		
 		return resultingTrip;
@@ -87,12 +86,12 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * Blocking call
 	 * This method expects a Trip which already has a remoteId.
 	 * To obtain a remoteId call the upload function.
-	 * @throws RESTFacadeException to indicate failure which could not be handled.
+	 * @throws CommunicationException to indicate failure which could not be handled.
 	 */
-	synchronized public void updateTrip(Trip t, ArrayList<Event> events) throws RESTFacadeException {
+	synchronized public void updateTrip(Trip t, ArrayList<Event> events) throws CommunicationException {
 		if(t.getRemoteId() == null){
 			String cause = "Tried to update a trip which has no remoteId";
-			throw new RESTFacadeException(LOGTAG, cause);
+			throw new CommunicationException(LOGTAG, cause);
 		}
 		
 		try {
@@ -107,7 +106,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	        if(responseCode >= 400 && responseCode < 500){
 	        	//This is in the 400: We have done something wrong.
 	        	Log.e(LOGTAG, "Tried to update a trip with startdate " + t.getStartDate() + ", the server returned malformed xml");
-	        	throw new RESTFacadeException(LOGTAG, "Got a reponse code in the 400 series");
+	        	throw new CommunicationException(LOGTAG, "Got a reponse code in the 400 series");
 	        }
 	        else if(responseCode >= 500 && responseCode < 600){
 	        	//This is in the 500 range
@@ -130,7 +129,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 			//The XML was not build properly.
 			String cause = "The xml needed to post an update command, could not be generated: " + e1.getMessage();
 			Log.e(LOGTAG, cause);
-			throw new RESTFacadeException(LOGTAG, cause , e1);
+			throw new CommunicationException(LOGTAG, cause , e1);
 		}
 	}
 	
@@ -139,7 +138,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	 * @param t the trip to be uploaded to the server, with containing events.
 	 * @return The foreign ID of the trip.Can be null, if there was a problem which could not be solved.
 	 */
-	synchronized public void uploadTrip(Trip t) throws RESTFacadeException
+	synchronized public void uploadTrip(Trip t) throws CommunicationException
 	{
 		try {
 	        //Build xml
@@ -176,7 +175,7 @@ public class RESTServerFacade implements IRemoteDataFacade {
 	    catch(Exception e){
 	    	//Something was wrong when we tried to build up xml.
 	    	Log.e(LOGTAG, e.getMessage());
-	    	throw new RESTFacadeException(LOGTAG, "Unknown exception caught", e);
+	    	throw new CommunicationException(LOGTAG, "Unknown exception caught", e);
 	    }
 	}
 	

@@ -3,12 +3,13 @@ package itu.dd.client.control;
 import itu.dd.client.domain.Event;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
+import itu.dd.client.tech.ILocalDataFacade;
 import itu.dd.client.tech.IRESTCache;
 import itu.dd.client.tech.IWebserviceConnection;
-import itu.dd.client.tech.LocalDataFacadeForSQLite;
+import itu.dd.client.tech.SQLiteAdapter;
 import itu.dd.client.tech.RESTCache;
-import itu.dd.client.tech.WebserviceConnectionREST;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.RESTConnection;
+import itu.dd.client.tech.exception.CommunicationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +26,10 @@ public class DataFacade implements IDataFacade {
 	private DataFacade(){};
 	
 	public DataFacade(Context context){
-		IWebserviceConnection conn = new WebserviceConnectionREST();
+		IWebserviceConnection conn = new RESTConnection();
 		_remote = new RESTCache(context, conn);
 		//_remote = new DummyRESTserver();
-		_local = new LocalDataFacadeForSQLite(context);
+		_local = new SQLiteAdapter(context);
 	}
 	
 	/**
@@ -81,10 +82,10 @@ public class DataFacade implements IDataFacade {
 	 * @param endTime the ending of the aggregation
 	 * @param latiude latitude of the center of the area of interest.
 	 * @param longitude longitude of the center of the area of interest.
-	 * @throws RESTFacadeException with a message for the user.
+	 * @throws CommunicationException with a message for the user.
 	 */
 	public ArrayList<MoodEvent> getReadingEvents(Long startTime, Long endTime, Double ulLatitude,
-			Double ulLongitude, Double lrLatitude, Double lrLongitude) throws RESTFacadeException {
+			Double ulLongitude, Double lrLatitude, Double lrLongitude) throws CommunicationException {
 		return _remote.getReadingEvents(startTime, endTime, ulLatitude, ulLongitude, lrLatitude, lrLongitude);
 	}
 
@@ -160,7 +161,7 @@ public class DataFacade implements IDataFacade {
 		_local.deleteTrip(startTime);
 	}
 	
-	public void updateFilteredTrip(Trip t) throws RESTFacadeException {
+	public void updateFilteredTrip(Trip t) throws CommunicationException {
 		_remote.updateFilteredTrip(t, t.getEvents());		
 	}
 }
