@@ -25,7 +25,7 @@ import android.telephony.TelephonyManager;
 import android.test.AndroidTestCase;
 import static org.easymock.EasyMock.*;
 
-public class RESTServerFacadeTest extends AndroidTestCase {
+public class RestAdapterTest extends AndroidTestCase {
 	RestAdapter rest = null;
 
 	protected void setUp() {

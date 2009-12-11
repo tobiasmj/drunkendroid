@@ -15,7 +15,7 @@ import itu.dd.client.tech.RestCache;
 import itu.dd.client.tech.RestConnection;
 import android.test.AndroidTestCase;
 
-public class RESTCacheTest extends AndroidTestCase {
+public class RestCacheTest extends AndroidTestCase {
 	private static final String GETUPDATECANDIDATES = "getUpdateCandidates";
 	private static final String SETTRIPPROS = "setTripProcessedAndUpdateForeignId";
 	private static final String GETUPLOADCANDIDATES = "getUploadCandidates";

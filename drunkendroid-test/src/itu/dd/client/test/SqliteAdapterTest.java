@@ -11,7 +11,7 @@ import itu.dd.client.tech.ILocalDataFacade;
 import itu.dd.client.tech.SqliteAdapter;
 import android.test.AndroidTestCase;
 
-public class LocalSQLTest extends AndroidTestCase {
+public class SqliteAdapterTest extends AndroidTestCase {
 	ILocalDataFacade _dbh;
 
 	protected void setUp() {
