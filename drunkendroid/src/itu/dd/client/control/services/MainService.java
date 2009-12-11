@@ -52,7 +52,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 		MainService._service = this;
 		_notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		_locationManager = new GPSLocationAdapter(this);
-		_locationManager.RegisterLocationUpdates(this);
+		_locationManager.registerLocationUpdates(this);
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
 		Log.i(this.getString(R.string.log_tag), "Service started");
@@ -79,13 +79,15 @@ public class MainService extends Service implements ILocationAdapterListener {
 	 * Returns the last known location from the ILocationAdapter.
 	 */
 	public Location getLastKnownLocation() {
-		return _locationManager.GetLastKnownLocation();
+		return _locationManager.getLastKnownLocation();
 	}
 
 	/**
 	 * Method called every time startService() is called. Contains service
 	 * commands if called from application, otherwise the service has been
-	 * restarted by the Android framework.
+	 * restarted by the Android framework. This method is deprecated since API
+	 * level 5, and is now called onStartCommand(). Kept for compatibility with
+	 * our test-phone.
 	 */
 	@Override
 	public void onStart(Intent intent, int startId) {
@@ -137,7 +139,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 		Log.i(this.getString(R.string.log_tag), "Service stopped");
 		UnregisterReceivers();
 		getRepository().closeRepository();
-		_locationManager.UnregisterLocationUpdates(this);
+		_locationManager.unregisterLocationUpdates(this);
 		_notificationManager.cancel(1);
 		_moodHandler.removeMessages(0);
 		MainService._service = null;

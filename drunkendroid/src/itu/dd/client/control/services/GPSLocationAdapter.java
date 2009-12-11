@@ -1,23 +1,20 @@
 package itu.dd.client.control.services;
 
 import itu.dd.client.R;
-
 import java.util.ArrayList;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class GPSLocationAdapter implements ILocationAdapter {
 	private LocationManager _manager;
 	private LocationListener _locationListener;
 	private Location _lastKnownLocation = null;
 	private ArrayList<ILocationAdapterListener> _listeners = new ArrayList<ILocationAdapterListener>();
-	private String _provider;
+	private String _provider = LocationManager.GPS_PROVIDER;
 	private Context _context;
 	private int _time = 60000;
 	private int _distance = 10;
@@ -42,9 +39,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 			}
 		};
 
-		_provider = _manager.getBestProvider(GetCriteria(), true);
-
-		Connect();
+		connect();
 	}
 
 	/**
@@ -63,7 +58,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 		int selectedIndex = sp.getInt("GPSAccuracy", 2);
 
 		_lastKnownLocation = location;
-		if (location.getAccuracy() < Integer.parseInt(GPSArray[selectedIndex])) {
+		if ((location.getAccuracy() != 0.0) && (location.getAccuracy() < Integer.parseInt(GPSArray[selectedIndex]))) {
 			Location l = _lastKnownLocation;
 			int length = _listeners.size();
 			for(int i = 0; i < length; i++)
@@ -74,7 +69,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	/**
 	 * Start listening for changes on the GPS.
 	 */
-	public void Connect() {
+	public void connect() {
 		// Request location updates
 		_manager.requestLocationUpdates(_provider, _time, _distance,
 				_locationListener);
@@ -83,23 +78,8 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	/**
 	 * Stop listening for changes on the GPS.
 	 */
-	public void Disconnect() {
+	public void disconnect() {
 		_manager.removeUpdates(_locationListener);
-	}
-
-	/**
-	 * Sets a criteria for when the GPS should return updates.
-	 */
-	private Criteria GetCriteria() {
-		// Create criteria
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		criteria.setAltitudeRequired(false);
-		criteria.setBearingRequired(false);
-		criteria.setCostAllowed(true);
-		criteria.setPowerRequirement(Criteria.POWER_LOW);
-
-		return criteria;
 	}
 
 	/**
@@ -107,7 +87,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	 * 
 	 * @return A location object describing the GPS' last known location.
 	 */
-	public Location GetLastKnownLocation() {
+	public Location getLastKnownLocation() {
 		return this._lastKnownLocation;
 	}
 
@@ -115,7 +95,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	 * Adds a listener to the Location Adapter. If the listener has already been
 	 * added, nothing will happen.
 	 */
-	public void RegisterLocationUpdates(ILocationAdapterListener interest) {
+	public void registerLocationUpdates(ILocationAdapterListener interest) {
 		boolean found = false;
 		int length = _listeners.size();
 		for(int i = 0; i < length; i++) {
@@ -132,7 +112,7 @@ public class GPSLocationAdapter implements ILocationAdapter {
 	 * Unregister a receiver of location updates. If there are no receivers
 	 * left, the Location adapter will stop listening for location changes.
 	 */
-	public void UnregisterLocationUpdates(ILocationAdapterListener interest) {
+	public void unregisterLocationUpdates(ILocationAdapterListener interest) {
 		for (int i = 0; i < _listeners.size(); i++) {
 			if (_listeners.get(i) == interest) {
 				_listeners.remove(i);
@@ -140,6 +120,6 @@ public class GPSLocationAdapter implements ILocationAdapter {
 			}
 		}
 		if (_listeners.size() == 0)
-			Disconnect();
+			disconnect();
 	}
 }
