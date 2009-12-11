@@ -26,7 +26,7 @@ import com.google.android.maps.Projection;
 public class MoodOverlay extends Overlay
 {
 	private DataFacade _dataFacade;
-    private HeatMap _heatmap = HeatMap.getInstance();
+    private Heatmap _heatmap = Heatmap.getInstance();
     private MapView _mapView;
     private Context _context;
     
@@ -311,7 +311,7 @@ public class MoodOverlay extends Overlay
 			{
 				event = data.get(i);
 				GeoPoint gp = new GeoPoint((int)(event.getLatitude()*1E6), (int)(event.getLongitude()*1E6));
-				MoodMapPoint mp = new MoodMapPoint(gp, event.getMood());
+				MoodmapPoint mp = new MoodmapPoint(gp, event.getMood());
 				_heatmap.addMoodMapPoint(mp);
 			}
 		}

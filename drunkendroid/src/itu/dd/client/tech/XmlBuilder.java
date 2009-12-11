@@ -11,7 +11,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
 
-public final class XMLBuilder {
+public final class XmlBuilder {
 	private static final String TRIP = "trip";
 	private static final String EVENT = "event";
 	private static final String EVENTTYPE = "eventType";
@@ -37,7 +37,7 @@ public final class XMLBuilder {
         serializer.startTag("", EVENTS);
         int length = eventList.size();
         for(int i = 0; i < length; i++)
-        	XMLBuilder.addEventXml(serializer, eventList.get(i));
+        	XmlBuilder.addEventXml(serializer, eventList.get(i));
         serializer.endTag("", EVENTS);
         serializer.endDocument();
        
@@ -68,13 +68,13 @@ public final class XMLBuilder {
 	}
 	
 	static void addSMSXml(XmlSerializer serializer,
-			SMSEvent e) throws IllegalArgumentException,
+			SmsEvent e) throws IllegalArgumentException,
 			IllegalStateException, IOException {
-		if(IncomingSMSEvent.class.isInstance(e)) {
+		if(IncomingSmsEvent.class.isInstance(e)) {
 			serializer.startTag("", SENDER);
 			serializer.text(String.valueOf(e.getPhonenumber()));
 			serializer.endTag("", SENDER);
-		} else if(OutgoingSMSEvent.class.isInstance(e)) {
+		} else if(OutgoingSmsEvent.class.isInstance(e)) {
 			serializer.startTag("", RECEIVER);
 			serializer.text(String.valueOf(e.getPhonenumber()));
 			serializer.endTag("", RECEIVER);
@@ -95,7 +95,7 @@ public final class XMLBuilder {
 			serializer.text("mood");
 		else if (CallEvent.class.isInstance(e))
 			serializer.text("call");
-		else if (SMSEvent.class.isInstance(e))
+		else if (SmsEvent.class.isInstance(e))
 			serializer.text("sms");
 
 		serializer.endTag("", EVENTTYPE);
@@ -116,10 +116,10 @@ public final class XMLBuilder {
 			addIncomingCallXml(serializer, (IncomingCallEvent) e);
 		else if (OutgoingCallEvent.class.isInstance(e))
 			addOutgoingCallXml(serializer, (OutgoingCallEvent) e);
-		else if (IncomingSMSEvent.class.isInstance(e))
-			addSMSXml(serializer, (SMSEvent) e);
-		else if (OutgoingSMSEvent.class.isInstance(e))
-			addSMSXml(serializer, (SMSEvent) e);
+		else if (IncomingSmsEvent.class.isInstance(e))
+			addSMSXml(serializer, (SmsEvent) e);
+		else if (OutgoingSmsEvent.class.isInstance(e))
+			addSMSXml(serializer, (SmsEvent) e);
 		
 		serializer.endTag("", DATA);
 		serializer.endTag("", EVENT);

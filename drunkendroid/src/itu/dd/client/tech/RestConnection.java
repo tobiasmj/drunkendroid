@@ -14,13 +14,13 @@ import org.apache.http.params.HttpParams;
 
 import android.util.Log;
 
-public class RESTConnection implements IWebserviceConnection{
+public class RestConnection implements IWebserviceConnection{
 	private static final String BASE_URI = "http://192.168.0.12:8182/drunkendroid/";
 	private static final String targetDomain = "192.168.0.12";
 	private static final String LOGTAG = "WebServiceConnectionREST";
 	private DefaultHttpClient httpClient = new DefaultHttpClient();
 	
-	public RESTConnection(){
+	public RestConnection(){
 		//Inspired by: http://groups.google.com/group/android-developers/browse_thread/thread/bf9474271ab80c64/9a200fd39171b5d2?lnk=raot&fwc=1
 		HttpParams params = httpClient.getParams();
 		HttpConnectionParams.setConnectionTimeout(params, 5000); //5 Seconds connection timeout

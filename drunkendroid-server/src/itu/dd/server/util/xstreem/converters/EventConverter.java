@@ -3,10 +3,10 @@ package itu.dd.server.util.xstreem.converters;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import itu.dd.server.domain.Call;
-import itu.dd.server.domain.Location;
-import itu.dd.server.domain.Mood;
-import itu.dd.server.domain.Sms;
+import itu.dd.server.domain.CallEvent;
+import itu.dd.server.domain.LocationEvent;
+import itu.dd.server.domain.MoodEvent;
+import itu.dd.server.domain.SmsEvent;
 import itu.dd.server.interfaces.IEvent;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -48,14 +48,14 @@ public class EventConverter implements Converter{
 				writer.setValue(Double.toString(event.getLatitude()));
 				writer.endNode();
 				if(event.getType().equals("mood")){
-					Mood moodEvent = (Mood) event;
+					MoodEvent moodEvent = (MoodEvent) event;
 					writer.startNode("data");
 					writer.startNode("mood");
 					writer.setValue(Integer.toString(moodEvent.getMood()));
 					writer.endNode();
 					writer.endNode();	
 				} else if(event.getType().equals("call")) {
-					Call callEvent = (Call) event;
+					CallEvent callEvent = (CallEvent) event;
 					writer.startNode("data");
 					if(!callEvent.getCaller().equals("0")) {
 						writer.startNode("caller");
@@ -72,7 +72,7 @@ public class EventConverter implements Converter{
 					writer.endNode();
 					writer.endNode();
 				} else if(event.getType().equals("SMS")) {
-					Sms smsEvent = (Sms) event;
+					SmsEvent smsEvent = (SmsEvent) event;
 					writer.startNode("data");
 					if(!smsEvent.getSender().equals("0")) {	
 						writer.startNode("caller");
@@ -93,7 +93,7 @@ public class EventConverter implements Converter{
 				writer.endNode();
 			}
 
-		} else if (Mood.class.isInstance(value) || Location.class.isInstance(value) || Call.class.isInstance(value) || Sms.class.isInstance(value) ) {
+		} else if (MoodEvent.class.isInstance(value) || LocationEvent.class.isInstance(value) || CallEvent.class.isInstance(value) || SmsEvent.class.isInstance(value) ) {
 			IEvent event = (IEvent)value;
 			writer.startNode("eventType");
 			writer.setValue(event.getType());
@@ -108,14 +108,14 @@ public class EventConverter implements Converter{
 			writer.setValue(Double.toString(event.getLatitude()));
 			writer.endNode();
 			if(event.getType().equals("mood")){
-				Mood moodEvent = (Mood) event;
+				MoodEvent moodEvent = (MoodEvent) event;
 				writer.startNode("data");
 				writer.startNode("mood");
 				writer.setValue(Integer.toString(moodEvent.getMood()));
 				writer.endNode();
 				writer.endNode();	
 			}  else if(event.getType().equals("call")) {
-				Call callEvent = (Call) event;
+				CallEvent callEvent = (CallEvent) event;
 				writer.startNode("data");
 				if(!callEvent.getCaller().equals("0")) {
 					writer.startNode("caller");
@@ -132,7 +132,7 @@ public class EventConverter implements Converter{
 				writer.endNode();
 				writer.endNode();
 			} else if(event.getType().equals("SMS")) {
-				Sms smsEvent = (Sms) event;
+				SmsEvent smsEvent = (SmsEvent) event;
 				writer.startNode("data");
 				if(!smsEvent.getSender().equals("0")) {	
 					writer.startNode("sender");
@@ -231,13 +231,13 @@ public class EventConverter implements Converter{
 					}
 
 					if(eventType.equals("mood")) {
-						events.add(new Mood(timeStamp,latitude,longitude,mood));	
+						events.add(new MoodEvent(timeStamp,latitude,longitude,mood));	
 					} else if(eventType.equals("location")) {
-						events.add(new Location(timeStamp, longitude, latitude));
+						events.add(new LocationEvent(timeStamp, longitude, latitude));
 					} else if (eventType.equals("call")) {
-						events.add(new Call(timeStamp,latitude,longitude,caller,reciever,endTime));
+						events.add(new CallEvent(timeStamp,latitude,longitude,caller,reciever,endTime));
 					} else if (eventType.equals("SMS")) {
-						events.add(new Sms(timeStamp,latitude,longitude,sender,reciever,message));
+						events.add(new SmsEvent(timeStamp,latitude,longitude,sender,reciever,message));
 					}
 					reader.moveUp();
 				}
@@ -252,13 +252,13 @@ public class EventConverter implements Converter{
 	 */
 	@Override
 	public boolean canConvert(Class clazz) {
-		if(clazz.equals(Mood.class)) {
+		if(clazz.equals(MoodEvent.class)) {
 			return true;
-		} else if (clazz.equals(Location.class)) {
+		} else if (clazz.equals(LocationEvent.class)) {
 			return true;
-		} else if (clazz.equals(Call.class)) {
+		} else if (clazz.equals(CallEvent.class)) {
 			return true;
-		} else if (clazz.equals(Sms.class)) {
+		} else if (clazz.equals(SmsEvent.class)) {
 			return true;
 		}
 		return false;

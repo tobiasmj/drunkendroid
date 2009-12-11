@@ -11,15 +11,15 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class SQLiteAdapter implements ILocalDataFacade {
+public class SqliteAdapter implements ILocalDataFacade {
 	private static final String LOGTAG = "LocalDB DrunkenDroid";
-	DBHelper dbHelper;
+	DbHelper dbHelper;
 	
 	//don't use the default constructor
 	@SuppressWarnings("unused")
-	private SQLiteAdapter(){};
-	public SQLiteAdapter(Context context){
-		dbHelper = DBHelper.getInstance(context);
+	private SqliteAdapter(){};
+	public SqliteAdapter(Context context){
+		dbHelper = DbHelper.getInstance(context);
 	}
 	
 	public void addEvent(Trip t, Event e) {
@@ -39,16 +39,16 @@ public class SQLiteAdapter implements ILocalDataFacade {
 				readingValues.put("sender", ((CallEvent)e).getPhonenumber());
 			else if(OutgoingCallEvent.class.isInstance(e))
 				readingValues.put("receiver", ((CallEvent)e).getPhonenumber());
-			else if(IncomingSMSEvent.class.isInstance(e)) {
-				readingValues.put("sender", ((SMSEvent)e).getPhonenumber());
-				readingValues.put("message", ((SMSEvent)e).getTextMessage());
+			else if(IncomingSmsEvent.class.isInstance(e)) {
+				readingValues.put("sender", ((SmsEvent)e).getPhonenumber());
+				readingValues.put("message", ((SmsEvent)e).getTextMessage());
 			} 
-			else if(OutgoingSMSEvent.class.isInstance(e)) {
-				readingValues.put("receiver", ((SMSEvent)e).getPhonenumber());
-				readingValues.put("message", ((SMSEvent)e).getTextMessage());
+			else if(OutgoingSmsEvent.class.isInstance(e)) {
+				readingValues.put("receiver", ((SmsEvent)e).getPhonenumber());
+				readingValues.put("message", ((SmsEvent)e).getTextMessage());
 			}
 			
-			long success = db.insertOrThrow(DBHelper.TABLE_EVENT, null, readingValues);
+			long success = db.insertOrThrow(DbHelper.TABLE_EVENT, null, readingValues);
 			if(success == -1)
 				throw new SQLException("The reading was not inserted");
 			db.setTransactionSuccessful();
@@ -67,7 +67,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
         values.put("name", name);
         // Add a value for the active state to the real sql table.
 
-        Long tripId = db.insertOrThrow(DBHelper.TABLE_TRIP, null, values);
+        Long tripId = db.insertOrThrow(DbHelper.TABLE_TRIP, null, values);
 	    if(tripId < 0){
 	    	Log.e(LOGTAG, "A new trip was not started correctly. Something is really wrong with the database");
 			throw new SQLException("The new trip didn't get inserted to the trip table");
@@ -92,7 +92,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 			
 			ContentValues values = new ContentValues();
 			values.put(activeColumn, 0);// 0 == false in sqlite3
-			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
+			db.update(DbHelper.TABLE_TRIP, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
 		finally{
@@ -108,7 +108,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		
 		db.beginTransaction();
 		try{
-			returnedTrips = db.query(DBHelper.TABLE_TRIP, selectedTripColumns, null, null, null, null, null);
+			returnedTrips = db.query(DbHelper.TABLE_TRIP, selectedTripColumns, null, null, null, null, null);
 			db.setTransactionSuccessful();	
 		}
 		finally{
@@ -149,7 +149,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 			final String whereClause = "active = ?";
 			final String[] whereArgs = {"1"}; //1 == true in SQLite3
 			db.beginTransaction();
-			Cursor result = db.query(DBHelper.TABLE_TRIP, returnColumns, whereClause, whereArgs, null, null, null);
+			Cursor result = db.query(DbHelper.TABLE_TRIP, returnColumns, whereClause, whereArgs, null, null, null);
 			db.setTransactionSuccessful();
 			
 			while(result.moveToNext()){
@@ -192,7 +192,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		
 		String[] selectedColumns = {"id", "foreignId", "name"};
 		String[] whereDateTimeEQ = {String.valueOf(startTime)};
-		Cursor selectionCursor = db.query(DBHelper.TABLE_TRIP, selectedColumns, "startDateTime = ?", whereDateTimeEQ, null, null, null);
+		Cursor selectionCursor = db.query(DbHelper.TABLE_TRIP, selectedColumns, "startDateTime = ?", whereDateTimeEQ, null, null, null);
 		//Find the TripId
 		if(!selectionCursor.moveToFirst())
 			throw new IllegalArgumentException("The trip could not be located");
@@ -209,7 +209,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		//Build the trip, by building each event
 		String[] selectedReadingColumns = {"dateTime", "longitude", "latitude", "mood", "sender", "receiver", "message", "id"};
 		String[] whereTripEQ = {String.valueOf(tripId)};
-		Cursor selectionOfReadings = db.query(DBHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
+		Cursor selectionOfReadings = db.query(DbHelper.TABLE_EVENT, selectedReadingColumns, "trip = ?", whereTripEQ, null, null, null);
 		
 		while(selectionOfReadings.moveToNext()){
 			if(!selectionOfReadings.isNull(1) || !selectionOfReadings.isNull(2)){
@@ -242,10 +242,10 @@ public class SQLiteAdapter implements ILocalDataFacade {
 						//This is an SMS, since there is a message
 						if(selectionOfReadings.isNull(5)) {
 							//This is an incoming sms, since there is no receiver
-							e = new IncomingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
+							e = new IncomingSmsEvent(date, latitude, longitude, selectionOfReadings.getString(4), selectionOfReadings.getString(6));
 						} else {
 							//This is and outgoing sms, since there is a receiver
-							e = new OutgoingSMSEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
+							e = new OutgoingSmsEvent(date, latitude, longitude, selectionOfReadings.getString(5), selectionOfReadings.getString(6));
 						}
 					}
 				}
@@ -280,7 +280,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		ArrayList<Event> events = new ArrayList<Event>();
 		
 		db.beginTransaction();
-		Cursor cursor = db.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
+		Cursor cursor = db.query(DbHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
 		try{
 			if(cursor.moveToFirst()){
 				do {
@@ -322,7 +322,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		
 		try{
 			db.beginTransaction();
-			db.update(DBHelper.TABLE_EVENT, values, whereClause, whereArgs);
+			db.update(DbHelper.TABLE_EVENT, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
 		finally{
@@ -358,7 +358,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		values.put("foreignId", String.valueOf(t.getRemoteId()));
 		try{
 			db.beginTransaction();
-			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
+			db.update(DbHelper.TABLE_TRIP, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
 		finally{
@@ -374,7 +374,7 @@ public class SQLiteAdapter implements ILocalDataFacade {
 		final String[] whereArgs = {String.valueOf(localTripId)};
 		int result = 0;
 		db.beginTransaction();
-		Cursor cursor = db.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
+		Cursor cursor = db.query(DbHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
 		
 		try{
 			if(cursor.moveToFirst()){
@@ -399,12 +399,12 @@ public class SQLiteAdapter implements ILocalDataFacade {
 			final String whereClauseTRIP = "id = ?";
 			final String[] whereArgsTRIP = {String.valueOf(t.getLocalId())};
 			db.beginTransaction();
-			db.delete(DBHelper.TABLE_TRIP, whereClauseTRIP, whereArgsTRIP);
+			db.delete(DbHelper.TABLE_TRIP, whereClauseTRIP, whereArgsTRIP);
 			
 			//Delete the events
 			final String whereClauseEVENT = "trip = ?";
 			final String[] whereArgsEVENT = {String.valueOf(t.getLocalId())};
-			db.delete(DBHelper.TABLE_EVENT, whereClauseEVENT, whereArgsEVENT);
+			db.delete(DbHelper.TABLE_EVENT, whereClauseEVENT, whereArgsEVENT);
 			db.setTransactionSuccessful();
 		}
 		finally{

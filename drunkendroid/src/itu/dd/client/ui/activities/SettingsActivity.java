@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class AppSettingsActivity extends Activity {
+public class SettingsActivity extends Activity {
 	
 	private Spinner moodReadSpinner;
 	private Spinner GPSAccuracySpinner;
@@ -98,8 +98,8 @@ public class AppSettingsActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, AppSettingsActivity.CHANGES_DONE, 0, R.string.done_changing_settings_button).setIcon(android.R.drawable.ic_menu_save);
-		menu.add(0, AppSettingsActivity.RESTORE_SETTINGS, 0, R.string.restore_settings_button).setIcon(android.R.drawable.ic_menu_delete);
+		menu.add(0, SettingsActivity.CHANGES_DONE, 0, R.string.done_changing_settings_button).setIcon(android.R.drawable.ic_menu_save);
+		menu.add(0, SettingsActivity.RESTORE_SETTINGS, 0, R.string.restore_settings_button).setIcon(android.R.drawable.ic_menu_delete);
 		return true;
 	}
 	
@@ -109,10 +109,10 @@ public class AppSettingsActivity extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {		
 		switch(item.getItemId()) {
-			case AppSettingsActivity.CHANGES_DONE:
+			case SettingsActivity.CHANGES_DONE:
 				finish();
 				break;
-			case AppSettingsActivity.RESTORE_SETTINGS:
+			case SettingsActivity.RESTORE_SETTINGS:
 				RestoreDefaults();
 				
 			return true;	

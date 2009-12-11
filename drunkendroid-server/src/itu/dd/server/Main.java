@@ -11,7 +11,7 @@ public class Main {
 	        component.getServers().add(Protocol.HTTP, 8182);  
 	  
 	        // Arrach the drunkendroid application
-	        component.getDefaultHost().attach(new DrunkendroidserverApplication());
+	        component.getDefaultHost().attach(new DrunkDroidServerApplication());
 	  
 	        // Start the component.  
 	        component.start();  

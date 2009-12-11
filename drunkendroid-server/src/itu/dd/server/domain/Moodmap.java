@@ -4,7 +4,7 @@ package itu.dd.server.domain;
  * Class that represents a MoodMap.
  *
  */
-public class MoodMap {
+public class Moodmap {
 
 	private long _startTimeStamp, _endTimeStamp;
 
@@ -63,7 +63,7 @@ public class MoodMap {
 	 * @param LRlatitude LowerRightCorner latitude of the MoodMap
 	 * @param LRlongitude LowerRightCorner longitude of the MoodMap
 	 */
-	public MoodMap (long startTimeStamp,long endTimeStamp, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude, int gridX, int gridY) {
+	public Moodmap (long startTimeStamp,long endTimeStamp, double ULlatitude, double ULlongitude, double LRlatitude, double LRlongitude, int gridX, int gridY) {
 		_startTimeStamp = startTimeStamp;
 		_endTimeStamp = endTimeStamp;
 		_ULlatitude = ULlatitude;

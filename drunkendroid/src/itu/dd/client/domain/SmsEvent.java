@@ -2,18 +2,18 @@ package itu.dd.client.domain;
 
 import android.location.Location;
 
-public class SMSEvent extends Event {
+public class SmsEvent extends Event {
 	private String _phoneNumber;
 	private String _textMessage;
 	
-	public SMSEvent(Location location, String phoneNumber, String textMessage) {
+	public SmsEvent(Location location, String phoneNumber, String textMessage) {
 		super(location);
 		_phoneNumber = phoneNumber;
 		_textMessage = textMessage;
 		
 	}
 	
-	public SMSEvent(Long dateTime, Double latitude, Double longitude, String phoneNumber, String textMessage) {
+	public SmsEvent(Long dateTime, Double latitude, Double longitude, String phoneNumber, String textMessage) {
 		super(dateTime, latitude, longitude);
 		_phoneNumber = phoneNumber;
 		_textMessage = textMessage;

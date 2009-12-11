@@ -12,7 +12,7 @@ public class DataFacadeTest extends AndroidTestCase {
 	IDataFacade data;
 
 	protected void setUp() {
-		dbh = new SQLiteAdapter(this.getContext());
+		dbh = new SqliteAdapter(this.getContext());
 		data = new DataFacade(this.getContext());
 	}
 
@@ -45,7 +45,7 @@ public class DataFacadeTest extends AndroidTestCase {
 	}
 
 	private void flushDB() {
-		DBHelper myHelper = DBHelper.getInstance(this.getContext());
+		DbHelper myHelper = DbHelper.getInstance(this.getContext());
 		myHelper.flushDatabase();
 	}
 

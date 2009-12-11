@@ -6,16 +6,16 @@ import java.util.List;
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.control.IDataFacade;
 import itu.dd.client.domain.*;
-import itu.dd.client.tech.DBHelper;
+import itu.dd.client.tech.DbHelper;
 import itu.dd.client.tech.ILocalDataFacade;
-import itu.dd.client.tech.SQLiteAdapter;
+import itu.dd.client.tech.SqliteAdapter;
 import android.test.AndroidTestCase;
 
 public class LocalSQLTest extends AndroidTestCase {
 	ILocalDataFacade _dbh;
 
 	protected void setUp() {
-		_dbh = new SQLiteAdapter(this.getContext());
+		_dbh = new SqliteAdapter(this.getContext());
 	}
 
 	protected void tearDown() {
@@ -23,7 +23,7 @@ public class LocalSQLTest extends AndroidTestCase {
 	}
 
 	private void flushDB() {
-		DBHelper myHelper = DBHelper.getInstance(this.getContext());
+		DbHelper myHelper = DbHelper.getInstance(this.getContext());
 		myHelper.flushDatabase();
 	}
 

@@ -9,7 +9,7 @@ import junit.framework.TestSuite;
  * jUnit test suite.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { MoodMapTest.class, RepositoryTest.class, ConverterTest.class })
+@Suite.SuiteClasses( { MoodmapTest.class, RepositoryTest.class, ConverterTest.class })
 public class AllTests {
 
 	public static Test suite() {

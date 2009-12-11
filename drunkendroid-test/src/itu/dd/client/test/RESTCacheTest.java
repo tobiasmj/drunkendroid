@@ -7,12 +7,12 @@ import java.util.List;
 import itu.dd.client.domain.Event;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
-import itu.dd.client.tech.DBHelper;
+import itu.dd.client.tech.DbHelper;
 import itu.dd.client.tech.ILocalDataFacade;
-import itu.dd.client.tech.IRESTCache;
-import itu.dd.client.tech.SQLiteAdapter;
-import itu.dd.client.tech.RESTCache;
-import itu.dd.client.tech.RESTConnection;
+import itu.dd.client.tech.IRestCache;
+import itu.dd.client.tech.SqliteAdapter;
+import itu.dd.client.tech.RestCache;
+import itu.dd.client.tech.RestConnection;
 import android.test.AndroidTestCase;
 
 public class RESTCacheTest extends AndroidTestCase {
@@ -21,12 +21,12 @@ public class RESTCacheTest extends AndroidTestCase {
 	private static final String GETUPLOADCANDIDATES = "getUploadCandidates";
 	private static final String SETEVENTPROS = "setEventProcessed";
 
-	IRESTCache cache = null;
+	IRestCache cache = null;
 	ILocalDataFacade _dbh = null;
 
 	protected void setUp() {
 		// Nothing yet
-		_dbh = new SQLiteAdapter(this.getContext());
+		_dbh = new SqliteAdapter(this.getContext());
 	}
 
 	protected void tearDown() {
@@ -35,7 +35,7 @@ public class RESTCacheTest extends AndroidTestCase {
 	}
 
 	private void flushDB() {
-		DBHelper myHelper = DBHelper.getInstance(this.getContext());
+		DbHelper myHelper = DbHelper.getInstance(this.getContext());
 		myHelper.flushDatabase();
 	}
 
@@ -69,7 +69,7 @@ public class RESTCacheTest extends AndroidTestCase {
 	public void testSetProcessedWithUploadCalls() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		insertTestData();
 		
-		cache = new RESTCache(mContext, new RESTConnection());
+		cache = new RestCache(mContext, new RestConnection());
 		//Make some methods available using reflection
 		Method getUploadCandidates = cache.getClass().getDeclaredMethod(GETUPLOADCANDIDATES);
 		getUploadCandidates.setAccessible(true);
@@ -105,7 +105,7 @@ public class RESTCacheTest extends AndroidTestCase {
 	public void testSetProcessedWithUpdateCalls() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		insertTestData();
 		
-		cache = new RESTCache(mContext, new RESTConnection());
+		cache = new RestCache(mContext, new RestConnection());
 		//Make some methods available using reflection
 		
 		/**

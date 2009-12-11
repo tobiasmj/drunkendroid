@@ -2,12 +2,12 @@ package itu.dd.client.ui.map;
 
 import com.google.android.maps.GeoPoint;
 
-public class MoodMapPoint {
+public class MoodmapPoint {
 
 	private GeoPoint _point;
 	private int _mood;
 	
-	public MoodMapPoint(GeoPoint gp, int mood)
+	public MoodmapPoint(GeoPoint gp, int mood)
 	{
 		_point = gp;
 		_mood = mood;

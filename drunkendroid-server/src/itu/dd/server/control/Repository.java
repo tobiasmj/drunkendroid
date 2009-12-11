@@ -1,11 +1,11 @@
 package itu.dd.server.control;
 
-import itu.dd.server.domain.Call;
+import itu.dd.server.domain.CallEvent;
 import itu.dd.server.domain.GridCell;
-import itu.dd.server.domain.Location;
-import itu.dd.server.domain.Mood;
-import itu.dd.server.domain.MoodMap;
-import itu.dd.server.domain.Sms;
+import itu.dd.server.domain.LocationEvent;
+import itu.dd.server.domain.MoodEvent;
+import itu.dd.server.domain.Moodmap;
+import itu.dd.server.domain.SmsEvent;
 import itu.dd.server.domain.Trip;
 import itu.dd.server.interfaces.IEvent;
 
@@ -57,7 +57,7 @@ public class Repository {
 	 * @param call, the call object to be inserted
 	 * @throws SQLException, thrown when an SQL error occurs.
 	 */
-	public void insertCall(Call call) throws SQLException {
+	public void insertCall(CallEvent call) throws SQLException {
 		// make sure that the location has a tripid associated.
 		if (call.getTripId() != 0) {
 			ResultSet rs = null;
@@ -92,7 +92,7 @@ public class Repository {
 	 * @param call, the call object to be inserted
 	 * @throws SQLException, thrown when an SQL error occurs.
 	 */
-	public void insertSms(Sms sms) throws SQLException {
+	public void insertSms(SmsEvent sms) throws SQLException {
 		// make sure that the location has a tripid associated.
 		if (sms.getTripId() != 0) {
 			ResultSet rs = null;
@@ -126,7 +126,7 @@ public class Repository {
 	 * @param location, the location object to be inserted
 	 * @throws SQLException, thrown when an SQL error occurs.
 	 */
-	public void insertLocation(Location location) throws SQLException {
+	public void insertLocation(LocationEvent location) throws SQLException {
 		// make sure that the location has a tripid associated.
 		if (location.getTripId() != 0) {
 			ResultSet rs = null;
@@ -160,7 +160,7 @@ public class Repository {
 	 * @param mood, the Mood object to be inserted
 	 * @throws SQLException, thrown when an SQL error occurs.
 	 */
-	public void insertMood(Mood mood) throws SQLException {
+	public void insertMood(MoodEvent mood) throws SQLException {
 		// make sure that the mood has a tripid associated.
 		if (mood.getTripId() != 0) {
 			ResultSet rs = null;
@@ -214,10 +214,10 @@ public class Repository {
 
 						IEvent event = trip.getNextEvent();
 						event.setTripId(tripID);
-						if(event.getClass().equals(Mood.class)) {
-							insertMood((Mood)event);
-						} else if (event.getClass().equals(Location.class)) {
-							insertLocation((Location)event);
+						if(event.getClass().equals(MoodEvent.class)) {
+							insertMood((MoodEvent)event);
+						} else if (event.getClass().equals(LocationEvent.class)) {
+							insertLocation((LocationEvent)event);
 						}
 					}
 				} else {
@@ -291,7 +291,7 @@ public class Repository {
 			rs = _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Mood(rs.getLong("timeStamp"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
+				events.add(new MoodEvent(rs.getLong("timeStamp"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getInt("mood")));
 			}
 
 			// get all location events for a given tripId
@@ -299,7 +299,7 @@ public class Repository {
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Location(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude")));
+				events.add(new LocationEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude")));
 			}
 			
 			// get all call events for a given tripId
@@ -307,7 +307,7 @@ public class Repository {
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Call(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTimeStamp")));
+				events.add(new CallEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTimeStamp")));
 			}
 			
 			// get all sms events for a given tripId
@@ -315,7 +315,7 @@ public class Repository {
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new Sms(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
+				events.add(new SmsEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
 			}
 
 			// create trip object 
@@ -358,7 +358,7 @@ public class Repository {
 	 * @return GridCell array containing the mood readings.
 	 * @throws SQLException thrown when an SQL error occurs 
 	 */
-	public GridCell[][] calculateMoodMap(MoodMap mm) throws SQLException {
+	public GridCell[][] calculateMoodMap(Moodmap mm) throws SQLException {
 		int gridX = mm.getGridX();
 		int gridY = mm.getGridY();
 		double moodReadingLong, moodReadingLat;

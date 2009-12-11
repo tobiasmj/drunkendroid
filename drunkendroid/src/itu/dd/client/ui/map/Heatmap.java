@@ -15,22 +15,22 @@ import android.graphics.Shader;
 import android.graphics.Bitmap.Config;
 import android.graphics.Shader.TileMode;
 
-public class HeatMap{
+public class Heatmap{
 
-	private static HeatMap _instance = null;
+	private static Heatmap _instance = null;
 	private static int[] _colorTable;
-	private ArrayList<MoodMapPoint> _moods = new ArrayList<MoodMapPoint>();
+	private ArrayList<MoodmapPoint> _moods = new ArrayList<MoodmapPoint>();
 	private Bitmap _bitmap;
 	private int _zoomLevel;
 	
-	private HeatMap()
+	private Heatmap()
 	{
 		_colorTable = ColorTable.getColorTable();
 	}
 	
-	public static HeatMap getInstance()
+	public static Heatmap getInstance()
 	{
-		if(_instance == null) _instance = new HeatMap();
+		if(_instance == null) _instance = new Heatmap();
 		return _instance;
 	}
 	
@@ -38,7 +38,7 @@ public class HeatMap{
 	 * Adds a MoodMapPoint to ArrayList _moods
 	 * @param mp
 	 */
-	public void addMoodMapPoint(MoodMapPoint mp)
+	public void addMoodMapPoint(MoodmapPoint mp)
 	{
 		if(!_moods.contains(mp))
 			_moods.add(mp);
@@ -125,7 +125,7 @@ public class HeatMap{
 	 * @param mp
 	 * @return a canvas with the circle drawn upon it
 	 */
-    private Canvas drawCircle(Canvas canvas, Projection projection, MoodMapPoint mp)
+    private Canvas drawCircle(Canvas canvas, Projection projection, MoodmapPoint mp)
     {
 		Point p = projection.toPixels(mp.getGeoPoint(), null);
 		int radius = 1;

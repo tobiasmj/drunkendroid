@@ -6,12 +6,12 @@ import java.sql.SQLException;
 
 import junit.framework.Assert;
 import itu.dd.server.control.Repository;
-import itu.dd.server.domain.Call;
+import itu.dd.server.domain.CallEvent;
 import itu.dd.server.domain.GridCell;
-import itu.dd.server.domain.Location;
-import itu.dd.server.domain.Mood;
-import itu.dd.server.domain.MoodMap;
-import itu.dd.server.domain.Sms;
+import itu.dd.server.domain.LocationEvent;
+import itu.dd.server.domain.MoodEvent;
+import itu.dd.server.domain.Moodmap;
+import itu.dd.server.domain.SmsEvent;
 import itu.dd.server.domain.Trip;
 import itu.dd.server.interfaces.IEvent;
 import itu.dd.server.mock.MockCalculateMoodMapDatabaseConnection;
@@ -65,7 +65,7 @@ public class RepositoryTest {
 	@Test
 	public void testInsertSms() throws SQLException {
 		Repository rep = new Repository(MockInsertSmsDatabaseConnection.getInstance().getConn());
-		Sms sms = new Sms(1,10,10,"004551883250", "004551883250","test message");
+		SmsEvent sms = new SmsEvent(1,10,10,"004551883250", "004551883250","test message");
 		sms.setTripId(1);
 		rep.insertSms(sms);
 	}
@@ -75,7 +75,7 @@ public class RepositoryTest {
 	@Test
 	public void testInsertCall() throws SQLException {
 		Repository rep = new Repository(MockInsertCallDatabaseConnection.getInstance().getConn());
-		Call call = new Call(1,10,10,"004551883250", "004551883250",2);
+		CallEvent call = new CallEvent(1,10,10,"004551883250", "004551883250",2);
 		call.setTripId(1);
 		rep.insertCall(call);
 	}
@@ -86,7 +86,7 @@ public class RepositoryTest {
 	@Test
 	public void testInsertLocation() throws SQLException {
 		Repository rep = new Repository(MockInsertLocationDatabaseConnection.getInstance().getConn());
-		Location location = new Location(1,10,10);
+		LocationEvent location = new LocationEvent(1,10,10);
 		location.setTripId(1);
 		rep.insertLocation(location);
 	}
@@ -97,7 +97,7 @@ public class RepositoryTest {
 	@Test
 	public void testInsertMood() throws SQLException {
 		Repository rep = new Repository(MockInsertMoodDatabaseConnection.getInstance().getConn());
-		Mood mood = new Mood(1, 10, 10, 100);
+		MoodEvent mood = new MoodEvent(1, 10, 10, 100);
 		mood.setTripId(1);
 		rep.insertMood(mood);
 	}
@@ -108,7 +108,7 @@ public class RepositoryTest {
 	@Test
 	public void testGetMoodMap() throws SQLException {
 		Repository rep = new Repository(MockCalculateMoodMapDatabaseConnection.getInstance().getConn());
-		MoodMap mm = new MoodMap(1L,10L,5.0D,5.0D,10.0D,10.0D,60,60);
+		Moodmap mm = new Moodmap(1L,10L,5.0D,5.0D,10.0D,10.0D,60,60);
 		GridCell[][] gc = rep.calculateMoodMap(mm);
 		
 		Assert.assertTrue(GridCell.class.isInstance(gc[0][0]));
@@ -151,10 +151,10 @@ public class RepositoryTest {
 		Trip eTrip = new Trip(1L, 2L, "testTrip");
 		eTrip.setTripId(1);
 
-		Mood eMood = new Mood(1L,1D,2D,1);
-		Location eLocation = new Location(1L,1D,2D);
-		Call eCall = new Call(1L,1D,2D,"004551883250","004551883250",2L);
-		Sms eSms = new Sms(1L,1D,2D,"004551883250","004551883250","test message");
+		MoodEvent eMood = new MoodEvent(1L,1D,2D,1);
+		LocationEvent eLocation = new LocationEvent(1L,1D,2D);
+		CallEvent eCall = new CallEvent(1L,1D,2D,"004551883250","004551883250",2L);
+		SmsEvent eSms = new SmsEvent(1L,1D,2D,"004551883250","004551883250","test message");
 		
 		Assert.assertEquals(eTrip.getStartTime(), it.getStartTime());
 		Assert.assertEquals(eTrip.getEndTime(), it.getEndTime());
@@ -162,28 +162,28 @@ public class RepositoryTest {
 		Assert.assertEquals(eTrip.getTripId(), it.getTripId());
 		while(eTrip.moreEvents()) {
 			IEvent event = eTrip.getNextEvent();
-			if(Mood.class.isInstance(event)) {
-				Mood mEvent = (Mood)event;
+			if(MoodEvent.class.isInstance(event)) {
+				MoodEvent mEvent = (MoodEvent)event;
 				Assert.assertEquals(eMood.getLatitude(), mEvent.getLatitude());				
 				Assert.assertEquals(eMood.getLongitude(), mEvent.getLongitude());				
 				Assert.assertEquals(eMood.getMood(), mEvent.getMood());				
 				Assert.assertEquals(eMood.getTimeStamp(), mEvent.getTimeStamp());				
 
-			} else if (Location.class.isInstance(event)) {
-				Location lEvent = (Location)event;
+			} else if (LocationEvent.class.isInstance(event)) {
+				LocationEvent lEvent = (LocationEvent)event;
 				Assert.assertEquals(eLocation.getLatitude(), lEvent.getLatitude());				
 				Assert.assertEquals(eLocation.getLongitude(), lEvent.getLongitude());				
 				Assert.assertEquals(eLocation.getTimeStamp(), lEvent.getTimeStamp());				
-			} else if (Call.class.isInstance(event)) {
-				Call cEvent = (Call)event;
+			} else if (CallEvent.class.isInstance(event)) {
+				CallEvent cEvent = (CallEvent)event;
 				Assert.assertEquals(eCall.getLatitude(), cEvent.getLatitude());				
 				Assert.assertEquals(eCall.getLongitude(), cEvent.getLongitude());				
 				Assert.assertEquals(eCall.getTimeStamp(), cEvent.getTimeStamp());
 				Assert.assertEquals(eCall.getCaller(), cEvent.getCaller());
 				Assert.assertEquals(eCall.getReciever(), cEvent.getReciever());
 				Assert.assertEquals(eCall.getEndTime(), cEvent.getEndTime());
-			} else if (Sms.class.isInstance(event)) {
-				Sms sEvent = (Sms)event;
+			} else if (SmsEvent.class.isInstance(event)) {
+				SmsEvent sEvent = (SmsEvent)event;
 				Assert.assertEquals(eSms.getLatitude(), sEvent.getLatitude());				
 				Assert.assertEquals(eSms.getLongitude(), sEvent.getLongitude());				
 				Assert.assertEquals(eSms.getTimeStamp(), sEvent.getTimeStamp());

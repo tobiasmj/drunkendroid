@@ -5,30 +5,30 @@ import itu.dd.server.interfaces.IEvent;
 
 /**
  * 
- * Class representing a SMS.
+ * Class representing a Call.
  *
  */
 /*
- *        <event>
-     <eventType>sms</eventType>
+ *    <event>
+     <eventType>call</eventType>
      <dateTime>1255816133</dateTime>
      <latitude>35.908422</latitude>
      <longitude>14.502362</longitude>
      <data>
-      <sender>0036577293610</sender>
+      <caller>0036577293610</caller>
       <receiver>0036577104516</receiver>
-      <message>Hi, bring two bottles of gin.</message>
+      <endTime>1255817201</endTime>
      </data
    </event>
  */
-public class Sms implements IEvent{
+public class CallEvent implements IEvent{
 
 	private long _timeStamp;
 	private double _latitude, _longitude;
 	private long _tripId = 0;
+	private String _caller;
 	private String _reciever;
-	private String _sender;
-	private String _message;
+	private long _endTime;
 	
 	public long getTripId() {
 		return _tripId;
@@ -39,17 +39,17 @@ public class Sms implements IEvent{
 	}
 	/**
 	 * Constructor
-	 * @param timeStamp the time of the reading in unixTimeformat
+	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public Sms (long timeStamp, double latitude, double longitude, String sender, String reciever, String message) {
+	public CallEvent (long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
+		this._caller = caller;
 		this._reciever = reciever;
-		this._sender = sender;
-		this._message = message;
+		this._endTime = endTime;
 	}
 	/**
 	 * Constructor 
@@ -58,14 +58,14 @@ public class Sms implements IEvent{
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public Sms (long tripId, long timeStamp, double latitude, double longitude, String sender, String reciever, String message) {
+	public CallEvent (long tripId, long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
 		this._tripId = tripId;
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
+		this._caller = caller;
 		this._reciever = reciever;
-		this._sender = sender;
-		this._message = message;
+		this._endTime = endTime;
 	}
 	public String getEventType() {
 		return "call";
@@ -86,7 +86,7 @@ public class Sms implements IEvent{
 
 	@Override
 	public String getType() {
-		return "SMS";
+		return "call";
 	}
 
 	@Override
@@ -105,13 +105,13 @@ public class Sms implements IEvent{
 		_timeStamp = timeStamp;
 		
 	}
-	public String getSender() {
-		return _sender;
+	public String getCaller() {
+		return _caller;
 	}
 	public String getReciever() {
 		return _reciever;
 	}
-	public String getMessage() {
-		return _message;
+	public long getEndTime() {
+		return _endTime;
 	}
 }

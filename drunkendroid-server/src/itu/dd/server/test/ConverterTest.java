@@ -4,10 +4,10 @@ package itu.dd.server.test;
 
 import java.util.LinkedList;
 import junit.framework.Assert;
-import itu.dd.server.domain.Call;
-import itu.dd.server.domain.Location;
-import itu.dd.server.domain.Mood;
-import itu.dd.server.domain.Sms;
+import itu.dd.server.domain.CallEvent;
+import itu.dd.server.domain.LocationEvent;
+import itu.dd.server.domain.MoodEvent;
+import itu.dd.server.domain.SmsEvent;
 import itu.dd.server.domain.Trip;
 import itu.dd.server.interfaces.IEvent;
 import itu.dd.server.util.xstreem.converters.EventConverter;
@@ -30,10 +30,10 @@ public class ConverterTest {
 	private XStream _xStream;
 	private String _tripXML, _eventsXML;
 	private Trip _trip;
-	private Mood _mood;
-	private Location _loc;
-	private Call _call1, _call2;
-	private Sms _sms1, _sms2;
+	private MoodEvent _mood;
+	private LocationEvent _loc;
+	private CallEvent _call1, _call2;
+	private SmsEvent _sms1, _sms2;
 	private LinkedList<IEvent> _events;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -47,12 +47,12 @@ public class ConverterTest {
 	public void setUp() throws Exception {
 		_trip = new Trip(1255816133L, 1255816133L, "ginsaturday");
 		_events = new LinkedList<IEvent>();
-		_mood = new Mood(1255816133L,35.908422D,14.502362D, 124);
-		_loc = new Location(1255816133L,14.502362D,35.908422D);
-		_call1 = new Call(1255816133L,35.908422D,14.502362D,"004551883250","0",12558161155L);
-		_call2 = new Call(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
-		_sms1 = new Sms(1255816133L,35.908422D,14.502362D,"004551883250","0","test message");
-		_sms2 = new Sms(1255816133L,35.908422D,14.502362D,"0","004551883250","test message");
+		_mood = new MoodEvent(1255816133L,35.908422D,14.502362D, 124);
+		_loc = new LocationEvent(1255816133L,14.502362D,35.908422D);
+		_call1 = new CallEvent(1255816133L,35.908422D,14.502362D,"004551883250","0",12558161155L);
+		_call2 = new CallEvent(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
+		_sms1 = new SmsEvent(1255816133L,35.908422D,14.502362D,"004551883250","0","test message");
+		_sms2 = new SmsEvent(1255816133L,35.908422D,14.502362D,"0","004551883250","test message");
 		
 		_events.add(_mood);
 		_events.add(_loc);
@@ -225,23 +225,23 @@ public class ConverterTest {
 		
 		while (_trip.moreEvents()) {
 			IEvent testEvent = _trip.getNextEvent();
-			if (testEvent.getClass().equals(Mood.class)) {
-				Mood moodTestEvent = (Mood) testEvent;
+			if (testEvent.getClass().equals(MoodEvent.class)) {
+				MoodEvent moodTestEvent = (MoodEvent) testEvent;
 				Assert.assertEquals(_mood.getTimeStamp(), moodTestEvent.getTimeStamp());
 				Assert.assertEquals(_mood.getType(), moodTestEvent.getType());
 				Assert.assertEquals(_mood.getLatitude(), moodTestEvent.getLatitude());
 				Assert.assertEquals(_mood.getLongitude(), moodTestEvent.getLongitude());	
 				Assert.assertEquals(_mood.getMood(), moodTestEvent.getMood());
-			} else if (testEvent.getClass().equals(Location.class)) {
+			} else if (testEvent.getClass().equals(LocationEvent.class)) {
 
-				Location locationTestEvent = (Location) testEvent;
+				LocationEvent locationTestEvent = (LocationEvent) testEvent;
 				Assert.assertEquals(_loc.getTimeStamp(), locationTestEvent.getTimeStamp());
 				Assert.assertEquals(_loc.getType(), locationTestEvent.getType());
 				Assert.assertEquals(_loc.getLatitude(), locationTestEvent.getLatitude());
 				Assert.assertEquals(_loc.getLongitude(), locationTestEvent.getLongitude());
-			} else if (testEvent.getClass().equals(Call.class)) {
+			} else if (testEvent.getClass().equals(CallEvent.class)) {
 				
-				Call callEvent = (Call) testEvent;
+				CallEvent callEvent = (CallEvent) testEvent;
 				Assert.assertEquals(_call1.getTimeStamp(), callEvent.getTimeStamp());
 				Assert.assertEquals(_call1.getType(), callEvent.getType());
 				Assert.assertEquals(_call1.getLatitude(), callEvent.getLatitude());
@@ -253,9 +253,9 @@ public class ConverterTest {
 					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
 				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
-			} else if (testEvent.getClass().equals(Sms.class)) {
+			} else if (testEvent.getClass().equals(SmsEvent.class)) {
 				
-				Sms smsEvent = (Sms) testEvent;
+				SmsEvent smsEvent = (SmsEvent) testEvent;
 				Assert.assertEquals(_sms1.getTimeStamp(), smsEvent.getTimeStamp());
 				Assert.assertEquals(_sms1.getType(), smsEvent.getType());
 				Assert.assertEquals(_sms1.getLatitude(), smsEvent.getLatitude());
@@ -278,10 +278,10 @@ public class ConverterTest {
 	public void testEventMarshal() {
 		XStream xStream = new XStream();
 		xStream.registerConverter(new EventConverter());
-		xStream.alias("event", Mood.class);
-		xStream.alias("event", Location.class);
-		xStream.alias("event", Call.class);
-		xStream.alias("event", Sms.class);
+		xStream.alias("event", MoodEvent.class);
+		xStream.alias("event", LocationEvent.class);
+		xStream.alias("event", CallEvent.class);
+		xStream.alias("event", SmsEvent.class);
 		xStream.alias("events", LinkedList.class);
 		
 		String XmlOutput = xStream.toXML(_events);
@@ -296,10 +296,10 @@ public class ConverterTest {
 	public void testEventUnMarshal() {
 		XStream xStream = new XStream();
 		xStream.registerConverter(new EventConverter());
-		xStream.alias("events", Mood.class);
-		xStream.alias("events", Location.class);
-		xStream.alias("events", Call.class);
-		xStream.alias("events", Sms.class);
+		xStream.alias("events", MoodEvent.class);
+		xStream.alias("events", LocationEvent.class);
+		xStream.alias("events", CallEvent.class);
+		xStream.alias("events", SmsEvent.class);
 
 		
 		Object uncastedEvents = xStream.fromXML(_eventsXML);
@@ -311,22 +311,22 @@ public class ConverterTest {
 		for (int i = 0; i < events.size(); i++ ) {
 			event = (IEvent) events.get(i);
 			
-			if(Mood.class.isInstance(event)) {
-				Mood mEvent = (Mood)event;
+			if(MoodEvent.class.isInstance(event)) {
+				MoodEvent mEvent = (MoodEvent)event;
 				Assert.assertEquals(_mood.getTimeStamp(), mEvent.getTimeStamp());
 				Assert.assertEquals(_mood.getType(), mEvent.getType());
 				Assert.assertEquals(_mood.getLatitude(), mEvent.getLatitude());
 				Assert.assertEquals(_mood.getLongitude(), mEvent.getLongitude());
 				Assert.assertEquals(_mood.getMood(), mEvent.getMood());
-			} else if (Location.class.isInstance(event)) {
-				Location lEvent = (Location)event;
+			} else if (LocationEvent.class.isInstance(event)) {
+				LocationEvent lEvent = (LocationEvent)event;
 				Assert.assertEquals(_loc.getTimeStamp(), lEvent.getTimeStamp());
 				Assert.assertEquals(_loc.getType(), lEvent.getType());
 				Assert.assertEquals(_loc.getLatitude(), lEvent.getLatitude());
 				Assert.assertEquals(_loc.getLongitude(), lEvent.getLongitude());
-			}else if (Call.class.isInstance(event)) {
+			}else if (CallEvent.class.isInstance(event)) {
 				
-				Call callEvent = (Call) event;
+				CallEvent callEvent = (CallEvent) event;
 				Assert.assertEquals(_call1.getTimeStamp(), callEvent.getTimeStamp());
 				Assert.assertEquals(_call1.getType(), callEvent.getType());
 				Assert.assertEquals(_call1.getLatitude(), callEvent.getLatitude());
@@ -338,9 +338,9 @@ public class ConverterTest {
 					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
 				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
-			} else if (Sms.class.isInstance(event)) {
+			} else if (SmsEvent.class.isInstance(event)) {
 				
-				Sms smsEvent = (Sms)event;
+				SmsEvent smsEvent = (SmsEvent)event;
 				Assert.assertEquals(_sms1.getTimeStamp(), smsEvent.getTimeStamp());
 				Assert.assertEquals(_sms1.getType(), smsEvent.getType());
 				Assert.assertEquals(_sms1.getLatitude(), smsEvent.getLatitude());

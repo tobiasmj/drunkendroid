@@ -2,10 +2,10 @@ package itu.dd.server;
 
 
 import itu.dd.server.control.Repository;
-import itu.dd.server.domain.Call;
-import itu.dd.server.domain.Location;
-import itu.dd.server.domain.Mood;
-import itu.dd.server.domain.Sms;
+import itu.dd.server.domain.CallEvent;
+import itu.dd.server.domain.LocationEvent;
+import itu.dd.server.domain.MoodEvent;
+import itu.dd.server.domain.SmsEvent;
 import itu.dd.server.interfaces.IEvent;
 import itu.dd.server.tech.DatabaseConnection;
 import itu.dd.server.util.XmlResponse;
@@ -66,10 +66,10 @@ public class EventResource extends ServerResource {
 				// setting up XStream for marshaling and un-marshalling events.
 				XStream xStream = new XStream();
 				xStream.registerConverter(new EventConverter());
-				xStream.alias("events", Mood.class);
-				xStream.alias("events", Location.class);
-				xStream.alias("events", Call.class);
-				xStream.alias("events", Sms.class);
+				xStream.alias("events", MoodEvent.class);
+				xStream.alias("events", LocationEvent.class);
+				xStream.alias("events", CallEvent.class);
+				xStream.alias("events", SmsEvent.class);
 				
 				// parse the xml
 				Object uncastedEvents = xStream.fromXML(entity.getStream());
@@ -81,17 +81,17 @@ public class EventResource extends ServerResource {
 				for (int i = 0; i < events.size(); i++ ) {
 					event = (IEvent) events.get(i);
 					event.setTripId(_tripId);
-					if(Mood.class.isInstance(event)) {
-						Mood mEvent = (Mood)event;
+					if(MoodEvent.class.isInstance(event)) {
+						MoodEvent mEvent = (MoodEvent)event;
 						rep.insertMood(mEvent);
-					} else if (Location.class.isInstance(event)) {
-						Location lEvent = (Location)event;
+					} else if (LocationEvent.class.isInstance(event)) {
+						LocationEvent lEvent = (LocationEvent)event;
 						rep.insertLocation(lEvent);
-					} else if (Call.class.isInstance(event)) {
-						Call cEvent = (Call)event;
+					} else if (CallEvent.class.isInstance(event)) {
+						CallEvent cEvent = (CallEvent)event;
 						rep.insertCall(cEvent);
-					} else if (Sms.class.isInstance(event)) {
-						Sms sEvent = (Sms)event;
+					} else if (SmsEvent.class.isInstance(event)) {
+						SmsEvent sEvent = (SmsEvent)event;
 						rep.insertSms(sEvent);
 					}
 				}

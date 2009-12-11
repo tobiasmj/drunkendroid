@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.XStream;
 /**
  * JUnit test class for testing creating a moodMap, using a mock-object database connection.
  */
-public class MoodMapTest {
+public class MoodmapTest {
 
 	/**
 	 * @throws java.lang.Exception

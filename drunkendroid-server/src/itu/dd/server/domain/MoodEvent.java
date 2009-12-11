@@ -5,30 +5,15 @@ import itu.dd.server.interfaces.IEvent;
 
 /**
  * 
- * Class representing a Call.
+ * Class representing a Mood Reading.
  *
  */
-/*
- *    <event>
-     <eventType>call</eventType>
-     <dateTime>1255816133</dateTime>
-     <latitude>35.908422</latitude>
-     <longitude>14.502362</longitude>
-     <data>
-      <caller>0036577293610</caller>
-      <receiver>0036577104516</receiver>
-      <endTime>1255817201</endTime>
-     </data
-   </event>
- */
-public class Call implements IEvent{
+public class MoodEvent implements IEvent{
 
 	private long _timeStamp;
 	private double _latitude, _longitude;
+	private int _mood = -1;
 	private long _tripId = 0;
-	private String _caller;
-	private String _reciever;
-	private long _endTime;
 	
 	public long getTripId() {
 		return _tripId;
@@ -39,36 +24,34 @@ public class Call implements IEvent{
 	}
 	/**
 	 * Constructor
-	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds
+	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds.
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
+	 * @param mood the mood valued 0-255
 	 */
-	public Call (long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
+	public MoodEvent (long timeStamp, double latitude, double longitude, int mood ) {
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
-		this._caller = caller;
-		this._reciever = reciever;
-		this._endTime = endTime;
+		this._mood = mood;
 	}
 	/**
 	 * Constructor 
 	 * @param tripId the tripId associated with the reading
-	 * @param timeStamp the time of the reading in unixTimeformat
+	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds.
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
+	 * @param mood the mood valued 0-255
 	 */
-	public Call (long tripId, long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
+	public MoodEvent (long tripId, long timeStamp, double latitude, double longitude, int mood ) {
 		this._tripId = tripId;
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
-		this._caller = caller;
-		this._reciever = reciever;
-		this._endTime = endTime;
+		this._mood = mood;
 	}
 	public String getEventType() {
-		return "call";
+		return "mood";
 	}
 
 	public double getLatitude() {
@@ -78,6 +61,9 @@ public class Call implements IEvent{
 	public double getLongitude() {
 		return _longitude;
 	}
+	public int getMood() {
+		return _mood;
+	}
 
 	@Override
 	public long getTimeStamp() {
@@ -86,7 +72,7 @@ public class Call implements IEvent{
 
 	@Override
 	public String getType() {
-		return "call";
+		return "mood";
 	}
 
 	@Override
@@ -104,14 +90,5 @@ public class Call implements IEvent{
 	public void setTimeStamp(long timeStamp) {
 		_timeStamp = timeStamp;
 		
-	}
-	public String getCaller() {
-		return _caller;
-	}
-	public String getReciever() {
-		return _reciever;
-	}
-	public long getEndTime() {
-		return _endTime;
 	}
 }

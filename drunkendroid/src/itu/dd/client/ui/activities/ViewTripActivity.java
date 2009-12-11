@@ -8,7 +8,7 @@ import itu.dd.client.domain.CallEvent;
 import itu.dd.client.domain.Event;
 import itu.dd.client.domain.LocationEvent;
 import itu.dd.client.domain.MoodEvent;
-import itu.dd.client.domain.SMSEvent;
+import itu.dd.client.domain.SmsEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.ui.map.RouteOverlay;
 import itu.dd.client.ui.map.ItemizedEventOverlay;
@@ -111,7 +111,7 @@ public class ViewTripActivity extends MapActivity {
             		OverlayItem overlayitem = new OverlayItem(point, "", "");
             		_callOverlay.addOverlay(overlayitem);
             	}
-            	else if(SMSEvent.class.isInstance(e))
+            	else if(SmsEvent.class.isInstance(e))
             	{
             		GeoPoint point = new GeoPoint(latitude,longitude);
             		OverlayItem overlayitem = new OverlayItem(point, "", "");

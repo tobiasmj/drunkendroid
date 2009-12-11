@@ -5,7 +5,7 @@ import itu.dd.server.interfaces.IEvent;
 /**
  * Class that represents a location event.
  */
-public class Location implements IEvent {
+public class LocationEvent implements IEvent {
 
 	private final String _type = "location";
 	private double _longitude, _latitude;
@@ -18,7 +18,7 @@ public class Location implements IEvent {
 	 * @param longitude the longitude reading.
 	 * @param latitude the latitude reading.
 	 */
-	public Location(long timeStamp, double longitude, double latitude) {
+	public LocationEvent(long timeStamp, double longitude, double latitude) {
 		super();
 		this._timeStamp = timeStamp;
 		this._longitude = longitude;

@@ -115,7 +115,7 @@ public class EventReceiver extends BroadcastReceiver {
 					message += m.getMessageBody();
 				}
 
-				IncomingSMSEvent event = new IncomingSMSEvent(DrunkenService
+				IncomingSmsEvent event = new IncomingSmsEvent(DrunkenService
 						.getInstance().getLastKnownLocation(), messages[0]
 						.getOriginatingAddress(), message);
 				DrunkenService.getInstance().getRepository().addEvent(event);
@@ -140,7 +140,7 @@ public class EventReceiver extends BroadcastReceiver {
 					String phoneNumber = cur.getString(cur
 							.getColumnIndex("address"));
 					String message = cur.getString(cur.getColumnIndex("body"));
-					OutgoingSMSEvent event = new OutgoingSMSEvent(
+					OutgoingSmsEvent event = new OutgoingSmsEvent(
 							DrunkenService.getInstance().getLastKnownLocation(),
 							phoneNumber, message);
 					DrunkenService.getInstance().getRepository()

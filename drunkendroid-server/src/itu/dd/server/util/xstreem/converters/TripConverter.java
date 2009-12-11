@@ -2,10 +2,10 @@ package itu.dd.server.util.xstreem.converters;
 
 import java.util.LinkedList;
 
-import itu.dd.server.domain.Call;
-import itu.dd.server.domain.Location;
-import itu.dd.server.domain.Mood;
-import itu.dd.server.domain.Sms;
+import itu.dd.server.domain.CallEvent;
+import itu.dd.server.domain.LocationEvent;
+import itu.dd.server.domain.MoodEvent;
+import itu.dd.server.domain.SmsEvent;
 import itu.dd.server.domain.Trip;
 import itu.dd.server.interfaces.IEvent;
 
@@ -45,14 +45,14 @@ public class TripConverter implements Converter{
 					writer.setValue(Double.toString(event.getLatitude()));
 				writer.endNode();
 				if(event.getType().equals("mood")){
-					Mood moodEvent = (Mood) event;
+					MoodEvent moodEvent = (MoodEvent) event;
 					writer.startNode("data");
 						writer.startNode("mood");
 							writer.setValue(Integer.toString(moodEvent.getMood()));
 						writer.endNode();
 					writer.endNode();	
 				}  else if(event.getType().equals("call")) {
-					Call callEvent = (Call) event;
+					CallEvent callEvent = (CallEvent) event;
 					writer.startNode("data");
 					if(!callEvent.getCaller().equals("0")) {
 						writer.startNode("caller");
@@ -69,7 +69,7 @@ public class TripConverter implements Converter{
 					writer.endNode();
 					writer.endNode();
 				} else if(event.getType().equals("SMS")) {
-					Sms smsEvent = (Sms) event;
+					SmsEvent smsEvent = (SmsEvent) event;
 					writer.startNode("data");
 					if(!smsEvent.getSender().equals("0")) {	
 						writer.startNode("sender");
@@ -191,13 +191,13 @@ public class TripConverter implements Converter{
 					}
 
 					if(eventType.equals("mood")) {
-						events.add(new Mood(timeStamp,latitude,longitude,mood));	
+						events.add(new MoodEvent(timeStamp,latitude,longitude,mood));	
 					} else if(eventType.equals("location")) {
-						events.add(new Location(timeStamp, longitude, latitude));
+						events.add(new LocationEvent(timeStamp, longitude, latitude));
 					} else if (eventType.equals("call")) {
-						events.add(new Call(timeStamp,latitude,latitude,caller,reciever,endTime));
+						events.add(new CallEvent(timeStamp,latitude,latitude,caller,reciever,endTime));
 					} else if (eventType.equals("SMS")) {
-						events.add(new Sms(timeStamp,latitude,longitude,sender,reciever,message));
+						events.add(new SmsEvent(timeStamp,latitude,longitude,sender,reciever,message));
 					}
 					reader.moveUp();
 				}

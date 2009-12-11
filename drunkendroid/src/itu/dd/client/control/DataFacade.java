@@ -4,11 +4,11 @@ import itu.dd.client.domain.Event;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.tech.ILocalDataFacade;
-import itu.dd.client.tech.IRESTCache;
+import itu.dd.client.tech.IRestCache;
 import itu.dd.client.tech.IWebserviceConnection;
-import itu.dd.client.tech.SQLiteAdapter;
-import itu.dd.client.tech.RESTCache;
-import itu.dd.client.tech.RESTConnection;
+import itu.dd.client.tech.SqliteAdapter;
+import itu.dd.client.tech.RestCache;
+import itu.dd.client.tech.RestConnection;
 import itu.dd.client.tech.exception.CommunicationException;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import android.util.Log;
 
 public class DataFacade implements IDataFacade {
 	private static final String _LOGTAG = "Drunkendroid DataFacade";
-	private IRESTCache _remote;
+	private IRestCache _remote;
 	private ILocalDataFacade _local;
 	
 	//Don't call the default constructor!
@@ -26,10 +26,10 @@ public class DataFacade implements IDataFacade {
 	private DataFacade(){};
 	
 	public DataFacade(Context context){
-		IWebserviceConnection conn = new RESTConnection();
-		_remote = new RESTCache(context, conn);
+		IWebserviceConnection conn = new RestConnection();
+		_remote = new RestCache(context, conn);
 		//_remote = new DummyRESTserver();
-		_local = new SQLiteAdapter(context);
+		_local = new SqliteAdapter(context);
 	}
 	
 	/**

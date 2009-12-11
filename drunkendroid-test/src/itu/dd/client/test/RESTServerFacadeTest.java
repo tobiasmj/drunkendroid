@@ -18,7 +18,7 @@ import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.tech.IRemoteDataFacade;
 import itu.dd.client.tech.IWebserviceConnection;
-import itu.dd.client.tech.RESTAdapter;
+import itu.dd.client.tech.RestAdapter;
 import itu.dd.client.tech.exception.CommunicationException;
 import android.content.Context;
 import android.telephony.TelephonyManager;
@@ -26,7 +26,7 @@ import android.test.AndroidTestCase;
 import static org.easymock.EasyMock.*;
 
 public class RESTServerFacadeTest extends AndroidTestCase {
-	RESTAdapter rest = null;
+	RestAdapter rest = null;
 
 	protected void setUp() {
 
@@ -64,7 +64,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 
 		expect(conn.post((String) anyObject(), (String) anyObject()))
 				.andStubReturn(response);
-		rest = new RESTAdapter(this.getContext(), conn);
+		rest = new RestAdapter(this.getContext(), conn);
 		// Make the private method accessible using reflection.
 		Method consume = rest.getClass().getDeclaredMethod(
 				"consumeTripUploadResponse", HttpResponse.class);
@@ -106,7 +106,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(conn);
 
 		// Create a new RESTServerHelper class to test with.
-		rest = new RESTAdapter(this.getContext(), conn);
+		rest = new RestAdapter(this.getContext(), conn);
 		// Verify
 		rest.uploadTrip(t);
 		// Don't know how to do these assertions right yet.
@@ -159,7 +159,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(conn);
 
 		// Create a new RESTServerHelper class to test with.
-		rest = new RESTAdapter(this.getContext(), conn);
+		rest = new RestAdapter(this.getContext(), conn);
 		// Verify
 		rest.uploadTrip(t);
 		Long tripIdResult = t.getRemoteId();
@@ -216,7 +216,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(response);
 		replay(conn);
 
-		rest = new RESTAdapter(this.getContext(), conn);
+		rest = new RestAdapter(this.getContext(), conn);
 
 		ArrayList<Event> eventList1 = new ArrayList<Event>();
 		eventList1.add(e1);
@@ -284,7 +284,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(response);
 		replay(conn);
 
-		rest = new RESTAdapter(this.getContext(), conn);
+		rest = new RestAdapter(this.getContext(), conn);
 
 		ArrayList<Event> eventList1 = new ArrayList<Event>();
 		eventList1.add(e1);
@@ -331,7 +331,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 			replay(conn);
 			replay(entity);
 
-			IRemoteDataFacade rest = new RESTAdapter(this.getContext(),
+			IRemoteDataFacade rest = new RestAdapter(this.getContext(),
 					conn);
 
 			// Execute

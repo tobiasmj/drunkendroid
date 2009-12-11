@@ -19,22 +19,22 @@ import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.tech.exception.CommunicationException;
 
-public class RESTCache implements IRESTCache {
+public class RestCache implements IRestCache {
 	private final int UPDATECALL = 1;
 	private final int UPLOADCALL = 2;
 	private final String LOGTAG = "RESTCache";
 	private HashSet<String> uploadTripFilter = null;
-	private DBHelper _dbHelper;
-	private SQLiteAdapter _localSqlFacade;
-	RESTAdapter _server;
+	private DbHelper _dbHelper;
+	private SqliteAdapter _localSqlFacade;
+	RestAdapter _server;
 	private Context _context;
 	static QueueLooper _queueLooper = null;
 	
-	public RESTCache(Context context, IWebserviceConnection conn){
+	public RestCache(Context context, IWebserviceConnection conn){
 		this._context = context;
-		_dbHelper = DBHelper.getInstance(this._context);
-		_localSqlFacade = new SQLiteAdapter(context);
-		_server = new RESTAdapter(this._context, conn);
+		_dbHelper = DbHelper.getInstance(this._context);
+		_localSqlFacade = new SqliteAdapter(context);
+		_server = new RestAdapter(this._context, conn);
 		//The Looper
 		//Build the uploadTripFilter
 		uploadTripFilter = new HashSet<String>();	
@@ -103,7 +103,7 @@ public class RESTCache implements IRESTCache {
 		values.put("online", String.valueOf(1)); //set to online
 		try{
 			db.beginTransaction();
-			db.update(DBHelper.TABLE_EVENT, values, whereClause, whereArgs);
+			db.update(DbHelper.TABLE_EVENT, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
 		finally{
@@ -121,7 +121,7 @@ public class RESTCache implements IRESTCache {
 		values.put("online", String.valueOf(1)); //set to online
 		try{
 			db.beginTransaction();
-			db.update(DBHelper.TABLE_TRIP, values, whereClause, whereArgs);
+			db.update(DbHelper.TABLE_TRIP, values, whereClause, whereArgs);
 			db.setTransactionSuccessful();
 		}
 		finally{
@@ -228,7 +228,7 @@ public class RESTCache implements IRESTCache {
 		HashSet<Integer> result = new HashSet<Integer>();
 		
 		dbInstance.beginTransaction();
-		Cursor cursor = dbInstance.query(DBHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
+		Cursor cursor = dbInstance.query(DbHelper.TABLE_EVENT, columns, whereClause, whereArgs, null, null, null);
 		try{
 			while(cursor.moveToNext()){
 				result.add(cursor.getInt(0));
@@ -254,7 +254,7 @@ public class RESTCache implements IRESTCache {
 		ArrayList<Trip> trips = new ArrayList<Trip>();
 		
 		dbInstance.beginTransaction();
-		Cursor cursor = dbInstance.query(DBHelper.TABLE_TRIP, columns, selection, null, null, null, null);
+		Cursor cursor = dbInstance.query(DbHelper.TABLE_TRIP, columns, selection, null, null, null, null);
 		try{
 			while(cursor.moveToNext()){
 				long startDateTime;

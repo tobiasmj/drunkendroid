@@ -7,7 +7,7 @@ import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.tech.exception.CommunicationException;
 
-public interface IRESTCache {
+public interface IRestCache {
 	
 	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
 			Double lrLatitude, Double lrLongitude) throws CommunicationException;

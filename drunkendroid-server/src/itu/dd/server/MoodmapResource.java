@@ -3,7 +3,7 @@ package itu.dd.server;
 
 import itu.dd.server.control.Repository;
 import itu.dd.server.domain.GridCell;
-import itu.dd.server.domain.MoodMap;
+import itu.dd.server.domain.Moodmap;
 import itu.dd.server.tech.DatabaseConnection;
 import itu.dd.server.util.*;
 import itu.dd.server.util.xstreem.converters.MoodMapConverter;
@@ -31,7 +31,7 @@ import com.thoughtworks.xstream.XStream;
 /**
  * Class that handles requests for retrieving MoodMaps.
  */
-public class MoodMapResource extends ServerResource {
+public class MoodmapResource extends ServerResource {
 	private long _startTimeStamp, _endTimeStamp;
 	private double _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude;
 	private int _gridX = 20 , _gridY = 20;
@@ -63,7 +63,7 @@ public class MoodMapResource extends ServerResource {
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			
 		}
 		// create the MoodMap object
-		MoodMap moodMap = new MoodMap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude, _gridX, _gridY);
+		Moodmap moodMap = new Moodmap(_startTimeStamp, _endTimeStamp, _ULlatitude, _ULlongitude, _LRlatitude, _LRlongitude, _gridX, _gridY);
 		
 		try {
 			// set up the repository

@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * @author ExxKA
  * This class is inspired by the book: Beginning Android and http://www.smnirven.com/?p=15
  */
-public class RESTAdapter implements IRemoteDataFacade {
+public class RestAdapter implements IRemoteDataFacade {
 	private static final String _TRIP = "trip";
 	private static final String _TRIPID = "tripId";
 	private static final String EVENT = "event";
@@ -36,7 +36,7 @@ public class RESTAdapter implements IRemoteDataFacade {
 	private String _IMEI = "";
 	IWebserviceConnection conn = null;
 	
-	public RESTAdapter(Context context, IWebserviceConnection conn){
+	public RestAdapter(Context context, IWebserviceConnection conn){
 		TelephonyManager mgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		_IMEI = mgr.getDeviceId();
 		this.conn = conn;
@@ -97,7 +97,7 @@ public class RESTAdapter implements IRemoteDataFacade {
 		try {
 			//Build xml
 	    	String xml;
-			xml = XMLBuilder.buildXmlFromEvents(events);
+			xml = XmlBuilder.buildXmlFromEvents(events);
 			//Now try to send it
 	        HttpResponse response = conn.post(_TRIP + "/" + EVENT + "/" +_IMEI + "/" + 
 	        		String.valueOf(t.getRemoteId()), xml);
@@ -142,7 +142,7 @@ public class RESTAdapter implements IRemoteDataFacade {
 	{
 		try {
 	        //Build xml
-	    	String xml = XMLBuilder.buildXmlFromTrip(t);
+	    	String xml = XmlBuilder.buildXmlFromTrip(t);
 	        //Now try to send it
 	        HttpResponse response = conn.post(_TRIP + "/"+_IMEI, xml);
 	        //Status codes in the 400 range are logged in the consume method.

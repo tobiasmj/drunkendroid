@@ -341,8 +341,8 @@ public class TripsActivity extends ListActivity {
 		public MultiChoiceListener() {
 			_possibleChoices.add(IncomingCallEvent.class.getName());
 			_possibleChoices.add(OutgoingCallEvent.class.getName());
-			_possibleChoices.add(IncomingSMSEvent.class.getName());
-			_possibleChoices.add(OutgoingSMSEvent.class.getName());
+			_possibleChoices.add(IncomingSmsEvent.class.getName());
+			_possibleChoices.add(OutgoingSmsEvent.class.getName());
 
 			_choices.addAll(_possibleChoices);
 		}

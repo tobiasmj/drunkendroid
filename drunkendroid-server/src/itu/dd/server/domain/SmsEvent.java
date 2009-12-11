@@ -5,15 +5,30 @@ import itu.dd.server.interfaces.IEvent;
 
 /**
  * 
- * Class representing a Mood Reading.
+ * Class representing a SMS.
  *
  */
-public class Mood implements IEvent{
+/*
+ *        <event>
+     <eventType>sms</eventType>
+     <dateTime>1255816133</dateTime>
+     <latitude>35.908422</latitude>
+     <longitude>14.502362</longitude>
+     <data>
+      <sender>0036577293610</sender>
+      <receiver>0036577104516</receiver>
+      <message>Hi, bring two bottles of gin.</message>
+     </data
+   </event>
+ */
+public class SmsEvent implements IEvent{
 
 	private long _timeStamp;
 	private double _latitude, _longitude;
-	private int _mood = -1;
 	private long _tripId = 0;
+	private String _reciever;
+	private String _sender;
+	private String _message;
 	
 	public long getTripId() {
 		return _tripId;
@@ -24,34 +39,36 @@ public class Mood implements IEvent{
 	}
 	/**
 	 * Constructor
-	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds.
+	 * @param timeStamp the time of the reading in unixTimeformat
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
-	 * @param mood the mood valued 0-255
 	 */
-	public Mood (long timeStamp, double latitude, double longitude, int mood ) {
+	public SmsEvent (long timeStamp, double latitude, double longitude, String sender, String reciever, String message) {
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
-		this._mood = mood;
+		this._reciever = reciever;
+		this._sender = sender;
+		this._message = message;
 	}
 	/**
 	 * Constructor 
 	 * @param tripId the tripId associated with the reading
-	 * @param timeStamp the time of the reading in unixTimeformat in miliseconds.
+	 * @param timeStamp the time of the reading in unixTimeformat
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
-	 * @param mood the mood valued 0-255
 	 */
-	public Mood (long tripId, long timeStamp, double latitude, double longitude, int mood ) {
+	public SmsEvent (long tripId, long timeStamp, double latitude, double longitude, String sender, String reciever, String message) {
 		this._tripId = tripId;
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
-		this._mood = mood;
+		this._reciever = reciever;
+		this._sender = sender;
+		this._message = message;
 	}
 	public String getEventType() {
-		return "mood";
+		return "call";
 	}
 
 	public double getLatitude() {
@@ -61,9 +78,6 @@ public class Mood implements IEvent{
 	public double getLongitude() {
 		return _longitude;
 	}
-	public int getMood() {
-		return _mood;
-	}
 
 	@Override
 	public long getTimeStamp() {
@@ -72,7 +86,7 @@ public class Mood implements IEvent{
 
 	@Override
 	public String getType() {
-		return "mood";
+		return "SMS";
 	}
 
 	@Override
@@ -90,5 +104,14 @@ public class Mood implements IEvent{
 	public void setTimeStamp(long timeStamp) {
 		_timeStamp = timeStamp;
 		
+	}
+	public String getSender() {
+		return _sender;
+	}
+	public String getReciever() {
+		return _reciever;
+	}
+	public String getMessage() {
+		return _message;
 	}
 }
