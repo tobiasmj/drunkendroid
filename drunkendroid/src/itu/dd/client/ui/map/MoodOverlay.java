@@ -1,7 +1,6 @@
 package itu.dd.client.ui.map;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.domain.MoodEvent;
@@ -141,18 +140,7 @@ public class MoodOverlay extends Overlay
 			// Don't draw heatmap - tell the user that it is
 			// not available on this zoom level
 			else
-			{
-				/*
-				Paint background = new Paint();
-				background.setColor(Color.BLACK);
-				background.setAlpha(150);
-				
-				RectF rect = new RectF();
-				rect.
-				
-				canvas.drawRoundRect(rect, 0, 0, background);
-				*/
-				
+			{				
 				Paint paint = new Paint();
 				paint.setStyle(Paint.Style.FILL);
 				paint.setAntiAlias(true);
