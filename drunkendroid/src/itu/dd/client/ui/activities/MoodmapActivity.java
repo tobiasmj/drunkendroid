@@ -13,7 +13,7 @@ import com.google.android.maps.Overlay;
 
 import android.os.Bundle;
 
-public class MoodMapActivity extends MapActivity {
+public class MoodmapActivity extends MapActivity {
 	MapView _mapView;
 	MapController _mapController;
 	MoodOverlay _moodOverlay;
@@ -43,7 +43,7 @@ public class MoodMapActivity extends MapActivity {
 	            List<Overlay> overlays = _mapView.getOverlays();
 	            
 	            // Add heatmap overlay
-	            _moodOverlay = new MoodOverlay(MoodMapActivity.this, _mapView);
+	            _moodOverlay = new MoodOverlay(MoodmapActivity.this, _mapView);
 	            overlays.add(_moodOverlay);
 	        }
         });

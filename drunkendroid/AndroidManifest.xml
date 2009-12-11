@@ -12,7 +12,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".ui.activities.MoodMapActivity"
+		<activity android:name=".ui.activities.MoodmapActivity"
 			android:label="@string/activity_mood_map">
 			<intent-filter>
 				<action android:name="itu.malta.drunkendroid.VIEW_MAP" />
