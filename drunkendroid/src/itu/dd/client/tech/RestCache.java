@@ -69,6 +69,11 @@ public class RestCache implements IRestCache {
 		_queueLooper.mHandler.sendMessage(m);
 	}
 	
+	/**
+	 * This method is called when the user decides to upload a trip to the server.
+	 * The user might add event types which are not normally included.
+	 * This is a blocking call
+	 */
 	public void updateFilteredTrip(Trip t, ArrayList<Event> eventList) throws CommunicationException {
 		try {
 			if(t.getRemoteId() == null) {
