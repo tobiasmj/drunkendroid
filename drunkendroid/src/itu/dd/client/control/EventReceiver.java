@@ -1,6 +1,6 @@
 package itu.dd.client.control;
 
-import itu.dd.client.control.services.DrunkenService;
+import itu.dd.client.control.services.MainService;
 import itu.dd.client.domain.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -79,18 +79,18 @@ public class EventReceiver extends BroadcastReceiver {
 
 		private void handleOutgoingCall(Intent intent) {
 			Log.i("DrunkDroid", "Outgoing Call");
-			OutgoingCallEvent event = new OutgoingCallEvent(DrunkenService
+			OutgoingCallEvent event = new OutgoingCallEvent(MainService
 					.getInstance().getLastKnownLocation(), intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER));
-			DrunkenService.getInstance().getRepository().addEvent(event);
+			MainService.getInstance().getRepository().addEvent(event);
 		}
 
 		private void handleMoodReading(Intent i) {
 			if (i.getExtras() != null) {
 				Log.i("DrunkDroid", "Incoming MoodReading");
-				Location location = DrunkenService.getInstance()
+				Location location = MainService.getInstance()
 						.getLastKnownLocation();
 				MoodEvent readingEvent = new MoodEvent(location, i.getShortExtra("mood", (short)0));
-				DrunkenService.getInstance().getRepository().addEvent(
+				MainService.getInstance().getRepository().addEvent(
 						readingEvent);
 			} else {
 				throw new IllegalArgumentException(
@@ -115,24 +115,24 @@ public class EventReceiver extends BroadcastReceiver {
 					message += m.getMessageBody();
 				}
 
-				IncomingSmsEvent event = new IncomingSmsEvent(DrunkenService
+				IncomingSmsEvent event = new IncomingSmsEvent(MainService
 						.getInstance().getLastKnownLocation(), messages[0]
 						.getOriginatingAddress(), message);
-				DrunkenService.getInstance().getRepository().addEvent(event);
+				MainService.getInstance().getRepository().addEvent(event);
 			}
 		}
 
 		private void handleIncomingCall(Intent i) {
 			Log.i("DrunkDroid", "Incoming Call");
-			IncomingCallEvent event = new IncomingCallEvent(DrunkenService
+			IncomingCallEvent event = new IncomingCallEvent(MainService
 					.getInstance().getLastKnownLocation(), i.getStringExtra("phoneNumber"));
-			DrunkenService.getInstance().getRepository().addEvent(event);
+			MainService.getInstance().getRepository().addEvent(event);
 		}
 
 		private void handleOutgoingSMS(Intent i) {
 			Uri smsUri = Uri.parse("content://sms");
 			String orderBy = "date desc";
-			Cursor cur = DrunkenService.getInstance().getContentResolver()
+			Cursor cur = MainService.getInstance().getContentResolver()
 					.query(smsUri, null, null, null, orderBy);
 			if (cur.moveToNext()) {
 				if (cur.getString(cur.getColumnIndex("type")).equals("2")) {
@@ -141,9 +141,9 @@ public class EventReceiver extends BroadcastReceiver {
 							.getColumnIndex("address"));
 					String message = cur.getString(cur.getColumnIndex("body"));
 					OutgoingSmsEvent event = new OutgoingSmsEvent(
-							DrunkenService.getInstance().getLastKnownLocation(),
+							MainService.getInstance().getLastKnownLocation(),
 							phoneNumber, message);
-					DrunkenService.getInstance().getRepository()
+					MainService.getInstance().getRepository()
 							.addEvent(event);
 				}
 			}
@@ -155,9 +155,9 @@ public class EventReceiver extends BroadcastReceiver {
 			LocationEvent locationEvent = new LocationEvent(location);
 			// Save event to trip and check for possible events with empty
 			// locations.
-			DrunkenService.getInstance().getRepository()
+			MainService.getInstance().getRepository()
 					.updateEventsWithoutLocation(location);
-			DrunkenService.getInstance().getRepository()
+			MainService.getInstance().getRepository()
 					.addEvent(locationEvent);
 		}
 	}

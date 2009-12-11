@@ -1,7 +1,7 @@
 package itu.dd.client.ui.activities;
 
 import itu.dd.client.control.TripRepository;
-import itu.dd.client.control.services.DrunkenService;
+import itu.dd.client.control.services.MainService;
 import itu.dd.client.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (DrunkenService.getInstance() == null)
+		if (MainService.getInstance() == null)
 			setTripState(TRIP_STATE_NOT_RUNNING);
 		else
 			setTripState(TRIP_STATE_RUNNING);
@@ -206,8 +206,8 @@ public class MainActivity extends Activity {
 		if (repo.hasActiveTrip()) {
 			Intent i = new Intent(
 					MainActivity.this,
-					itu.dd.client.control.services.DrunkenService.class);
-			i.putExtra("command", DrunkenService.SERVICE_COMMAND_START_TRIP);
+					itu.dd.client.control.services.MainService.class);
+			i.putExtra("command", MainService.SERVICE_COMMAND_START_TRIP);
 			startService(i);
 			setTripState(TRIP_STATE_RUNNING);
 		} else {
@@ -225,11 +225,11 @@ public class MainActivity extends Activity {
 									String name = input.getText().toString();
 									Intent i = new Intent(
 											MainActivity.this,
-											itu.dd.client.control.services.DrunkenService.class);
+											itu.dd.client.control.services.MainService.class);
 									i
 											.putExtra(
 													"command",
-													DrunkenService.SERVICE_COMMAND_START_TRIP);
+													MainService.SERVICE_COMMAND_START_TRIP);
 									i.putExtra("name", name);
 									startService(i);
 									setTripState(TRIP_STATE_RUNNING);
@@ -252,11 +252,11 @@ public class MainActivity extends Activity {
 									int whichButton) {
 								Intent i = new Intent(
 										MainActivity.this,
-										itu.dd.client.control.services.DrunkenService.class);
+										itu.dd.client.control.services.MainService.class);
 								i
 										.putExtra(
 												"command",
-												DrunkenService.SERVICE_COMMAND_END_TRIP);
+												MainService.SERVICE_COMMAND_END_TRIP);
 								startService(i);
 								setTripState(TRIP_STATE_NOT_RUNNING);
 							}

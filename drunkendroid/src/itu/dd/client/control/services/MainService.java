@@ -26,9 +26,9 @@ import android.widget.Toast;
  * Service singleton running in background when Trip is ongoing. Service is
  * destroyed as soon as a trip has ended. *
  */
-public class DrunkenService extends Service implements ILocationAdapterListener {
+public class MainService extends Service implements ILocationAdapterListener {
 
-	private static DrunkenService _service = null;
+	private static MainService _service = null;
 	private Handler _moodHandler = new Handler();
 	private EventReceiver _eventHandler = new EventReceiver();
 	private SMSObserver _smsObserver = new SMSObserver(new Handler());
@@ -49,7 +49,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		DrunkenService._service = this;
+		MainService._service = this;
 		_notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		_locationManager = new GPSLocationAdapter(this);
 		_locationManager.RegisterLocationUpdates(this);
@@ -62,7 +62,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	/**
 	 * Static method to get the Singleton instance.
 	 */
-	public static DrunkenService getInstance() {
+	public static MainService getInstance() {
 		return _service;
 	}
 
@@ -140,7 +140,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 		_locationManager.UnregisterLocationUpdates(this);
 		_notificationManager.cancel(1);
 		_moodHandler.removeMessages(0);
-		DrunkenService._service = null;
+		MainService._service = null;
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 	 *            SharedPreferences containing the mood reading interval.
 	 */
 	private void StartReadingTimer(SharedPreferences sp) {
-		final Intent moodIntent = new Intent(DrunkenService.this,
+		final Intent moodIntent = new Intent(MainService.this,
 				MoodReadActivity.class);
 		String[] intervalArray = getResources().getStringArray(
 				R.array.mood_read_intervals);
@@ -232,9 +232,9 @@ public class DrunkenService extends Service implements ILocationAdapterListener 
 					not.flags = Notification.FLAG_AUTO_CANCEL;
 					not.defaults |= Notification.DEFAULT_SOUND;
 					not.vibrate = new long[] { 0, 1000, 2000, 3000 };
-					not.setLatestEventInfo(DrunkenService.this,
+					not.setLatestEventInfo(MainService.this,
 							"How are you feeling?",
-							"Click here to make a new Mood Reading!", PendingIntent.getActivity(DrunkenService.this, 0,
+							"Click here to make a new Mood Reading!", PendingIntent.getActivity(MainService.this, 0,
 									moodIntent, 0));
 					_notificationManager.notify(1, not);
 					
