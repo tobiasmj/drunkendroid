@@ -59,10 +59,10 @@ public class EventResource extends ServerResource {
 				// setting up the repository 
 				Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 				
-				if (!rep.checkTripExist(_tripId, _IMEINumber)) {
+				/*if (!rep.checkTripExist(_tripId, _IMEINumber)) {
 					setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 					result = XmlResponse.generateErrorRepresentation("A Trip with TripId:" + _tripId + " and IMEI number:" + _IMEINumber + " does not exsist", "8");
-				}
+				}*/
 				// setting up XStream for marshaling and un-marshalling events.
 				XStream xStream = new XStream();
 				xStream.registerConverter(new EventConverter());

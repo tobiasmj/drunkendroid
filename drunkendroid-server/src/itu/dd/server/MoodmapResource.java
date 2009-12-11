@@ -54,10 +54,10 @@ public class MoodmapResource extends ServerResource {
 		
 		_ULlatitude = Double.parseDouble(getRequest().getAttributes().get("ULLatitude").toString());
 		_ULlongitude = Double.parseDouble(getRequest().getAttributes().get("ULLongitude").toString());
-		System.out.println("UL. lat: " + _ULlatitude + " long: " + _ULlongitude);
+		//System.out.println("UL. lat: " + _ULlatitude + " long: " + _ULlongitude);
 		_LRlatitude = Double.parseDouble(getRequest().getAttributes().get("LRLatitude").toString());
 		_LRlongitude = Double.parseDouble(getRequest().getAttributes().get("LRLongitude").toString());
-		System.out.println("LR. lat: " + _LRlatitude + " long: " + _LRlongitude);		
+		//System.out.println("LR. lat: " + _LRlatitude + " long: " + _LRlongitude);		
 		} catch (NumberFormatException e) {
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			result = XmlResponse.generateErrorRepresentation("Malformed Data in URL", "7");			
@@ -69,13 +69,13 @@ public class MoodmapResource extends ServerResource {
 			// set up the repository
 			Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
 			//calculate the MoodMap
-			System.out.println(System.currentTimeMillis()/1000 +" Start calculate moodmap");
+			//System.out.println(System.currentTimeMillis()/1000 +" Start calculate moodmap");
 			_moodMapGrid = rep.calculateMoodMap(moodMap);
-			System.out.println(System.currentTimeMillis()/1000 +" End calculate moodmap");
+			//System.out.println(System.currentTimeMillis()/1000 +" End calculate moodmap");
 			// get the MoodMap as an XML representation.
-			System.out.println(System.currentTimeMillis()/1000 + " get moodmap xml");
+			//System.out.println(System.currentTimeMillis()/1000 + " get moodmap xml");
 			result = getMoodMapXML();
-			System.out.println(System.currentTimeMillis()/1000 +  " end get moodmap xml");
+			//System.out.println(System.currentTimeMillis()/1000 +  " end get moodmap xml");
 		} catch (SQLException se) {
 			setStatus(Status.SERVER_ERROR_INTERNAL);
 			result = XmlResponse.generateErrorRepresentation(" Error getting data from database", "5");

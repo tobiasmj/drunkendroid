@@ -10,7 +10,7 @@ public class Main {
 	        // Add a new HTTP server listening on port 8182.  
 	        component.getServers().add(Protocol.HTTP, 8182);  
 	  
-	        // Arrach the drunkendroid application
+	        // Attach the drunkendroid application/connector 
 	        component.getDefaultHost().attach(new DrunkDroidServerApplication());
 	  
 	        // Start the component.  

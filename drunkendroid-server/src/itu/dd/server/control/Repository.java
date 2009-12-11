@@ -319,7 +319,7 @@ public class Repository {
 			}
 
 			// create trip object 
-			_stmt.executeQuery("Select name,startTimeStamp,endTimeStamp from trip where id = " + trip.getTripId());
+			_stmt.executeQuery("Select name,startTimeStamp,endTimeStamp from Trip where id = " + trip.getTripId());
 
 			rs = _stmt.getResultSet();
 			Trip newTrip = null;
