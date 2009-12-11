@@ -12,21 +12,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import itu.dd.client.control.IRemoteDataFacade;
 import itu.dd.client.domain.Event;
 import itu.dd.client.domain.LocationEvent;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
+import itu.dd.client.tech.IRemoteDataFacade;
 import itu.dd.client.tech.IWebserviceConnection;
-import itu.dd.client.tech.RESTServerFacade;
-import itu.dd.client.tech.exception.RESTFacadeException;
+import itu.dd.client.tech.RESTAdapter;
+import itu.dd.client.tech.exception.CommunicationException;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.test.AndroidTestCase;
 import static org.easymock.EasyMock.*;
 
 public class RESTServerFacadeTest extends AndroidTestCase {
-	RESTServerFacade rest = null;
+	RESTAdapter rest = null;
 
 	protected void setUp() {
 
@@ -39,7 +39,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 			throws SecurityException, NoSuchMethodException,
 			IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException, IllegalStateException, IOException,
-			RESTFacadeException {
+			CommunicationException {
 		// Build
 		final String content = "<tripId>2343456</tripId>";
 		// Build an inputStream from to provide the mock object with.
@@ -64,7 +64,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 
 		expect(conn.post((String) anyObject(), (String) anyObject()))
 				.andStubReturn(response);
-		rest = new RESTServerFacade(this.getContext(), conn);
+		rest = new RESTAdapter(this.getContext(), conn);
 		// Make the private method accessible using reflection.
 		Method consume = rest.getClass().getDeclaredMethod(
 				"consumeTripUploadResponse", HttpResponse.class);
@@ -79,7 +79,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 			throws SecurityException, NoSuchMethodException,
 			IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException, IllegalStateException, IOException,
-			RESTFacadeException {
+			CommunicationException {
 		// Build
 		final String content = "<error><code>1</code><message>Payload not text/XML</message></error>";
 		// Build an inputStream from to provide the mock object with.
@@ -106,7 +106,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(conn);
 
 		// Create a new RESTServerHelper class to test with.
-		rest = new RESTServerFacade(this.getContext(), conn);
+		rest = new RESTAdapter(this.getContext(), conn);
 		// Verify
 		rest.uploadTrip(t);
 		// Don't know how to do these assertions right yet.
@@ -114,7 +114,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 	}
 
 	public void testConsumePostWithServerError() throws IllegalStateException,
-			IOException, RESTFacadeException {
+			IOException, CommunicationException {
 		// Build
 		final String content1 = "<error><code>7</code><message>Dummy server error. Unit testing</message></error>";
 		// Build an inputStream from to provide the mock object with.
@@ -159,7 +159,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(conn);
 
 		// Create a new RESTServerHelper class to test with.
-		rest = new RESTServerFacade(this.getContext(), conn);
+		rest = new RESTAdapter(this.getContext(), conn);
 		// Verify
 		rest.uploadTrip(t);
 		Long tripIdResult = t.getRemoteId();
@@ -169,7 +169,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 
 	}
 
-	public void testBuildXMLFromStandAloneEvent() throws RESTFacadeException {
+	public void testBuildXMLFromStandAloneEvent() throws CommunicationException {
 		Trip t = this.generateTrip();
 		t.setRemoteId(42L); // just a random test number
 		Event e1 = new LocationEvent(Calendar.getInstance().getTimeInMillis(),
@@ -216,7 +216,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(response);
 		replay(conn);
 
-		rest = new RESTServerFacade(this.getContext(), conn);
+		rest = new RESTAdapter(this.getContext(), conn);
 
 		ArrayList<Event> eventList1 = new ArrayList<Event>();
 		eventList1.add(e1);
@@ -231,7 +231,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 	}
 
 	public void testBuildXMLFromStandAloneMoodEvent()
-			throws RESTFacadeException {
+			throws CommunicationException {
 		Trip t = this.generateTrip();
 		t.setRemoteId(42L); // just a random test number
 		int mood = 90;
@@ -284,7 +284,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 		replay(response);
 		replay(conn);
 
-		rest = new RESTServerFacade(this.getContext(), conn);
+		rest = new RESTAdapter(this.getContext(), conn);
 
 		ArrayList<Event> eventList1 = new ArrayList<Event>();
 		eventList1.add(e1);
@@ -299,7 +299,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 	}
 
 	public void testGetMoodEvents() throws IllegalStateException,
-			IOException, RESTFacadeException {
+			IOException, CommunicationException {
 		try {
 			// Build up the test
 			final String content1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -331,7 +331,7 @@ public class RESTServerFacadeTest extends AndroidTestCase {
 			replay(conn);
 			replay(entity);
 
-			IRemoteDataFacade rest = new RESTServerFacade(this.getContext(),
+			IRemoteDataFacade rest = new RESTAdapter(this.getContext(),
 					conn);
 
 			// Execute

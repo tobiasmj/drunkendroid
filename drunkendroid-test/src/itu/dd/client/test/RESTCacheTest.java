@@ -4,15 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import itu.dd.client.control.ILocalDataFacade;
 import itu.dd.client.domain.Event;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.tech.DBHelper;
+import itu.dd.client.tech.ILocalDataFacade;
 import itu.dd.client.tech.IRESTCache;
-import itu.dd.client.tech.LocalDataFacadeForSQLite;
+import itu.dd.client.tech.SQLiteAdapter;
 import itu.dd.client.tech.RESTCache;
-import itu.dd.client.tech.WebserviceConnectionREST;
+import itu.dd.client.tech.RESTConnection;
 import android.test.AndroidTestCase;
 
 public class RESTCacheTest extends AndroidTestCase {
@@ -26,7 +26,7 @@ public class RESTCacheTest extends AndroidTestCase {
 
 	protected void setUp() {
 		// Nothing yet
-		_dbh = new LocalDataFacadeForSQLite(this.getContext());
+		_dbh = new SQLiteAdapter(this.getContext());
 	}
 
 	protected void tearDown() {
@@ -69,7 +69,7 @@ public class RESTCacheTest extends AndroidTestCase {
 	public void testSetProcessedWithUploadCalls() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		insertTestData();
 		
-		cache = new RESTCache(mContext, new WebserviceConnectionREST());
+		cache = new RESTCache(mContext, new RESTConnection());
 		//Make some methods available using reflection
 		Method getUploadCandidates = cache.getClass().getDeclaredMethod(GETUPLOADCANDIDATES);
 		getUploadCandidates.setAccessible(true);
@@ -105,7 +105,7 @@ public class RESTCacheTest extends AndroidTestCase {
 	public void testSetProcessedWithUpdateCalls() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		insertTestData();
 		
-		cache = new RESTCache(mContext, new WebserviceConnectionREST());
+		cache = new RESTCache(mContext, new RESTConnection());
 		//Make some methods available using reflection
 		
 		/**

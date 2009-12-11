@@ -5,17 +5,17 @@ import java.util.List;
 
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.control.IDataFacade;
-import itu.dd.client.control.ILocalDataFacade;
 import itu.dd.client.domain.*;
 import itu.dd.client.tech.DBHelper;
-import itu.dd.client.tech.LocalDataFacadeForSQLite;
+import itu.dd.client.tech.ILocalDataFacade;
+import itu.dd.client.tech.SQLiteAdapter;
 import android.test.AndroidTestCase;
 
 public class LocalSQLTest extends AndroidTestCase {
 	ILocalDataFacade _dbh;
 
 	protected void setUp() {
-		_dbh = new LocalDataFacadeForSQLite(this.getContext());
+		_dbh = new SQLiteAdapter(this.getContext());
 	}
 
 	protected void tearDown() {

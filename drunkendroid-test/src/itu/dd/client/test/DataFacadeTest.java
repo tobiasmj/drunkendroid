@@ -2,7 +2,6 @@ package itu.dd.client.test;
 
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.control.IDataFacade;
-import itu.dd.client.control.ILocalDataFacade;
 import itu.dd.client.domain.MoodEvent;
 import itu.dd.client.domain.Trip;
 import itu.dd.client.tech.*;
@@ -13,7 +12,7 @@ public class DataFacadeTest extends AndroidTestCase {
 	IDataFacade data;
 
 	protected void setUp() {
-		dbh = new LocalDataFacadeForSQLite(this.getContext());
+		dbh = new SQLiteAdapter(this.getContext());
 		data = new DataFacade(this.getContext());
 	}
 
