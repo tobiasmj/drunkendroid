@@ -43,12 +43,12 @@ public class DataFacade implements IDataFacade {
 		if(e.getLatitude() != null && e.getLongitude() != null){
 			//also upload to the server, if the location is known.
 			if(t.getRemoteId() == null){
-				_remote.uploadTrip(t);
+				_remote.uploadTrip();
 			}
 			else{
 				ArrayList<Event> eventList = new ArrayList<Event>();
 				eventList.add(e);
-				_remote.updateTrip(t, eventList);
+				_remote.updateTrip();
 			}	
 		}	
 	}
@@ -118,9 +118,9 @@ public class DataFacade implements IDataFacade {
 		
 		//If trip has no RemoteId, upload trip and get it.
 		if(t.getRemoteId() == null)
-			_remote.uploadTrip(t);
+			_remote.uploadTrip();
 		else
-			_remote.updateTrip(t, eventList);
+			_remote.updateTrip();
 	}
 
 	/**

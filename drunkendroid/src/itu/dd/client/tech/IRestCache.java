@@ -12,8 +12,8 @@ public interface IRestCache {
 	public ArrayList<MoodEvent> getReadingEvents(Long starTime, Long endTime, Double ulLatitude, Double ulLongitude, 
 			Double lrLatitude, Double lrLongitude) throws CommunicationException;
 	
-	public void uploadTrip(Trip t);
-	public void updateTrip(Trip t, ArrayList<Event> eventList);
+	public void uploadTrip();
+	public void updateTrip();
 	public void updateFilteredTrip(Trip t, ArrayList<Event> eventList) throws CommunicationException;
 
 	public void closeCache();

@@ -60,10 +60,10 @@ public class RestCache implements IRestCache {
 	}
 	
 	/**
-	 * The parameters are already persisted in the db.
+	 * The trip and events are already persisted in the db.
 	 * So we will discover ourselves what needs to be updated.
 	 */
-	public void updateTrip(Trip t, ArrayList<Event> eventList) {
+	public void updateTrip() {
 		Message m = new Message();
 		m.what = UPDATECALL;
 		_queueLooper.mHandler.sendMessage(m);
@@ -77,7 +77,7 @@ public class RestCache implements IRestCache {
 	public void updateFilteredTrip(Trip t, ArrayList<Event> eventList) throws CommunicationException {
 		try {
 			if(t.getRemoteId() == null) {
-				uploadTrip(t);
+				uploadTrip();
 				throw new CommunicationException(LOGTAG,"Tried to upload a trip without Remote ID");
 			}
 			_server.updateTrip(t, eventList);
@@ -90,10 +90,10 @@ public class RestCache implements IRestCache {
 	}
 	
 	/**
-	 * The parameters are already persisted in the db.
+	 * The trip is already persisted in the db.
 	 * So we will just find the ones which need to be uploaded
 	 */
-	public void uploadTrip(Trip t) {
+	public void uploadTrip() {
 		Message m = new Message();
 		m.what = UPLOADCALL;
 		_queueLooper.mHandler.sendMessage(m);

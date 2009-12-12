@@ -1,7 +1,5 @@
 package itu.dd.client.domain;
 
-import java.util.Calendar;
-
 import android.location.Location;
 
 public abstract class Event implements Comparable<Event> {

@@ -1,6 +1,5 @@
 package itu.dd.client.ui.map;
 
-import itu.dd.client.domain.Event;
 import itu.dd.client.domain.LocationEvent;
 import itu.dd.client.R;
 

@@ -3,7 +3,7 @@
 	package="itu.dd.client" android:versionCode="1"
 	android:versionName="1.0">
 	<application android:icon="@drawable/icon" android:label="@string/appName"
-		android:debuggable="true">
+		android:debuggable="false">
 		<uses-library android:name="com.google.android.maps" />
 		<activity android:name=".ui.activities.MainActivity"
 			android:label="@string/appName">
