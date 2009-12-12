@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="itu.malta.drunkendroid.test"
+      package="itu.dd.client.test"
       android:versionCode="1"
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/app_name">
@@ -8,5 +8,5 @@
     <uses-library android:name="android.test.runner" />
     </application>
     <uses-sdk android:minSdkVersion="4" />
-    <instrumentation android:targetPackage="itu.malta.drunkendroid" android:name="android.test.InstrumentationTestRunner" />
+    <instrumentation android:targetPackage="itu.dd.client" android:name="android.test.InstrumentationTestRunner" />
 </manifest> 

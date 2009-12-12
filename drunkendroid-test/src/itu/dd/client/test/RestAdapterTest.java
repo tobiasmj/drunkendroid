@@ -365,6 +365,7 @@ public class RestAdapterTest extends AndroidTestCase {
 
 	private Trip generateTrip() {
 		Trip t = new Trip();
+		t.setName("TestName");
 		// MoodEvent 1
 		MoodEvent r1 = new MoodEvent(new Long(1255816133),
 				(Double) 35.908422, (Double) 14.502362, 110);
