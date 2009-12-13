@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -43,7 +42,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 	public final static int SERVICE_COMMAND_END_TRIP = 2;
 
 	/**
-	 * First method to be called when creating servce. Sets up the service as a
+	 * First method to be called when creating service. Sets up the service as a
 	 * Singleton.
 	 */
 	@Override
@@ -55,8 +54,6 @@ public class MainService extends Service implements ILocationAdapterListener {
 		_locationManager.registerLocationUpdates(this);
 		RegisterReceivers();
 		StartReadingTimer(getSharedPreferences("prefs_config", MODE_PRIVATE));
-		Log.i(this.getString(R.string.log_tag), "Service started");
-
 	}
 
 	/**
@@ -99,16 +96,16 @@ public class MainService extends Service implements ILocationAdapterListener {
 				String name = intent.getExtras().getString("name");
 				_repo = new TripRepository(this, name);
 				if (getRepository().hasActiveTrip()) {
-					toast = Toast.makeText(this, "Continuing old trip!", 7);
+					toast = Toast.makeText(this, getString(R.string.continuing_trip), 7);
 					toast.show();
 				} else {
-					toast = Toast.makeText(this, "Trip started!", 5);
+					toast = Toast.makeText(this, getString(R.string.trip_started), 5);
 					toast.show();
 				}
 				break;
 			case SERVICE_COMMAND_END_TRIP:
 				getRepository().endTrip();
-				toast = Toast.makeText(this, "Trip ended!", 5);
+				toast = Toast.makeText(this, getString(R.string.trip_ended), 5);
 				toast.show();
 				stopSelf();
 				break;
@@ -136,7 +133,6 @@ public class MainService extends Service implements ILocationAdapterListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.i(this.getString(R.string.log_tag), "Service stopped");
 		UnregisterReceivers();
 		getRepository().closeRepository();
 		_locationManager.unregisterLocationUpdates(this);
@@ -225,18 +221,16 @@ public class MainService extends Service implements ILocationAdapterListener {
 		if (selectedIndex >= 0 && selectedIndex < 5) {
 			Runnable run = new Runnable() {
 				public void run() {
-					System.out.println("MoodRead Intervallet sat til "
-							+ _readingInterval);
 					_moodHandler.postDelayed(this, _readingInterval * 60000);
 					Notification not = new Notification(R.drawable.notification_icon,
-							"Time for a new Mood Reading!", System
+							getString(R.string.how_are_you_feeling), System
 									.currentTimeMillis());
 					not.flags = Notification.FLAG_AUTO_CANCEL;
 					not.defaults |= Notification.DEFAULT_SOUND;
 					not.vibrate = new long[] { 0, 1000, 2000, 3000 };
 					not.setLatestEventInfo(MainService.this,
-							"How are you feeling?",
-							"Click here to make a new Mood Reading!", PendingIntent.getActivity(MainService.this, 0,
+							getString(R.string.how_are_you_feeling),
+							getString(R.string.indicate_mood), PendingIntent.getActivity(MainService.this, 0,
 									moodIntent, 0));
 					_notificationManager.notify(1, not);
 					
