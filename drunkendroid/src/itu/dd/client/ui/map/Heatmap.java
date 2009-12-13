@@ -111,11 +111,11 @@ public class Heatmap{
 		switch(_zoomLevel)
 		{
 			case 19: return 100;
-			case 18: return 80;
-			case 17: return 60;
-			case 16: return 50;
-			case 15: return 40;
-			default: return 30;
+			case 18: return 95;
+			case 17: return 90;
+			case 16: return 85;
+			case 15: return 80;
+			default: return 75;
 		}
 	}
 	

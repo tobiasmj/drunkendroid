@@ -31,12 +31,12 @@ public class MoodmapActivity extends MapActivity {
 
         _mapController = _mapView.getController();
         
-        double lat = 55.686257*1E6;
-        double lng = 12.575125*1E6;
+        double lat = 55.675935*1E6;
+        double lng = 12.576327*1E6;
         
         _gp = new GeoPoint((int)lat,(int)lng);
         
-        _mapController.setZoom(16);
+        _mapController.setZoom(14);
         _mapController.animateTo(_gp, new Runnable() {
 	        public void run()
 	        {

@@ -206,7 +206,7 @@ public class MoodOverlay extends Overlay
 				_mapCenter.getLongitudeE6() != mapView.getMapCenter().getLongitudeE6())
 			_hasMapCenterChanged = true;
 
-		if(mapView.getZoomLevel() < 15)
+		if(mapView.getZoomLevel() < 14)
 			_isHeatmapAvailable = false;
 		else
 			_isHeatmapAvailable = true;
@@ -264,10 +264,10 @@ public class MoodOverlay extends Overlay
 		
 		// Calculate an upper-left and a lower-right corner for the map.
 		// The calculation adds 5 percent in each direction
-		double ulLat = _mapView.getMapCenter().getLatitudeE6()/1E6 + ((latSpan * 1.25) / 2)/1E6;
-		double ulLong = _mapView.getMapCenter().getLongitudeE6()/1E6 - ((longSpan * 1.25) / 2)/1E6;
-		double lrLat = _mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan * 1.25) / 2)/1E6;
-		double lrLong = _mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan * 1.25) / 2)/1E6;
+		double ulLat = _mapView.getMapCenter().getLatitudeE6()/1E6 + ((latSpan * 1.5) / 2)/1E6;
+		double ulLong = _mapView.getMapCenter().getLongitudeE6()/1E6 - ((longSpan * 1.5) / 2)/1E6;
+		double lrLat = _mapView.getMapCenter().getLatitudeE6()/1E6 - ((latSpan * 1.5) / 2)/1E6;
+		double lrLong = _mapView.getMapCenter().getLongitudeE6()/1E6 + ((longSpan * 1.5) / 2)/1E6;
 		
 		ArrayList<MoodEvent> data = null;
 
