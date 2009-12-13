@@ -45,19 +45,30 @@ public class GridCell{
 	 * @return integer from 0-255.
 	 */
 	public long getAverage() {
+		long value;
 		if(_count <= 2 ) {
-			return Math.round((_value/_count)*0.2);
+			return Math.round((_value/_count)*0.25);
 		} else if (_count <=10) {
-			return Math.round((_value/_count)*0.3);
-		} else if (_count <=25) {
 			return Math.round((_value/_count)*0.5);
-		} else if (_count <= 50) {
+		} else if (_count <=25) {
 			return Math.round((_value/_count)*0.75);
+		} else if (_count <= 50) {
+			return Math.round(_value/_count);
 		} else if (_count <= 100) {
-			return Math.round((_value/_count)*0.9);
+			value = Math.round((_value/_count)*1.25);
+			if (value > 255) {
+				value = 255;
+			}
+			return value;
+		} else {
+			value = Math.round((_value/_count)*1.5);
+			if (value > 255) {
+				value = 255;
+			}
+			return value;
 		}
-		return _value/_count;
 	}
+
 	public double getLongitude(){
 		return this._longitude;
 	}
