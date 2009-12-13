@@ -223,7 +223,6 @@ public class MoodOverlay extends Overlay
 		getMoodData();
 		canvas.drawBitmap(_heatmap.createHeatmap(_mapView), 0, 0, null);
 		_startPoint = new Point(0,0); // Reset bitmap upper-left point
-
 		return canvas;
 	}
 	
@@ -291,7 +290,7 @@ public class MoodOverlay extends Overlay
 		
 		if(data != null)
 		{
-			_heatmap.clearMoodMapPoints();
+			_heatmap.clearMoodPoints();
 			
 			int length = data.size();
 			MoodEvent event;
@@ -299,8 +298,8 @@ public class MoodOverlay extends Overlay
 			{
 				event = data.get(i);
 				GeoPoint gp = new GeoPoint((int)(event.getLatitude()*1E6), (int)(event.getLongitude()*1E6));
-				MoodmapPoint mp = new MoodmapPoint(gp, event.getMood());
-				_heatmap.addMoodMapPoint(mp);
+				MoodPoint mp = new MoodPoint(gp, event.getMood());
+				_heatmap.addMoodPoint(mp);
 			}
 		}
 	}

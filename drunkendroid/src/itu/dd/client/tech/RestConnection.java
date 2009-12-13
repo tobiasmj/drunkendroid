@@ -15,7 +15,7 @@ import org.apache.http.params.HttpParams;
 import android.util.Log;
 
 public class RestConnection implements IWebserviceConnection{
-	private static final String BASE_URI = "http://192.168.0.12:8182/drunkendroid/";
+	private static final String BASE_URI = "http://192.168.0.12:8182/drunkdroid/";
 	private static final String targetDomain = "192.168.0.12";
 	private static final String LOGTAG = "WebServiceConnectionREST";
 	private DefaultHttpClient httpClient = new DefaultHttpClient();

@@ -15,35 +15,35 @@
 		<activity android:name=".ui.activities.MoodmapActivity"
 			android:label="@string/activity_mood_map">
 			<intent-filter>
-				<action android:name="itu.malta.drunkendroid.VIEW_MAP" />
+				<action android:name="itu.dd.client.VIEW_MAP" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.activities.ViewTripActivity"
 			android:label="@string/view_trip">
 			<intent-filter>
-				<action android:name="itu.malta.drunkendroid.VIEW_TRIP" />
+				<action android:name="itu.dd.client.VIEW_TRIP" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.activities.SettingsActivity"
 			android:label="@string/activity_app_settings">
 			<intent-filter>
-				<action android:name="itu.malta.drunkendroid.VIEW_SETTINGS" />
+				<action android:name="itu.dd.client.VIEW_SETTINGS" />
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.activities.TripsActivity"
 			android:label="@string/activity_trips">
 			<intent-filter>
-				<action android:name="itu.malta.drunkendroid.VIEW_PREVIOUS_TRIPS" />
+				<action android:name="itu.dd.client.VIEW_PREVIOUS_TRIPS" />
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.activities.MoodReadActivity"
 			android:theme="@style/Dialog_No_Title">
 			<intent-filter>
-				<action android:name="itu.malta.drunkendroid.MOOD_READING" />
+				<action android:name="itu.dd.client.MOOD_READING" />
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
