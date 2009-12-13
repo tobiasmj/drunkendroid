@@ -150,11 +150,11 @@ public class MainService extends Service implements ILocationAdapterListener {
 	 */
 	private void RegisterReceivers() {
 		IntentFilter moodReadingFilter = new IntentFilter(
-				"itu.malta.drunkendroid.NEW_MOOD_READING");
+				"itu.dd.client.NEW_MOOD_READING");
 		this.registerReceiver(_eventHandler, moodReadingFilter);
 
 		IntentFilter locationChangeFilter = new IntentFilter(
-				"itu.malta.drunkendroid.NEW_LOCATION_CHANGE");
+				"itu.dd.client.NEW_LOCATION_CHANGE");
 		this.registerReceiver(_eventHandler, locationChangeFilter);
 
 		IntentFilter outgoingCallFilter = new IntentFilter(
@@ -162,11 +162,11 @@ public class MainService extends Service implements ILocationAdapterListener {
 		this.registerReceiver(_eventHandler, outgoingCallFilter);
 
 		IntentFilter incomingCallFilter = new IntentFilter(
-				"itu.malta.drunkendroid.NEW_INCOMING_CALL");
+				"itu.dd.client.NEW_INCOMING_CALL");
 		this.registerReceiver(_eventHandler, incomingCallFilter);
 
 		IntentFilter outgoingSMSFilter = new IntentFilter(
-				"itu.malta.drunkendroid.NEW_OUTGOING_SMS");
+				"itu.dd.client.NEW_OUTGOING_SMS");
 		this.registerReceiver(_eventHandler, outgoingSMSFilter);
 
 		IntentFilter incomingSMSFilter = new IntentFilter(
@@ -263,7 +263,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			sendBroadcast(new Intent("itu.malta.drunkendroid.NEW_OUTGOING_SMS"));
+			sendBroadcast(new Intent("itu.dd.client.NEW_OUTGOING_SMS"));
 		}
 	}
 
@@ -279,7 +279,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 			// Fire intent only on incoming call.
 			if (state == android.telephony.TelephonyManager.CALL_STATE_RINGING) {
 				Intent i = new Intent(
-						"itu.malta.drunkendroid.NEW_INCOMING_CALL");
+						"itu.dd.client.NEW_INCOMING_CALL");
 				i.putExtra("phoneNumber", incomingNumber);
 				sendBroadcast(i);
 			}
@@ -290,7 +290,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 	 * Interface method called by ILocationAdapter if registered to such.
 	 */
 	public void OnLocationChange(Location location) {
-		Intent i = new Intent("itu.malta.drunkendroid.NEW_LOCATION_CHANGE");
+		Intent i = new Intent("itu.dd.client.NEW_LOCATION_CHANGE");
 		i.putExtra("location", location);
 		sendBroadcast(i);
 	}

@@ -14,7 +14,7 @@ import android.util.Log;
 public class SqliteAdapter implements ILocalDataFacade {
 	private static final String LOGTAG = "LocalDB DrunkenDroid";
 	DbHelper dbHelper;
-	
+
 	//don't use the default constructor
 	@SuppressWarnings("unused")
 	private SqliteAdapter(){};

@@ -22,7 +22,7 @@ public class MoodReadActivity extends Activity {
 		SeekBar seekbar = (SeekBar)findViewById(R.id.SeekBar01);
 		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				Intent i = new Intent("itu.malta.drunkendroid.NEW_MOOD_READING");
+				Intent i = new Intent("itu.dd.client.NEW_MOOD_READING");
 				i.putExtra("mood", (short) seekBar.getProgress());
 				sendBroadcast(i);
 				MoodReadActivity.this.finish();

@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case MainActivity.MENU_SETTINGS:
 			try {
-				intent = new Intent("itu.malta.drunkendroid.VIEW_SETTINGS");
+				intent = new Intent("itu.dd.client.VIEW_SETTINGS");
 				startActivity(intent);
 			} catch (Exception e) {
 				Log.i(this.getString(R.string.log_tag),
@@ -136,7 +136,7 @@ public class MainActivity extends Activity {
 		case MainActivity.MENU_PREVIOUS_TRIPS:
 			try {
 				intent = new Intent(
-						"itu.malta.drunkendroid.VIEW_PREVIOUS_TRIPS");
+						"itu.dd.client.VIEW_PREVIOUS_TRIPS");
 				startActivity(intent);
 			} catch (Exception e) {
 				Log.i(this.getString(R.string.log_tag),
@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
 	private class MySeekbarListener implements SeekBar.OnSeekBarChangeListener {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			System.out.println("Sending Mood Reading!");
-			Intent i = new Intent("itu.malta.drunkendroid.NEW_MOOD_READING");
+			Intent i = new Intent("itu.dd.client.NEW_MOOD_READING");
 			i.putExtra("mood", (short) seekBar.getProgress());
 			sendBroadcast(i);
 			MainActivity.this.slider.animateClose();
@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
 				break;
 			case R.id.mapViewBtn:
 				try {
-					startActivity(new Intent("itu.malta.drunkendroid.VIEW_MAP"));
+					startActivity(new Intent("itu.dd.client.VIEW_MAP"));
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}

@@ -87,7 +87,7 @@ public class TripsActivity extends ListActivity {
 	 */
 	private void ShowTrip(int position) {
 		if (_trips.size() > 0) {
-			Intent i = new Intent("itu.malta.drunkendroid.VIEW_TRIP");
+			Intent i = new Intent("itu.dd.client.VIEW_TRIP");
 			i.putExtra("startTime", _trips.get(position).getStartDate());
 			startActivity(i);
 		}
