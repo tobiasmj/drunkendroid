@@ -29,6 +29,7 @@
 	<string name="map_name">View mood map</string>
 	<string name="indicate_mood">Indicate your mood now.</string>
 	<string name="how_are_you_feeling">How are you feeling?</string>
+	<string name="ask_me_later">Ask me later</string>
 	<string name="trip_started">Trip started</string>
 	<string name="trip_ended">Trip ended</string>
 	<string name="continuing_trip">Continuing old trip</string>

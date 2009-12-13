@@ -148,7 +148,8 @@ public class EventReceiver extends BroadcastReceiver {
 				}
 			}
 		}
-
+		
+		
 		private void handleLocationChange(Intent i) {
 			Log.i("DrunkDroid", "Location change");
 			Location location = (Location) (i.getExtras().get("location"));

@@ -213,8 +213,7 @@ public class MainService extends Service implements ILocationAdapterListener {
 	 *            SharedPreferences containing the mood reading interval.
 	 */
 	private void StartReadingTimer(SharedPreferences sp) {
-		final Intent moodIntent = new Intent(MainService.this,
-				MoodReadActivity.class);
+		final Intent moodIntent = new Intent("itu.dd.client.MOOD_READING");
 		String[] intervalArray = getResources().getStringArray(
 				R.array.mood_read_intervals);
 		int selectedIndex = sp.getInt("moodReadInterval", 0);

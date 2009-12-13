@@ -41,7 +41,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.activities.MoodReadActivity"
-			android:theme="@style/Dialog_No_Title">
+			android:theme="@style/Dialog_No_Title" android:launchMode="singleInstance">
 			<intent-filter>
 				<action android:name="itu.dd.client.MOOD_READING" />
 				<category android:name="android.intent.category.DEFAULT"></category>
