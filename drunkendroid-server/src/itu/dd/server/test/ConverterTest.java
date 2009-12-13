@@ -100,7 +100,7 @@ public class ConverterTest {
 			"      <longitude>14.502362</longitude>\n" +
 			"      <latitude>35.908422</latitude>\n" +
 			"      <data>\n" +
-			"        <reciever>004551883250</reciever>\n" +
+			"        <receiver>004551883250</receiver>\n" +
 			"        <endTime>12558161155</endTime>\n" +
 			"      </data>\n" +
 			"    </event>\n" +
@@ -120,7 +120,7 @@ public class ConverterTest {
 			"      <longitude>14.502362</longitude>\n" +
 			"      <latitude>35.908422</latitude>\n" +
 			"      <data>\n" +
-			"        <reciever>004551883250</reciever>\n" +
+			"        <receiver>004551883250</receiver>\n" +
 			"        <message>test message</message>\n" +
 			"      </data>\n" +
 			"    </event>\n" +
@@ -162,7 +162,7 @@ public class ConverterTest {
 			"    <longitude>14.502362</longitude>\n" +
 			"    <latitude>35.908422</latitude>\n" +
 			"    <data>\n" +
-			"      <reciever>004551883250</reciever>\n" +
+			"      <receiver>004551883250</receiver>\n" +
 			"      <endTime>12558161155</endTime>\n" +
 			"    </data>\n" +
 			"  </event>\n" +
@@ -182,7 +182,7 @@ public class ConverterTest {
 			"    <longitude>14.502362</longitude>\n" +
 			"    <latitude>35.908422</latitude>\n" +
 			"    <data>\n" +
-			"      <reciever>004551883250</reciever>\n" +
+			"      <receiver>004551883250</receiver>\n" +
 			"      <message>test message</message>\n" +
 			"    </data>\n" +
 			"  </event>\n" +
@@ -245,9 +245,9 @@ public class ConverterTest {
 				Assert.assertEquals(_call1.getLatitude(), callEvent.getLatitude());
 				Assert.assertEquals(_call1.getLongitude(), callEvent.getLongitude());
 				if(callEvent.getCaller().equals("0")) {
-					Assert.assertEquals(_call2.getReciever(),callEvent.getReciever());
+					Assert.assertEquals(_call2.getreceiver(),callEvent.getreceiver());
 
-				} else if (callEvent.getReciever().equals("0")) {
+				} else if (callEvent.getreceiver().equals("0")) {
 					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
 				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
@@ -259,9 +259,9 @@ public class ConverterTest {
 				Assert.assertEquals(_sms1.getLatitude(), smsEvent.getLatitude());
 				Assert.assertEquals(_sms1.getLongitude(), smsEvent.getLongitude());
 				if(smsEvent.getSender().equals("0")) {
-					Assert.assertEquals(_sms2.getReciever(),smsEvent.getReciever());
+					Assert.assertEquals(_sms2.getreceiver(),smsEvent.getreceiver());
 
-				} else if (smsEvent.getReciever().equals("0")) {
+				} else if (smsEvent.getreceiver().equals("0")) {
 					Assert.assertEquals(_sms1.getSender(),smsEvent.getSender());
 				}
 				Assert.assertEquals(_sms1.getMessage(),smsEvent.getMessage());
@@ -330,9 +330,9 @@ public class ConverterTest {
 				Assert.assertEquals(_call1.getLatitude(), callEvent.getLatitude());
 				Assert.assertEquals(_call1.getLongitude(), callEvent.getLongitude());
 				if(callEvent.getCaller().equals("0")) {
-					Assert.assertEquals(_call2.getReciever(),callEvent.getReciever());
+					Assert.assertEquals(_call2.getreceiver(),callEvent.getreceiver());
 
-				} else if (callEvent.getReciever().equals("0")) {
+				} else if (callEvent.getreceiver().equals("0")) {
 					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
 				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
@@ -344,9 +344,9 @@ public class ConverterTest {
 				Assert.assertEquals(_sms1.getLatitude(), smsEvent.getLatitude());
 				Assert.assertEquals(_sms1.getLongitude(), smsEvent.getLongitude());
 				if(smsEvent.getSender().equals("0")) {
-					Assert.assertEquals(_sms2.getReciever(),smsEvent.getReciever());
+					Assert.assertEquals(_sms2.getreceiver(),smsEvent.getreceiver());
 
-				} else if (smsEvent.getReciever().equals("0")) {
+				} else if (smsEvent.getreceiver().equals("0")) {
 					Assert.assertEquals(_sms1.getSender(),smsEvent.getSender());
 				}
 				Assert.assertEquals(_sms1.getMessage(),smsEvent.getMessage());

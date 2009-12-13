@@ -15,7 +15,7 @@ public class CallEvent implements IEvent{
 	private double _latitude, _longitude;
 	private long _tripId = 0;
 	private String _caller;
-	private String _reciever;
+	private String _receiver;
 	private long _endTime;
 
 	public long getTripId() {
@@ -31,12 +31,12 @@ public class CallEvent implements IEvent{
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public CallEvent (long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
+	public CallEvent (long timeStamp, double latitude, double longitude, String caller, String receiver, long endTime) {
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
 		this._caller = caller;
-		this._reciever = reciever;
+		this._receiver = receiver;
 		this._endTime = endTime;
 	}
 	/**
@@ -46,13 +46,13 @@ public class CallEvent implements IEvent{
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public CallEvent (long tripId, long timeStamp, double latitude, double longitude, String caller, String reciever, long endTime) {
+	public CallEvent (long tripId, long timeStamp, double latitude, double longitude, String caller, String receiver, long endTime) {
 		this._tripId = tripId;
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
 		this._caller = caller;
-		this._reciever = reciever;
+		this._receiver = receiver;
 		this._endTime = endTime;
 	}
 	public String getEventType() {
@@ -96,8 +96,8 @@ public class CallEvent implements IEvent{
 	public String getCaller() {
 		return _caller;
 	}
-	public String getReciever() {
-		return _reciever;
+	public String getreceiver() {
+		return _receiver;
 	}
 	public long getEndTime() {
 		return _endTime;

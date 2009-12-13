@@ -59,9 +59,9 @@ public class TripConverter implements Converter{
 					writer.setValue(callEvent.getCaller());
 					writer.endNode();
 				}
-				if(!callEvent.getReciever().equals("0")) {
-					writer.startNode("reciever");
-					writer.setValue(callEvent.getReciever());
+				if(!callEvent.getreceiver().equals("0")) {
+					writer.startNode("receiver");
+					writer.setValue(callEvent.getreceiver());
 					writer.endNode();
 				}
 				writer.startNode("endTime");
@@ -76,9 +76,9 @@ public class TripConverter implements Converter{
 					writer.setValue(smsEvent.getSender());
 					writer.endNode();
 				}
-				if(!smsEvent.getReciever().equals("0")) {
-					writer.startNode("reciever");
-					writer.setValue(smsEvent.getReciever());
+				if(!smsEvent.getreceiver().equals("0")) {
+					writer.startNode("receiver");
+					writer.setValue(smsEvent.getreceiver());
 					writer.endNode();
 				}
 				writer.startNode("message");
@@ -122,7 +122,7 @@ public class TripConverter implements Converter{
 		String name = "";
 		String eventType = "";
 		String caller = "0";
-		String reciever = "0";
+		String receiver = "0";
 		String message = "";
 		String sender = "0";
 		long endTime = -1;
@@ -162,16 +162,16 @@ public class TripConverter implements Converter{
 									}else if(eventType.equals("call")) {
 										if("caller".equals(reader.getNodeName())) {
 											caller = String.valueOf(reader.getValue());
-										} else if ("reciever".equals(reader.getNodeName())) {
-											reciever = String.valueOf(reader.getValue());
+										} else if ("receiver".equals(reader.getNodeName())) {
+											receiver = String.valueOf(reader.getValue());
 										}else if ("endTime".equals(reader.getNodeName())) {
 											endTime = Long.valueOf(reader.getValue());
 										}
 									}else if(eventType.equals("SMS")) {
 										if("sender".equals(reader.getNodeName())) {
 											sender = String.valueOf(reader.getValue());
-										} else if ("reciever".equals(reader.getNodeName())) {
-											reciever = String.valueOf(reader.getValue());
+										} else if ("receiver".equals(reader.getNodeName())) {
+											receiver = String.valueOf(reader.getValue());
 										}else if ("message".equals(reader.getNodeName())) {
 											message = String.valueOf(reader.getValue());
 										}
@@ -189,9 +189,9 @@ public class TripConverter implements Converter{
 					} else if(eventType.equals("location")) {
 						events.add(new LocationEvent(timeStamp, longitude, latitude));
 					} else if (eventType.equals("call")) {
-						events.add(new CallEvent(timeStamp,latitude,latitude,caller,reciever,endTime));
+						events.add(new CallEvent(timeStamp,latitude,latitude,caller,receiver,endTime));
 					} else if (eventType.equals("SMS")) {
-						events.add(new SmsEvent(timeStamp,latitude,longitude,sender,reciever,message));
+						events.add(new SmsEvent(timeStamp,latitude,longitude,sender,receiver,message));
 					}
 					reader.moveUp();
 				}

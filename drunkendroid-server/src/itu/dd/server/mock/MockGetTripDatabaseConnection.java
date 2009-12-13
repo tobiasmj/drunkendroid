@@ -44,10 +44,10 @@ public class MockGetTripDatabaseConnection implements IDatabaseConnection {
 			expect(stmt.executeQuery("Select timeStamp, longitude,latitude from Location where trip = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
-			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from PhoneCall where trip = 1")).andReturn(rs);
+			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,caller,receiver,endTimeStamp from PhoneCall where trip = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
-			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,sender,reciever,message from SMS where trip = 1")).andReturn(rs);
+			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,sender,receiver,message from SMS where trip = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
 			expect(stmt.executeQuery("Select name,startTimeStamp,endTimeStamp from Trip where id = 1")).andReturn(rs);
@@ -77,7 +77,7 @@ public class MockGetTripDatabaseConnection implements IDatabaseConnection {
 			expect(rs.getDouble("latitude")).andReturn(1D);
 			expect(rs.getDouble("longitude")).andReturn(2D);
 			expect(rs.getString("caller")).andReturn("004551883250");
-			expect(rs.getString("reciever")).andReturn("004551883250");
+			expect(rs.getString("receiver")).andReturn("004551883250");
 			expect(rs.getLong("endTimeStamp")).andReturn(2L);
 			expect(rs.next()).andReturn(false);
 
@@ -86,7 +86,7 @@ public class MockGetTripDatabaseConnection implements IDatabaseConnection {
 			expect(rs.getDouble("latitude")).andReturn(1D);
 			expect(rs.getDouble("longitude")).andReturn(2D);
 			expect(rs.getString("sender")).andReturn("004551883250");
-			expect(rs.getString("reciever")).andReturn("004551883250");
+			expect(rs.getString("receiver")).andReturn("004551883250");
 			expect(rs.getString("message")).andReturn("test message");
 			expect(rs.next()).andReturn(false);
 

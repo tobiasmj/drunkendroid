@@ -63,7 +63,7 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into PhoneCall(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
+				_stmt.executeUpdate("Insert into PhoneCall(trip,timeStamp,latitude,longitude,caller,receiver,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getreceiver() + "," + call.getEndTime() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -97,7 +97,7 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				_stmt.executeUpdate("Insert into SMS(trip,timeStamp,latitude,longitude,sender,reciever) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getReciever() + "," + sms.getMessage() + ")");
+				_stmt.executeUpdate("Insert into SMS(trip,timeStamp,latitude,longitude,sender,receiver) values (" + sms.getTripId() + "," + sms.getTimeStamp() + "," + sms.getLatitude() + "," + sms.getLongitude() + "," + sms.getSender() + "," + sms.getreceiver() + "," + sms.getMessage() + ")");
 			} finally {
 				// cleanup
 				if (rs != null) {
@@ -302,19 +302,19 @@ public class Repository {
 			}
 
 			// get all call events for a given tripId
-			_stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from PhoneCall where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp, longitude,latitude,caller,receiver,endTimeStamp from PhoneCall where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new CallEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTimeStamp")));
+				events.add(new CallEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("receiver"), rs.getLong("endTimeStamp")));
 			}
 
 			// get all sms events for a given tripId
-			_stmt.executeQuery("Select timeStamp, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
+			_stmt.executeQuery("Select timeStamp, longitude,latitude,sender,receiver,message from SMS where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
 
 			while (rs.next()) {
-				events.add(new SmsEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("reciever"), rs.getString("message")));
+				events.add(new SmsEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("sender"), rs.getString("receiver"), rs.getString("message")));
 			}
 
 			// create trip object 

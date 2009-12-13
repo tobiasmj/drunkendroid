@@ -180,7 +180,7 @@ public class RepositoryTest {
 				Assert.assertEquals(eCall.getLongitude(), cEvent.getLongitude());				
 				Assert.assertEquals(eCall.getTimeStamp(), cEvent.getTimeStamp());
 				Assert.assertEquals(eCall.getCaller(), cEvent.getCaller());
-				Assert.assertEquals(eCall.getReciever(), cEvent.getReciever());
+				Assert.assertEquals(eCall.getreceiver(), cEvent.getreceiver());
 				Assert.assertEquals(eCall.getEndTime(), cEvent.getEndTime());
 			} else if (SmsEvent.class.isInstance(event)) {
 				SmsEvent sEvent = (SmsEvent)event;
@@ -188,7 +188,7 @@ public class RepositoryTest {
 				Assert.assertEquals(eSms.getLongitude(), sEvent.getLongitude());				
 				Assert.assertEquals(eSms.getTimeStamp(), sEvent.getTimeStamp());
 				Assert.assertEquals(eSms.getSender(), sEvent.getSender());
-				Assert.assertEquals(eSms.getReciever(), sEvent.getReciever());
+				Assert.assertEquals(eSms.getreceiver(), sEvent.getreceiver());
 				Assert.assertEquals(eSms.getMessage(), sEvent.getMessage());	
 			}
 		}

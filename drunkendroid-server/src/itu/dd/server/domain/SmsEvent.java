@@ -14,7 +14,7 @@ public class SmsEvent implements IEvent{
 	private long _timeStamp;
 	private double _latitude, _longitude;
 	private long _tripId = 0;
-	private String _reciever;
+	private String _receiver;
 	private String _sender;
 	private String _message;
 
@@ -31,11 +31,11 @@ public class SmsEvent implements IEvent{
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public SmsEvent (long timeStamp, double latitude, double longitude, String sender, String reciever, String message) {
+	public SmsEvent (long timeStamp, double latitude, double longitude, String sender, String receiver, String message) {
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
-		this._reciever = reciever;
+		this._receiver = receiver;
 		this._sender = sender;
 		this._message = message;
 	}
@@ -46,12 +46,12 @@ public class SmsEvent implements IEvent{
 	 * @param latitude the latitude of the reading
 	 * @param longitude the longitude of the reading
 	 */
-	public SmsEvent (long tripId, long timeStamp, double latitude, double longitude, String sender, String reciever, String message) {
+	public SmsEvent (long tripId, long timeStamp, double latitude, double longitude, String sender, String receiver, String message) {
 		this._tripId = tripId;
 		this._timeStamp = timeStamp;
 		this._latitude = latitude;
 		this._longitude = longitude;
-		this._reciever = reciever;
+		this._receiver = receiver;
 		this._sender = sender;
 		this._message = message;
 	}
@@ -96,8 +96,8 @@ public class SmsEvent implements IEvent{
 	public String getSender() {
 		return _sender;
 	}
-	public String getReciever() {
-		return _reciever;
+	public String getreceiver() {
+		return _receiver;
 	}
 	public String getMessage() {
 		return _message;
