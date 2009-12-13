@@ -44,13 +44,13 @@ public class MockGetTripDatabaseConnection implements IDatabaseConnection {
 			expect(stmt.executeQuery("Select timeStamp, longitude,latitude from Location where trip = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
-			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from Call where trip = 1")).andReturn(rs);
+			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from PhoneCall where trip = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
 			expect(stmt.executeQuery("Select timeStamp, longitude,latitude,sender,reciever,message from SMS where trip = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
-			expect(stmt.executeQuery("Select name,startTimeStamp,endTimeStamp from trip where id = 1")).andReturn(rs);
+			expect(stmt.executeQuery("Select name,startTimeStamp,endTimeStamp from Trip where id = 1")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
 			stmt.close();
