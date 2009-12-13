@@ -35,8 +35,8 @@ public class EventResource extends ServerResource {
 	private long _tripId;
 	private long _IMEINumber;
 
-	
-	
+
+
 	/**
 	 * Method invoked for adding events 
 	 * @param entity
@@ -46,23 +46,18 @@ public class EventResource extends ServerResource {
 	@Post
 	public Representation storeRepresentation(Representation entity) throws ResourceException {
 		DomRepresentation result = null;
-		//not being used atm.
-		//imeiNumber = (String) getRequest().getAttributes().get("IMEI");
+
 		//get the tripID
 		_tripId = Integer.parseInt((String)getRequest().getAttributes().get("TripId"));
 		_IMEINumber = Long.parseLong((String)getRequest().getAttributes().get("IMEI"));
-		
+
 		// Testing if the HTTP content-type is XML.
 		if (entity.getMediaType().equals(MediaType.TEXT_XML,true)) {
 			try{
 
 				// setting up the repository 
 				Repository rep = new Repository(DatabaseConnection.getInstance().getConn());
-				
-				/*if (!rep.checkTripExist(_tripId, _IMEINumber)) {
-					setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-					result = XmlResponse.generateErrorRepresentation("A Trip with TripId:" + _tripId + " and IMEI number:" + _IMEINumber + " does not exsist", "8");
-				}*/
+
 				// setting up XStream for marshaling and un-marshalling events.
 				XStream xStream = new XStream();
 				xStream.registerConverter(new EventConverter());
@@ -70,13 +65,13 @@ public class EventResource extends ServerResource {
 				xStream.alias("events", LocationEvent.class);
 				xStream.alias("events", CallEvent.class);
 				xStream.alias("events", SmsEvent.class);
-				
+
 				// parse the xml
 				Object uncastedEvents = xStream.fromXML(entity.getStream());
 
 				LinkedList<?> events = (LinkedList<?>)uncastedEvents; 
 				IEvent event;
-				
+
 				// iterate the events and create the prober class instances. 
 				for (int i = 0; i < events.size(); i++ ) {
 					event = (IEvent) events.get(i);
@@ -95,7 +90,7 @@ public class EventResource extends ServerResource {
 						rep.insertSms(sEvent);
 					}
 				}
-				
+
 				// set the status and build an response 
 				setStatus(Status.SUCCESS_CREATED);
 			} catch (SQLException e) {
@@ -103,16 +98,14 @@ public class EventResource extends ServerResource {
 				result = XmlResponse.generateErrorRepresentation("Error inserting data in database", "4");	
 			} catch (IOException e) {
 				setStatus(Status.SERVER_ERROR_INTERNAL);
-
 			}
 		} else {
 			// not text/XML format
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			result = XmlResponse.generateErrorRepresentation("Payload not text/XML", "1");
-
 		}
 		return result;
-		
+
 	}
 }
 

@@ -57,7 +57,7 @@ public class MoodmapTest {
 		XStream xStream = new XStream();
 		xStream.registerConverter(new MoodMapConverter());
 		xStream.alias("p",GridCell.class);
-	
+
 		LinkedList<?> gc = (LinkedList<?>)xStream.fromXML("<p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\" />");
 		GridCell tgc = new GridCell(14.4889622588559, 35.9237275622272);
 		tgc.addValue(120);
@@ -86,7 +86,7 @@ public class MoodmapTest {
 		String xmlOutput = xStream.toXML(cc);
 		//xmlOutput = xmlOutput.replaceAll("\n", "").replaceAll(" ", "");
 		Assert.assertEquals("<p value=\"120\" long=\"14.4889622588559\" lat=\"35.9237275622272\"/>",xmlOutput);
-		
+
 	}
 
 
@@ -96,7 +96,7 @@ public class MoodmapTest {
 	@Test
 	public void testCanConvert() {
 		MoodMapConverter mmc = new MoodMapConverter();
-		
+
 		GridCell cc = createMock(GridCell.class);
 		expect(cc.getLatitude()).andStubReturn(35.9237275622272);
 		expect(cc.getLongitude()).andStubReturn(14.4889622588559);
@@ -105,5 +105,5 @@ public class MoodmapTest {
 
 		Assert.assertEquals(true,mmc.canConvert(GridCell.class));
 	}
-	
+
 }

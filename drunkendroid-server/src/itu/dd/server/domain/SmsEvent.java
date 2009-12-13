@@ -8,19 +8,7 @@ import itu.dd.server.interfaces.IEvent;
  * Class representing a SMS.
  *
  */
-/*
- *        <event>
-     <eventType>sms</eventType>
-     <dateTime>1255816133</dateTime>
-     <latitude>35.908422</latitude>
-     <longitude>14.502362</longitude>
-     <data>
-      <sender>0036577293610</sender>
-      <receiver>0036577104516</receiver>
-      <message>Hi, bring two bottles of gin.</message>
-     </data
-   </event>
- */
+
 public class SmsEvent implements IEvent{
 
 	private long _timeStamp;
@@ -29,7 +17,7 @@ public class SmsEvent implements IEvent{
 	private String _reciever;
 	private String _sender;
 	private String _message;
-	
+
 	public long getTripId() {
 		return _tripId;
 	}
@@ -97,13 +85,13 @@ public class SmsEvent implements IEvent{
 	@Override
 	public void setLongitude(double longitude) {
 		this._longitude = longitude;
-		
+
 	}
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
 		_timeStamp = timeStamp;
-		
+
 	}
 	public String getSender() {
 		return _sender;

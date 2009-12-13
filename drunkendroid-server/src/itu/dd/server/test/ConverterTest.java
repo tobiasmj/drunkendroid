@@ -1,7 +1,5 @@
 package itu.dd.server.test;
 
-
-
 import java.util.LinkedList;
 import junit.framework.Assert;
 import itu.dd.server.domain.CallEvent;
@@ -53,148 +51,148 @@ public class ConverterTest {
 		_call2 = new CallEvent(1255816133L,35.908422D,14.502362D,"0","004551883250",12558161155L);
 		_sms1 = new SmsEvent(1255816133L,35.908422D,14.502362D,"004551883250","0","test message");
 		_sms2 = new SmsEvent(1255816133L,35.908422D,14.502362D,"0","004551883250","test message");
-		
+
 		_events.add(_mood);
 		_events.add(_loc);
 		_events.add(_call1);
 		_events.add(_call2);
 		_events.add(_sms1);
 		_events.add(_sms2);
-		
+
 		_trip.addEvent(_mood);
 		_trip.addEvent(_loc);
 		_trip.addEvent(_call1);
 		_trip.addEvent(_call2);
 		_trip.addEvent(_sms1);
 		_trip.addEvent(_sms2);
-		
+
 		_tripXML = 
 			"<trip>\n" +
-	  		"  <events>\n" +
-	    	"    <event>\n" +
-	     	"      <eventType>mood</eventType>\n" +
-	     	"      <dateTime>1255816133</dateTime>\n" +
-	     	"      <longitude>14.502362</longitude>\n" +
-	     	"      <latitude>35.908422</latitude>\n" +
-	     	"      <data>\n" +
-	      	"        <mood>124</mood>\n" +
-	     	"      </data>\n" +
-	   		"    </event>\n" +
-	    	"    <event>\n" +
-	     	"      <eventType>location</eventType>\n" +
-	     	"      <dateTime>1255816133</dateTime>\n" +
-	     	"      <longitude>14.502362</longitude>\n" +
-	     	"      <latitude>35.908422</latitude>\n" +
-	   		"    </event>\n" +
-	    	"    <event>\n" +
-	     	"      <eventType>call</eventType>\n" +
-	     	"      <dateTime>1255816133</dateTime>\n" +
-	     	"      <longitude>14.502362</longitude>\n" +
-	     	"      <latitude>35.908422</latitude>\n" +
-	     	"      <data>\n" +
-	      	"        <caller>004551883250</caller>\n" +
-	      	"        <endTime>12558161155</endTime>\n" +
-	     	"      </data>\n" +
-	   		"    </event>\n" +
-	   		"    <event>\n" +
-	     	"      <eventType>call</eventType>\n" +
-	     	"      <dateTime>1255816133</dateTime>\n" +
-	     	"      <longitude>14.502362</longitude>\n" +
-	     	"      <latitude>35.908422</latitude>\n" +
-	     	"      <data>\n" +
-	      	"        <reciever>004551883250</reciever>\n" +
-	      	"        <endTime>12558161155</endTime>\n" +
-	     	"      </data>\n" +
-	   		"    </event>\n" +
-	    	"    <event>\n" +
-	     	"      <eventType>SMS</eventType>\n" +
-	     	"      <dateTime>1255816133</dateTime>\n" +
-	     	"      <longitude>14.502362</longitude>\n" +
-	     	"      <latitude>35.908422</latitude>\n" +
-	     	"      <data>\n" +
-	      	"        <sender>004551883250</sender>\n" +
-	      	"        <message>test message</message>\n" +
-	     	"      </data>\n" +
-	   		"    </event>\n" +
-	   		"    <event>\n" +
-	     	"      <eventType>SMS</eventType>\n" +
-	     	"      <dateTime>1255816133</dateTime>\n" +
-	     	"      <longitude>14.502362</longitude>\n" +
-	     	"      <latitude>35.908422</latitude>\n" +
-	     	"      <data>\n" +
-	      	"        <reciever>004551883250</reciever>\n" +
-	      	"        <message>test message</message>\n" +
-	     	"      </data>\n" +
-	   		"    </event>\n" +
-	   		"  </events>\n" +
-	  		"  <startDateTime>1255816133</startDateTime>\n" +
-	  		"  <endDateTime>1255816133</endDateTime>\n" +
-	  		"  <name>ginsaturday</name>\n" +
+			"  <events>\n" +
+			"    <event>\n" +
+			"      <eventType>mood</eventType>\n" +
+			"      <dateTime>1255816133</dateTime>\n" +
+			"      <longitude>14.502362</longitude>\n" +
+			"      <latitude>35.908422</latitude>\n" +
+			"      <data>\n" +
+			"        <mood>124</mood>\n" +
+			"      </data>\n" +
+			"    </event>\n" +
+			"    <event>\n" +
+			"      <eventType>location</eventType>\n" +
+			"      <dateTime>1255816133</dateTime>\n" +
+			"      <longitude>14.502362</longitude>\n" +
+			"      <latitude>35.908422</latitude>\n" +
+			"    </event>\n" +
+			"    <event>\n" +
+			"      <eventType>call</eventType>\n" +
+			"      <dateTime>1255816133</dateTime>\n" +
+			"      <longitude>14.502362</longitude>\n" +
+			"      <latitude>35.908422</latitude>\n" +
+			"      <data>\n" +
+			"        <caller>004551883250</caller>\n" +
+			"        <endTime>12558161155</endTime>\n" +
+			"      </data>\n" +
+			"    </event>\n" +
+			"    <event>\n" +
+			"      <eventType>call</eventType>\n" +
+			"      <dateTime>1255816133</dateTime>\n" +
+			"      <longitude>14.502362</longitude>\n" +
+			"      <latitude>35.908422</latitude>\n" +
+			"      <data>\n" +
+			"        <reciever>004551883250</reciever>\n" +
+			"        <endTime>12558161155</endTime>\n" +
+			"      </data>\n" +
+			"    </event>\n" +
+			"    <event>\n" +
+			"      <eventType>SMS</eventType>\n" +
+			"      <dateTime>1255816133</dateTime>\n" +
+			"      <longitude>14.502362</longitude>\n" +
+			"      <latitude>35.908422</latitude>\n" +
+			"      <data>\n" +
+			"        <sender>004551883250</sender>\n" +
+			"        <message>test message</message>\n" +
+			"      </data>\n" +
+			"    </event>\n" +
+			"    <event>\n" +
+			"      <eventType>SMS</eventType>\n" +
+			"      <dateTime>1255816133</dateTime>\n" +
+			"      <longitude>14.502362</longitude>\n" +
+			"      <latitude>35.908422</latitude>\n" +
+			"      <data>\n" +
+			"        <reciever>004551883250</reciever>\n" +
+			"        <message>test message</message>\n" +
+			"      </data>\n" +
+			"    </event>\n" +
+			"  </events>\n" +
+			"  <startDateTime>1255816133</startDateTime>\n" +
+			"  <endDateTime>1255816133</endDateTime>\n" +
+			"  <name>ginsaturday</name>\n" +
 			"</trip>";
 		_eventsXML = 
 			"<events>\n" +
 			"  <event>\n" +
-	     	"    <eventType>mood</eventType>\n" +
-	     	"    <dateTime>1255816133</dateTime>\n" +
-	     	"    <longitude>14.502362</longitude>\n" +
-	     	"    <latitude>35.908422</latitude>\n" +
-	     	"    <data>\n" +
-	      	"      <mood>124</mood>\n" +
-	     	"    </data>\n" +
-	   		"  </event>\n" +
+			"    <eventType>mood</eventType>\n" +
+			"    <dateTime>1255816133</dateTime>\n" +
+			"    <longitude>14.502362</longitude>\n" +
+			"    <latitude>35.908422</latitude>\n" +
+			"    <data>\n" +
+			"      <mood>124</mood>\n" +
+			"    </data>\n" +
+			"  </event>\n" +
 			"  <event>\n" +
 			"    <eventType>location</eventType>\n" +
 			"    <dateTime>1255816133</dateTime>\n" +
 			"    <longitude>14.502362</longitude>\n" +
 			"    <latitude>35.908422</latitude>\n" +
 			"  </event>\n" +
-	    	"  <event>\n" +
-	     	"    <eventType>call</eventType>\n" +
-	     	"    <dateTime>1255816133</dateTime>\n" +
-	     	"    <longitude>14.502362</longitude>\n" +
-	     	"    <latitude>35.908422</latitude>\n" +
-	     	"    <data>\n" +
-	      	"      <caller>004551883250</caller>\n" +
-	      	"      <endTime>12558161155</endTime>\n" +
-	     	"    </data>\n" +
-	   		"  </event>\n" +
-	   		"  <event>\n" +
-	     	"    <eventType>call</eventType>\n" +
-	     	"    <dateTime>1255816133</dateTime>\n" +
-	     	"    <longitude>14.502362</longitude>\n" +
-	     	"    <latitude>35.908422</latitude>\n" +
-	     	"    <data>\n" +
-	      	"      <reciever>004551883250</reciever>\n" +
-	      	"      <endTime>12558161155</endTime>\n" +
-	     	"    </data>\n" +
-	   		"  </event>\n" +
-	    	"  <event>\n" +
-	     	"    <eventType>SMS</eventType>\n" +
-	     	"    <dateTime>1255816133</dateTime>\n" +
-	     	"    <longitude>14.502362</longitude>\n" +
-	     	"    <latitude>35.908422</latitude>\n" +
-	     	"    <data>\n" +
-	      	"      <sender>004551883250</sender>\n" +
-	      	"      <message>test message</message>\n" +
-	     	"    </data>\n" +
-	   		"  </event>\n" +
-	   		"  <event>\n" +
-	     	"    <eventType>SMS</eventType>\n" +
-	     	"    <dateTime>1255816133</dateTime>\n" +
-	     	"    <longitude>14.502362</longitude>\n" +
-	     	"    <latitude>35.908422</latitude>\n" +
-	     	"    <data>\n" +
-	      	"      <reciever>004551883250</reciever>\n" +
-	      	"      <message>test message</message>\n" +
-	     	"    </data>\n" +
-	   		"  </event>\n" +
+			"  <event>\n" +
+			"    <eventType>call</eventType>\n" +
+			"    <dateTime>1255816133</dateTime>\n" +
+			"    <longitude>14.502362</longitude>\n" +
+			"    <latitude>35.908422</latitude>\n" +
+			"    <data>\n" +
+			"      <caller>004551883250</caller>\n" +
+			"      <endTime>12558161155</endTime>\n" +
+			"    </data>\n" +
+			"  </event>\n" +
+			"  <event>\n" +
+			"    <eventType>call</eventType>\n" +
+			"    <dateTime>1255816133</dateTime>\n" +
+			"    <longitude>14.502362</longitude>\n" +
+			"    <latitude>35.908422</latitude>\n" +
+			"    <data>\n" +
+			"      <reciever>004551883250</reciever>\n" +
+			"      <endTime>12558161155</endTime>\n" +
+			"    </data>\n" +
+			"  </event>\n" +
+			"  <event>\n" +
+			"    <eventType>SMS</eventType>\n" +
+			"    <dateTime>1255816133</dateTime>\n" +
+			"    <longitude>14.502362</longitude>\n" +
+			"    <latitude>35.908422</latitude>\n" +
+			"    <data>\n" +
+			"      <sender>004551883250</sender>\n" +
+			"      <message>test message</message>\n" +
+			"    </data>\n" +
+			"  </event>\n" +
+			"  <event>\n" +
+			"    <eventType>SMS</eventType>\n" +
+			"    <dateTime>1255816133</dateTime>\n" +
+			"    <longitude>14.502362</longitude>\n" +
+			"    <latitude>35.908422</latitude>\n" +
+			"    <data>\n" +
+			"      <reciever>004551883250</reciever>\n" +
+			"      <message>test message</message>\n" +
+			"    </data>\n" +
+			"  </event>\n" +
 			"</events>";
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
 	 * Test method for {@link TripConverter#marshal(Object value, HierarchicalStreamWriter writer,
 	 *		MarshallingContext context)}
@@ -217,12 +215,12 @@ public class ConverterTest {
 		_xStream = new XStream();
 		_xStream.registerConverter(new TripConverter());
 		_xStream.alias("trip", Trip.class);
-		
+
 		Trip testTrip = (Trip)_xStream.fromXML(_tripXML);
 		Assert.assertEquals(_trip.getName(), testTrip.getName());
 		Assert.assertEquals(_trip.getEndTime(), testTrip.getEndTime());
 		Assert.assertEquals(_trip.getStartTime(), testTrip.getStartTime());
-		
+
 		while (_trip.moreEvents()) {
 			IEvent testEvent = _trip.getNextEvent();
 			if (testEvent.getClass().equals(MoodEvent.class)) {
@@ -240,7 +238,7 @@ public class ConverterTest {
 				Assert.assertEquals(_loc.getLatitude(), locationTestEvent.getLatitude());
 				Assert.assertEquals(_loc.getLongitude(), locationTestEvent.getLongitude());
 			} else if (testEvent.getClass().equals(CallEvent.class)) {
-				
+
 				CallEvent callEvent = (CallEvent) testEvent;
 				Assert.assertEquals(_call1.getTimeStamp(), callEvent.getTimeStamp());
 				Assert.assertEquals(_call1.getType(), callEvent.getType());
@@ -248,13 +246,13 @@ public class ConverterTest {
 				Assert.assertEquals(_call1.getLongitude(), callEvent.getLongitude());
 				if(callEvent.getCaller().equals("0")) {
 					Assert.assertEquals(_call2.getReciever(),callEvent.getReciever());
-					
+
 				} else if (callEvent.getReciever().equals("0")) {
 					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
 				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
 			} else if (testEvent.getClass().equals(SmsEvent.class)) {
-				
+
 				SmsEvent smsEvent = (SmsEvent) testEvent;
 				Assert.assertEquals(_sms1.getTimeStamp(), smsEvent.getTimeStamp());
 				Assert.assertEquals(_sms1.getType(), smsEvent.getType());
@@ -262,14 +260,14 @@ public class ConverterTest {
 				Assert.assertEquals(_sms1.getLongitude(), smsEvent.getLongitude());
 				if(smsEvent.getSender().equals("0")) {
 					Assert.assertEquals(_sms2.getReciever(),smsEvent.getReciever());
-					
+
 				} else if (smsEvent.getReciever().equals("0")) {
 					Assert.assertEquals(_sms1.getSender(),smsEvent.getSender());
 				}
 				Assert.assertEquals(_sms1.getMessage(),smsEvent.getMessage());
 			}
 		}
-		
+
 	}
 	/**
 	 * Test method for {@link EventConverter#marshal(Object value, HierarchicalStreamWriter writer,MarshallingContext context)
@@ -283,11 +281,11 @@ public class ConverterTest {
 		xStream.alias("event", CallEvent.class);
 		xStream.alias("event", SmsEvent.class);
 		xStream.alias("events", LinkedList.class);
-		
+
 		String XmlOutput = xStream.toXML(_events);
 		Assert.assertEquals(_eventsXML, XmlOutput);
 	}
-	
+
 	/**
 	 * Test method for {@link EventConverter#unmarshal(HierarchicalStreamReader reader,UnmarshallingContext context)}
 	 * 	 
@@ -301,16 +299,16 @@ public class ConverterTest {
 		xStream.alias("events", CallEvent.class);
 		xStream.alias("events", SmsEvent.class);
 
-		
+
 		Object uncastedEvents = xStream.fromXML(_eventsXML);
 
 		LinkedList<?> events = (LinkedList<?>)uncastedEvents; 
-		
+
 		IEvent event;
-		
+
 		for (int i = 0; i < events.size(); i++ ) {
 			event = (IEvent) events.get(i);
-			
+
 			if(MoodEvent.class.isInstance(event)) {
 				MoodEvent mEvent = (MoodEvent)event;
 				Assert.assertEquals(_mood.getTimeStamp(), mEvent.getTimeStamp());
@@ -325,7 +323,7 @@ public class ConverterTest {
 				Assert.assertEquals(_loc.getLatitude(), lEvent.getLatitude());
 				Assert.assertEquals(_loc.getLongitude(), lEvent.getLongitude());
 			}else if (CallEvent.class.isInstance(event)) {
-				
+
 				CallEvent callEvent = (CallEvent) event;
 				Assert.assertEquals(_call1.getTimeStamp(), callEvent.getTimeStamp());
 				Assert.assertEquals(_call1.getType(), callEvent.getType());
@@ -333,13 +331,13 @@ public class ConverterTest {
 				Assert.assertEquals(_call1.getLongitude(), callEvent.getLongitude());
 				if(callEvent.getCaller().equals("0")) {
 					Assert.assertEquals(_call2.getReciever(),callEvent.getReciever());
-					
+
 				} else if (callEvent.getReciever().equals("0")) {
 					Assert.assertEquals(_call1.getCaller(),callEvent.getCaller());
 				}
 				Assert.assertEquals(_call1.getEndTime(),callEvent.getEndTime());
 			} else if (SmsEvent.class.isInstance(event)) {
-				
+
 				SmsEvent smsEvent = (SmsEvent)event;
 				Assert.assertEquals(_sms1.getTimeStamp(), smsEvent.getTimeStamp());
 				Assert.assertEquals(_sms1.getType(), smsEvent.getType());
@@ -347,7 +345,7 @@ public class ConverterTest {
 				Assert.assertEquals(_sms1.getLongitude(), smsEvent.getLongitude());
 				if(smsEvent.getSender().equals("0")) {
 					Assert.assertEquals(_sms2.getReciever(),smsEvent.getReciever());
-					
+
 				} else if (smsEvent.getReciever().equals("0")) {
 					Assert.assertEquals(_sms1.getSender(),smsEvent.getSender());
 				}

@@ -26,12 +26,12 @@ public class MockInsertTripDatabaseConnection implements IDatabaseConnection {
 	public static IDatabaseConnection getInstance(){
 		return MockInsertTripDatabaseConnectionSingleton.INSTANCE;
 	}
-	
+
 	@Override
 	public Connection getConn() {
-		
+
 		ResultSet rs = createMock(java.sql.ResultSet.class);
-		
+
 		Statement stmt = createMock(java.sql.Statement.class);
 		Connection mockConnection = createMock(java.sql.Connection.class);
 
@@ -40,23 +40,22 @@ public class MockInsertTripDatabaseConnection implements IDatabaseConnection {
 			expect(rs.next()).andReturn(true).times(1);
 			rs.close();
 			EasyMock.expectLastCall();
-		    replay(rs);
-		    
-		    expect(stmt.executeUpdate("Insert into Trip (IMEINumber,startTimeStamp,endTimeStamp,name) values (111111,123456,123456,\"Test trip\")", 1)).andReturn(1);
-		    expect(stmt.getGeneratedKeys()).andReturn(rs);
-		    stmt.close();
-		    EasyMock.expectLastCall();
-		    //expect(stmt.close()).andStubReturn(void);
-		    replay(stmt);
-		    
+			replay(rs);
+
+			expect(stmt.executeUpdate("Insert into Trip (IMEINumber,startTimeStamp,endTimeStamp,name) values (111111,123456,123456,\"Test trip\")", 1)).andReturn(1);
+			expect(stmt.getGeneratedKeys()).andReturn(rs);
+			stmt.close();
+			EasyMock.expectLastCall();
+			replay(stmt);
+
 			expect(mockConnection.createStatement()).andReturn(stmt);
 			replay(mockConnection);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// just print stack trace since this object is only used for unit testing
 			e.printStackTrace();
 		}
-		
+
 		return mockConnection;
 	}
 }

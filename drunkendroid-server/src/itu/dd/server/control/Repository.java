@@ -32,11 +32,11 @@ public class Repository {
 	public Repository(java.sql.Connection connection) {
 		this._conn = connection;
 	}
-	
-	
+
+
 	public boolean checkTripExist(Long tripId, Long IMEINumber) throws SQLException {
 		try {
-			
+
 			_stmt = _conn.createStatement();
 			return _stmt.execute("select id from Trip where id = " + tripId + "and IMEINumber = " + IMEINumber);
 		} finally {
@@ -50,8 +50,8 @@ public class Repository {
 		}			
 
 	}
-	
-	
+
+
 	/**
 	 * Method for inserting a call
 	 * @param call, the call object to be inserted
@@ -63,7 +63,6 @@ public class Repository {
 			ResultSet rs = null;
 			try {
 				_stmt = _conn.createStatement();
-				//String str = "Insert into Call(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")";
 				_stmt.executeUpdate("Insert into PhoneCall(trip,timeStamp,latitude,longitude,caller,reciever,endTimeStamp) values (" + call.getTripId() + "," + call.getTimeStamp() + "," + call.getLatitude() + "," + call.getLongitude() + "," + call.getCaller() + "," + call.getReciever() + "," + call.getEndTime() + ")");
 			} finally {
 				// cleanup
@@ -301,7 +300,7 @@ public class Repository {
 			while (rs.next()) {
 				events.add(new LocationEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude")));
 			}
-			
+
 			// get all call events for a given tripId
 			_stmt.executeQuery("Select timeStamp, longitude,latitude,caller,reciever,endTimeStamp from PhoneCall where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
@@ -309,7 +308,7 @@ public class Repository {
 			while (rs.next()) {
 				events.add(new CallEvent(rs.getLong("timeStamp"), rs.getDouble("longitude"), rs.getDouble("latitude"), rs.getString("caller"), rs.getString("reciever"), rs.getLong("endTimeStamp")));
 			}
-			
+
 			// get all sms events for a given tripId
 			_stmt.executeQuery("Select timeStamp, longitude,latitude,sender,reciever,message from SMS where trip = " + trip.getTripId());
 			rs= _stmt.getResultSet();
@@ -368,27 +367,19 @@ public class Repository {
 		double gridHeight = height/gridY;
 
 		GridCell[][] moodMapGrid = new GridCell[gridX][gridY];
-		
-		// tryng to fix moodmap skrew
+
+		// To fix moodmap skrew
 		double snapLongMin = Math.round(mm.getLongMin() / gridWidth) * gridWidth;
 		double snapLatMin = Math.round(mm.getLatMin()/gridHeight) * gridHeight;
 		double snapLongMax = Math.round(mm.getLongMax() / gridWidth) * gridWidth;
 		double snapLatMax = Math.round(mm.getLatMax()/gridHeight) * gridHeight; 
-		System.out.println("snapLatMin : " + snapLatMin);
-		System.out.println("snapLongMin : " + snapLongMin);
-		System.out.println("snapLatMax : " + snapLatMax);
-		System.out.println("snapLongMax : " + snapLongMax);
-		
-	
-		
-		
-		
+
 		ResultSet rs = null;
 		try { 
 			_stmt = _conn.createStatement();
 			String query =  "select mood, longitude, latitude from Mood where timeStamp between " + mm.getStartTimeStamp() + " and " + mm.getEndTimeStamp() +
 			" and longitude between " + snapLongMin + " and " +snapLongMax + " and latitude between " + snapLatMin + " and " + snapLatMax;
-			
+
 			_stmt.executeQuery(query);
 			rs = _stmt.getResultSet();
 			int xCoord, yCoord;

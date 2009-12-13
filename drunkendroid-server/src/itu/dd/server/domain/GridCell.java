@@ -8,10 +8,10 @@ package itu.dd.server.domain;
 public class GridCell{
 
 
-	
+
 	private double _longitude, _latitude;
 	private int _value, _count;
-	
+
 	// used when xStream unmarshaling
 	private boolean _unmarshaled = false;
 
@@ -24,7 +24,7 @@ public class GridCell{
 		this._longitude = longitude;
 		this._latitude = latitude;
 	}
-	
+
 	/**
 	 * Method to add a mood value to the GridCell
 	 * @param value
@@ -39,7 +39,7 @@ public class GridCell{
 			_unmarshaled = false;
 		}
 	}
-	
+
 	/**
 	 * get the average value of mood readings within the GridCell.
 	 * @return integer from 0-255.
@@ -64,7 +64,7 @@ public class GridCell{
 	public double getLatitude(){
 		return this._latitude;
 	}
-	
+
 	/**
 	 * used for xStreem unmarshaling
 	 * @param val the value set in the gridCell

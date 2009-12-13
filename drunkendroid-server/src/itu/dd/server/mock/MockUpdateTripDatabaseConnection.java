@@ -25,10 +25,10 @@ public class MockUpdateTripDatabaseConnection implements IDatabaseConnection {
 	public static IDatabaseConnection getInstance(){
 		return MockUpdateTripDatabaseConnectionSingleton.INSTANCE;
 	}
-	
+
 	@Override
 	public Connection getConn() throws SQLException {
-		
+
 		Statement stmt = createMock(java.sql.Statement.class);
 		Connection mockConnection = createMock(java.sql.Connection.class);
 
@@ -36,11 +36,11 @@ public class MockUpdateTripDatabaseConnection implements IDatabaseConnection {
 		stmt.close();
 		EasyMock.expectLastCall();
 		replay(stmt);
-		    
+
 		expect(mockConnection.createStatement()).andReturn(stmt);
 		replay(mockConnection);
-	
-		
+
+
 		return mockConnection;
 	}
 }

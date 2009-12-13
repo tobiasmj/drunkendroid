@@ -14,10 +14,7 @@ public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for itu.malta.drunkendroidserver.test");
-		//$JUnit-BEGIN$
-
-		//$JUnit-END$
+		"Test for itu.malta.drunkendroidserver.test");
 		return suite;
 	}
 

@@ -8,19 +8,7 @@ import itu.dd.server.interfaces.IEvent;
  * Class representing a Call.
  *
  */
-/*
- *    <event>
-     <eventType>call</eventType>
-     <dateTime>1255816133</dateTime>
-     <latitude>35.908422</latitude>
-     <longitude>14.502362</longitude>
-     <data>
-      <caller>0036577293610</caller>
-      <receiver>0036577104516</receiver>
-      <endTime>1255817201</endTime>
-     </data
-   </event>
- */
+
 public class CallEvent implements IEvent{
 
 	private long _timeStamp;
@@ -29,7 +17,7 @@ public class CallEvent implements IEvent{
 	private String _caller;
 	private String _reciever;
 	private long _endTime;
-	
+
 	public long getTripId() {
 		return _tripId;
 	}
@@ -97,13 +85,13 @@ public class CallEvent implements IEvent{
 	@Override
 	public void setLongitude(double longitude) {
 		this._longitude = longitude;
-		
+
 	}
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
 		_timeStamp = timeStamp;
-		
+
 	}
 	public String getCaller() {
 		return _caller;

@@ -24,7 +24,7 @@ public class Trip {
 	public Trip(int tripId) {
 		this._tripId = tripId;
 	}
-	
+
 	/**
 	 * Constructor, used when returning a trip from the database.
 	 * @param tripId
@@ -64,7 +64,7 @@ public class Trip {
 		this._endTime = endTime;
 		this._name = name;
 	}
-	
+
 	/**
 	 * Constructor 
 	 * @param startTime
@@ -84,7 +84,7 @@ public class Trip {
 	public void setTripId(long tripId) {
 		this._tripId = tripId;
 	}
-	
+
 	public String getImeiNumber() {
 		return _imeiNumber;
 	}
@@ -114,7 +114,7 @@ public class Trip {
 	public void addEvents(LinkedList<IEvent> events) {
 		this.events = events;
 	}
-	
+
 	/**
 	 * method for getting the next event in the list, the event is removed from the internal list.
 	 * @return an IEvent.

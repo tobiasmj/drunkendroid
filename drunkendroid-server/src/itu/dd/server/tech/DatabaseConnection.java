@@ -12,12 +12,9 @@ import java.sql.SQLException;
 public class DatabaseConnection implements IDatabaseConnection {
 	private String _connURL = null;
 	private DatabaseConnection(){
-			_connURL = "jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema";
-			// trying to externalise the connection string. currently dossen't work
-			//databaseConfiguration.getString("DatabaseConnection.1"); //$NON-NLS-1$
-		
+		_connURL = "jdbc:mysql://localhost/drunkendroid-server?user=drunkendroid&password=81sliema";
 	}
-	
+
 	private static class DatabaseConnectionSingleton {
 		private static final IDatabaseConnection INSTANCE = new DatabaseConnection();
 	}
@@ -26,13 +23,9 @@ public class DatabaseConnection implements IDatabaseConnection {
 		return DatabaseConnectionSingleton.INSTANCE;
 	}
 
-	public Connection getConn(){
+	public Connection getConn() throws SQLException{
 		Connection conn = null;
-		try{
-			conn  = DriverManager.getConnection(_connURL);
-		} catch (SQLException se){
-			// ignore for new since we can't do much about it?
-		}
+		conn  = DriverManager.getConnection(_connURL);
 		return conn;
 	}
 }

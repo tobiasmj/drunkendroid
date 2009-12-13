@@ -12,14 +12,14 @@ public class Moodmap {
 
 	private double _latMax, _latMin;
 	private double _longMax, _longMin;
-	
+
 	private int _gridX;
 	private int _gridY;
-	
+
 	public int getGridX() {
 		return _gridX;
 	}
-	
+
 	public int getGridY() {
 		return _gridY;
 	}
@@ -30,7 +30,7 @@ public class Moodmap {
 	public double getLRlatitude() {
 		return _LRlatitude;
 	}
-	
+
 	public double getULlatitude() {
 		return _ULlatitude;
 	}
@@ -86,10 +86,10 @@ public class Moodmap {
 			_longMax = LRlongitude;
 			_longMin = ULlongitude;
 		}
-		
-		
+
+
 	}
-	
+
 }
 
 

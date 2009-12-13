@@ -20,12 +20,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class EventConverter implements Converter{
 
-
-
-
-/**
- * method for marshaling an Event object into XML
- */
+	/**
+	 * method for marshaling an Event object into XML
+	 */
 	@Override
 	public void marshal(Object value, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -89,7 +86,7 @@ public class EventConverter implements Converter{
 					writer.endNode();
 					writer.endNode();
 				}
-				
+
 				writer.endNode();
 			}
 
@@ -157,7 +154,7 @@ public class EventConverter implements Converter{
 	/**
 	 * Method for un-marshaling an Event from XML into an object
 	 */
-	
+
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
@@ -170,7 +167,7 @@ public class EventConverter implements Converter{
 		long endTime = -1;
 		String message = "";
 		String sender ="0";
-		
+
 		LinkedList<IEvent> events = new LinkedList<IEvent>();
 
 		String eventType = "";
@@ -186,13 +183,9 @@ public class EventConverter implements Converter{
 						while(reader.hasMoreChildren()) {
 							reader.moveDown();
 							if("eventType".equals(reader.getNodeName())) {
-								// switching of types when implemented
 								eventType = reader.getValue();
 							} else if("dateTime".equals(reader.getNodeName())) {
 								timeStamp = Long.valueOf(reader.getValue());
-								/*if(timeStamp > signedHigh) {
-									throw new NumberFormatException("timeStamp out of bounds");
-								}*/
 
 							} else if("longitude".equals(reader.getNodeName())) {
 								longitude = Double.valueOf(reader.getValue());

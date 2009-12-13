@@ -14,7 +14,7 @@ public class MoodEvent implements IEvent{
 	private double _latitude, _longitude;
 	private int _mood = -1;
 	private long _tripId = 0;
-	
+
 	public long getTripId() {
 		return _tripId;
 	}
@@ -83,12 +83,12 @@ public class MoodEvent implements IEvent{
 	@Override
 	public void setLongitude(double longitude) {
 		this._longitude = longitude;
-		
+
 	}
 
 	@Override
 	public void setTimeStamp(long timeStamp) {
 		_timeStamp = timeStamp;
-		
+
 	}
 }

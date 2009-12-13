@@ -28,64 +28,64 @@ public class TripConverter implements Converter{
 		// start events tag
 		writer.startNode("events");
 		// parse and combine events as xml string
-		
+
 		while (trip.moreEvents()) {
 			IEvent event = trip.getNextEvent();
 			writer.startNode("event");
-				writer.startNode("eventType");
-					writer.setValue(event.getType());
+			writer.startNode("eventType");
+			writer.setValue(event.getType());
+			writer.endNode();
+			writer.startNode("dateTime");
+			writer.setValue(Long.toString(event.getTimeStamp()));
+			writer.endNode();
+			writer.startNode("longitude");
+			writer.setValue(Double.toString(event.getLongitude()));
+			writer.endNode();
+			writer.startNode("latitude");
+			writer.setValue(Double.toString(event.getLatitude()));
+			writer.endNode();
+			if(event.getType().equals("mood")){
+				MoodEvent moodEvent = (MoodEvent) event;
+				writer.startNode("data");
+				writer.startNode("mood");
+				writer.setValue(Integer.toString(moodEvent.getMood()));
 				writer.endNode();
-				writer.startNode("dateTime");
-					writer.setValue(Long.toString(event.getTimeStamp()));
-				writer.endNode();
-				writer.startNode("longitude");
-					writer.setValue(Double.toString(event.getLongitude()));
-				writer.endNode();
-				writer.startNode("latitude");
-					writer.setValue(Double.toString(event.getLatitude()));
-				writer.endNode();
-				if(event.getType().equals("mood")){
-					MoodEvent moodEvent = (MoodEvent) event;
-					writer.startNode("data");
-						writer.startNode("mood");
-							writer.setValue(Integer.toString(moodEvent.getMood()));
-						writer.endNode();
-					writer.endNode();	
-				}  else if(event.getType().equals("call")) {
-					CallEvent callEvent = (CallEvent) event;
-					writer.startNode("data");
-					if(!callEvent.getCaller().equals("0")) {
-						writer.startNode("caller");
-						writer.setValue(callEvent.getCaller());
-						writer.endNode();
-					}
-					if(!callEvent.getReciever().equals("0")) {
-						writer.startNode("reciever");
-						writer.setValue(callEvent.getReciever());
-						writer.endNode();
-					}
-					writer.startNode("endTime");
-					writer.setValue(Long.toString(callEvent.getEndTime()));
-					writer.endNode();
-					writer.endNode();
-				} else if(event.getType().equals("SMS")) {
-					SmsEvent smsEvent = (SmsEvent) event;
-					writer.startNode("data");
-					if(!smsEvent.getSender().equals("0")) {	
-						writer.startNode("sender");
-						writer.setValue(smsEvent.getSender());
-						writer.endNode();
-					}
-					if(!smsEvent.getReciever().equals("0")) {
-						writer.startNode("reciever");
-						writer.setValue(smsEvent.getReciever());
-						writer.endNode();
-					}
-					writer.startNode("message");
-					writer.setValue(smsEvent.getMessage());
-					writer.endNode();
+				writer.endNode();	
+			}  else if(event.getType().equals("call")) {
+				CallEvent callEvent = (CallEvent) event;
+				writer.startNode("data");
+				if(!callEvent.getCaller().equals("0")) {
+					writer.startNode("caller");
+					writer.setValue(callEvent.getCaller());
 					writer.endNode();
 				}
+				if(!callEvent.getReciever().equals("0")) {
+					writer.startNode("reciever");
+					writer.setValue(callEvent.getReciever());
+					writer.endNode();
+				}
+				writer.startNode("endTime");
+				writer.setValue(Long.toString(callEvent.getEndTime()));
+				writer.endNode();
+				writer.endNode();
+			} else if(event.getType().equals("SMS")) {
+				SmsEvent smsEvent = (SmsEvent) event;
+				writer.startNode("data");
+				if(!smsEvent.getSender().equals("0")) {	
+					writer.startNode("sender");
+					writer.setValue(smsEvent.getSender());
+					writer.endNode();
+				}
+				if(!smsEvent.getReciever().equals("0")) {
+					writer.startNode("reciever");
+					writer.setValue(smsEvent.getReciever());
+					writer.endNode();
+				}
+				writer.startNode("message");
+				writer.setValue(smsEvent.getMessage());
+				writer.endNode();
+				writer.endNode();
+			}
 			writer.endNode();
 		}
 
@@ -127,10 +127,6 @@ public class TripConverter implements Converter{
 		String sender = "0";
 		long endTime = -1;
 		LinkedList<IEvent> events  = new LinkedList<IEvent>();
-		/*XStream xStream = new XStream();
-		xStream.registerConverter(new EventConverter());
-		xStream.alias("event", Reading.class);
-		*/
 
 		while(reader.hasMoreChildren()) {
 
@@ -139,8 +135,6 @@ public class TripConverter implements Converter{
 
 				while(reader.hasMoreChildren()) {
 					reader.moveDown();
-
-					//xStream.fromXML((PathTrackingReader)reader);
 
 					if ("event".equals(reader.getNodeName())) {
 						while(reader.hasMoreChildren()) {
@@ -153,7 +147,7 @@ public class TripConverter implements Converter{
 								/*if(timeStamp > signedHigh) {
 									throw new NumberFormatException("timeStamp out of bounds");
 								}*/
-								
+
 							} else if("longitude".equals(reader.getNodeName())) {
 								longitude = Double.valueOf(reader.getValue());
 							} else if("latitude".equals(reader.getNodeName())) {
@@ -201,30 +195,23 @@ public class TripConverter implements Converter{
 					}
 					reader.moveUp();
 				}
-				//events.add(new Reading(timeStamp,latitude,longitude,mood));
 				reader.moveUp();
-				//reader.moveUp();
+
 			} else if("startDateTime".equals(reader.getNodeName())) {
 				startDateTime = Long.valueOf(reader.getValue());
-				/*if(startDateTime > signedHigh) {
-					throw new NumberFormatException("startDateTime out of bounds");
-				}*/
 				reader.moveUp();
 			} else if("endDateTime".equals(reader.getNodeName())) {
 				endDateTime = Long.valueOf(reader.getValue());
-				/*if(endDateTime > signedHigh) {
-					throw new NumberFormatException("endDateTime out of bounds");
-				}*/
 				reader.moveUp();
 			} else if("name".equals(reader.getNodeName())) {
 				name = reader.getValue();
 				reader.moveUp();
 			}
-			
+
 		}
 		Trip trip = new Trip(startDateTime,endDateTime,name);
 		trip.addEvents(events);
-		
+
 		return trip;
 	}
 

@@ -79,7 +79,7 @@ public class RepositoryTest {
 		call.setTripId(1);
 		rep.insertCall(call);
 	}
-	
+
 	/**
 	 * Test method for insertLocation	
 	 */
@@ -110,10 +110,10 @@ public class RepositoryTest {
 		Repository rep = new Repository(MockCalculateMoodMapDatabaseConnection.getInstance().getConn());
 		Moodmap mm = new Moodmap(1L,10L,5.0D,5.0D,10.0D,10.0D,60,60);
 		GridCell[][] gc = rep.calculateMoodMap(mm);
-		
+
 		Assert.assertTrue(GridCell.class.isInstance(gc[0][0]));
 		Assert.assertTrue(GridCell.class.isInstance(gc[59][59]));
-		
+
 	}
 
 	/**
@@ -121,21 +121,21 @@ public class RepositoryTest {
 	 * */
 	@Test
 	public void testInsert() throws SQLException {
-			Repository rep = new Repository(MockInsertTripDatabaseConnection.getInstance().getConn());
-			Trip it = new Trip("111111",(long)123456,(long)123456,"Test trip");
-			Assert.assertEquals((long) 42, rep.insertTrip(it));
+		Repository rep = new Repository(MockInsertTripDatabaseConnection.getInstance().getConn());
+		Trip it = new Trip("111111",(long)123456,(long)123456,"Test trip");
+		Assert.assertEquals((long) 42, rep.insertTrip(it));
 	}
-	
+
 	/**
 	 * Test method for updating a trip
 	 */
 	@Test
 	public void testUpdate() throws SQLException{
-			Repository rep = new Repository(MockUpdateTripDatabaseConnection.getInstance().getConn());
-			Trip it = new Trip("1",(long)1,(long)2,"testTrip");
-			it.setTripId(1);
-			rep.updateTrip(it);
-			//Assert.assertTrue(true);			
+		Repository rep = new Repository(MockUpdateTripDatabaseConnection.getInstance().getConn());
+		Trip it = new Trip("1",(long)1,(long)2,"testTrip");
+		it.setTripId(1);
+		rep.updateTrip(it);
+		//Assert.assertTrue(true);			
 	}
 	/**
 	 * Test method for getting a trip 
@@ -147,7 +147,7 @@ public class RepositoryTest {
 		Repository rep = new Repository(MockGetTripDatabaseConnection.getInstance().getConn());
 		Trip it = new Trip(1);
 		it = rep.getTrip(it);
-		
+
 		Trip eTrip = new Trip(1L, 2L, "testTrip");
 		eTrip.setTripId(1);
 
@@ -155,7 +155,7 @@ public class RepositoryTest {
 		LocationEvent eLocation = new LocationEvent(1L,1D,2D);
 		CallEvent eCall = new CallEvent(1L,1D,2D,"004551883250","004551883250",2L);
 		SmsEvent eSms = new SmsEvent(1L,1D,2D,"004551883250","004551883250","test message");
-		
+
 		Assert.assertEquals(eTrip.getStartTime(), it.getStartTime());
 		Assert.assertEquals(eTrip.getEndTime(), it.getEndTime());
 		Assert.assertEquals(eTrip.getName(), it.getName());
@@ -192,8 +192,8 @@ public class RepositoryTest {
 				Assert.assertEquals(eSms.getMessage(), sEvent.getMessage());	
 			}
 		}
-		
-		
-		
+
+
+
 	}
 }

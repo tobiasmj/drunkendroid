@@ -24,7 +24,7 @@ public class LocationEvent implements IEvent {
 		this._longitude = longitude;
 		this._latitude = latitude;
 	}
-	
+
 	public String getType() {
 		return _type;
 	}
@@ -52,5 +52,5 @@ public class LocationEvent implements IEvent {
 	public long getTripId() {
 		return _tripId;
 	}
-	
+
 }

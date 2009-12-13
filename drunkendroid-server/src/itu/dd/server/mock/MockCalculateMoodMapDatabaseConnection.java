@@ -26,52 +26,52 @@ public class MockCalculateMoodMapDatabaseConnection implements IDatabaseConnecti
 	public static IDatabaseConnection getInstance(){
 		return MockCalculateMoodMapDatabaseConnectionSingleton.INSTANCE;
 	}
-	
+
 	@Override
 	public Connection getConn() {
-		
+
 		ResultSet rs = createMock(java.sql.ResultSet.class);
-		
+
 		Statement stmt = createMock(java.sql.Statement.class);
 		Connection mockConnection = createMock(java.sql.Connection.class);
 
 		try {
-			
+
 			//Statement 
 			expect(stmt.executeQuery("select mood, longitude, latitude from Mood where timeStamp between 1 and 10 and longitude between 5.0 and 10.0 and latitude between 5.0 and 10.0")).andReturn(rs);
 			expect(stmt.getResultSet()).andReturn(rs);
 
-		    stmt.close();
-		    EasyMock.expectLastCall();
-		    replay(stmt);
-		    
-		    // resultSet
+			stmt.close();
+			EasyMock.expectLastCall();
+			replay(stmt);
+
+			// resultSet
 			expect(rs.next()).andReturn(true);
 			expect(rs.getLong("dateTime")).andReturn(5L);
 			expect(rs.getDouble("latitude")).andReturn(10.0D);
 			expect(rs.getDouble("longitude")).andReturn(10.0D);
 			expect(rs.getInt("mood")).andReturn(1);
-			
+
 			expect(rs.next()).andReturn(true);
 			expect(rs.getLong("dateTime")).andReturn(5L);
 			expect(rs.getDouble("latitude")).andReturn(5.0D);
 			expect(rs.getDouble("longitude")).andReturn(5.0D);
 			expect(rs.getInt("mood")).andReturn(1);
 			expect(rs.next()).andReturn(false);
-			
-			
+
+
 			rs.close();
 			EasyMock.expectLastCall();
-			
-		    replay(rs);
+
+			replay(rs);
 			expect(mockConnection.createStatement()).andReturn(stmt);
 			replay(mockConnection);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// just print stack trace since this object is only used for unit testing
 			e.printStackTrace();
 		}
-		
+
 		return mockConnection;
 	}
 }
