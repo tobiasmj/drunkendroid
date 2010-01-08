@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 public class GPSLocationAdapter implements ILocationAdapter {
 	private LocationManager _manager;
@@ -58,12 +59,15 @@ public class GPSLocationAdapter implements ILocationAdapter {
 		int selectedIndex = sp.getInt("GPSAccuracy", 2);
 
 		_lastKnownLocation = location;
-		if ((location.getAccuracy() != 0.0) && (location.getAccuracy() < Integer.parseInt(GPSArray[selectedIndex]))) {
+		if ((location.getAccuracy() < Integer.parseInt(GPSArray[selectedIndex]))) {
 			Location l = _lastKnownLocation;
 			int length = _listeners.size();
+			Log.i("DrunkDroid", "Location change, notifying listeners");
 			for(int i = 0; i < length; i++)
 				_listeners.get(i).OnLocationChange(l);
 		}
+		else 
+			Log.i("DrunkDroid", "Location update not precise enough");
 	}
 
 	/**

@@ -286,5 +286,6 @@ public class MainService extends Service implements ILocationAdapterListener {
 		Intent i = new Intent("itu.dd.client.NEW_LOCATION_CHANGE");
 		i.putExtra("location", location);
 		sendBroadcast(i);
+		
 	}
 }
