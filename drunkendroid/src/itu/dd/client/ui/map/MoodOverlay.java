@@ -1,6 +1,7 @@
 package itu.dd.client.ui.map;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import itu.dd.client.control.DataFacade;
 import itu.dd.client.domain.MoodEvent;
@@ -272,9 +273,12 @@ public class MoodOverlay extends Overlay
 		ArrayList<MoodEvent> data = null;
 
 		try {
+			//Find system time, and look for moods from the last ten days. (864000 secounds)
+			long endTime = Calendar.getInstance().getTimeInMillis();
+			long startTime = endTime - (864000 * 1000);
 			data = _dataFacade.getReadingEvents(
-					(long)130773960,
-					(long)131027900,
+					startTime,
+					endTime,
 					(double)ulLat,
 					(double)ulLong,
 					(double)lrLat,

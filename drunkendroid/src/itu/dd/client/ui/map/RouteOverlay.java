@@ -73,7 +73,11 @@ public class RouteOverlay extends Overlay {
 				}
 			}
 			Bitmap bitmap = BitmapFactory.decodeResource(_resources,R.drawable.marker_trip_end);            
-	        canvas.drawBitmap(bitmap, p.x-23, p.y-46, null); 
+	        
+			if(p != null){
+				//If there are moods to draw
+	        	canvas.drawBitmap(bitmap, p.x-23, p.y-46, null);
+	        }
 		}
 	}
 }
